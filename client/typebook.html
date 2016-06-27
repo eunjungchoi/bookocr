@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>TypeBook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="http://twitter.com/favicons/favicon.ico">
+
+    <link rel="stylesheet" href="typeahead/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">TypeBook</h1>
+
+      <h2 class="example-name">Type a book name..</h2>
+      <div class="">
+        <input class="typebook typeahead" type="text" placeholder="책을 입력하세요.">
+      </div>
+
+    <!-- -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=initGoogleApi"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+	<script type="text/javascript">
+    var $typebook;
+    $(function() {
+        var substringMatcher = function(strs) {
+            return function findMatches(q, cb) {
+                // an array that will be populated with substring matches
+                var matches = [];
+
+                // regex used to determine if a string contains the substring `q`
+                var substrRegex = new RegExp(q, 'i');
+
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function(i, str) {
+                    if (substrRegex.test(str)) {
+                        matches.push(str);
+                    }
+                });
+
+                cb(matches);
+            };
+        };
+
+        var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ];
+
+        //$('#the-basics .typeahead').typeahead({
+        //    hint: true,
+        //    highlight: true,
+        //    minLength: 1
+        //}, {
+        //    name: 'states',
+        //    source: substringMatcher(states)
+        //});
+
+        //
+        var url = 'https://content.googleapis.com/books/v1/volumes?key=' + googleApiKey + '&maxResults=20&orderBy=relevance&q=%QUERY';
+        var bestPictures = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            //prefetch: '../data/films/post_1960.json',
+            remote: {
+                url: url,
+                wildcard: '%QUERY',
+                //prepare: function(query, settings) {
+                //    console.log('prepare:', query, settings);
+                //    return settings;
+                //},
+                transform: transformGoogleApiResult,
+                rateLimitBy: "debounce", // [debounce, throttle]
+                rateLimitWait: 300,
+            },
+        });
+
+        function transformGoogleApiResult(response) {
+            var query = $typebook.typeahead('val');
+
+            var items = response.items;
+                items = _.map(items, function(item, i) {
+                    return _.get(item, 'volumeInfo', {});
+                });
+                items = _.filter(items, function(volume, i) {
+                    if (volume.title     && volume.title.indexOf(query) !== -1)              { return true }
+                    if (volume.subtitle  && volume.subtitle.indexOf(query) !== -1)           { return true }
+                    if (volume.authors   && volume.authors.join(' ').indexOf(query) !== -1)  { return true }
+                    if (volume.publisher && volume.publisher.indexOf(query) !== -1)          { return true }
+                    return false;
+                });
+                //
+
+            var result = _.map(items, function(volume, i) {
+                //console.log(i, volume);
+                var title    = _.get(volume, 'title');
+                var subtitle = _.get(volume, 'subtitle');
+                var authors  = _.get(volume, 'authors', []);
+                var author1  = authors[0];
+                var isbn13 = (_.find(_.get(volume, 'industryIdentifiers', []), function(ident) {
+                    return ident.type === "ISBN_13";
+                })||{}).identifier;
+                var isbn10 = (_.find(_.get(volume, 'industryIdentifiers', []), function(ident) {
+                    return ident.type === "ISBN_10";
+                })||{}).identifier;
+                var pageCount = _.get(volume, 'pageCount');
+                var categories = _.get(volume, 'categories');
+                var publisher = _.get(volume, 'publisher');
+                var publishedDate = _.get(volume, 'publishedDate');
+                var description = _.get(volume, 'description');
+                var thumbnail = _.get(volume, 'imageLinks.thumbnail');
+                var thumbnailSmall = _.get(volume, 'imageLinks.smallThumbnail');
+                //
+                var previewLink = _.get(volume, 'previewLink');
+
+                //
+                var fulltitle = title;
+                if (subtitle) {
+                    fulltitle += ' - ' + subtitle;
+                }
+                var fulltitleHtml  = '<span class="book-title">' + title + '</span>';
+                if (subtitle && subtitle.trim().length > 0) {
+                    fulltitleHtml += ' - ' + '<span class="book-subtitle">' + subtitle + '</span>';
+                }
+                var subtitleStr = '';
+                if (subtitle) {
+                    subtitleStr += '- ' + subtitle;
+                }
+
+                //
+                var value = fulltitle;
+                if (author1) {
+                    value += ', ' + author1;
+                }
+                //
+                return {
+                    title        : title,
+                    subtitle     : subtitle,
+                    //fulltitle    : fulltitle,
+                    //fulltitleHtml: fulltitleHtml,
+                    subtitleStr: subtitleStr,
+                    authors  : authors,
+                    author1  : author1,
+                    authorsStr: authors.join(', '),
+                    isbn     : isbn13,
+                    publisher: publisher,
+                    publishedDate: publishedDate,
+                    thumbnail: thumbnailSmall || thumbnail,
+                    //
+                    //item : item,
+                    value: title,
+                };
+            });
+            return result;
+        }
+
+        $typebook = $('.typebook').typeahead(null, {
+            name: 'book',
+            source: bestPictures,
+            display: 'value',
+            hint: false,
+            templates: {
+                empty: '<div class="empty-message">적당한 책이 없습니다.</div>',
+                suggestion: Handlebars.compile([
+                    "<div>",
+                        "<div class='img-wrapper'>",
+                            "<img class='thumbnail' src='{{thumbnail}}' />",
+                        "</div>",
+                        "<div class='book-info'>",
+                            "<div class='first-row'>",
+                                "<span class='book-title'>{{title}}</span>",
+                                ", <span class='book-author'>{{ authorsStr }}</span>",
+                            "</div>",
+                            "<div class='second-row'>",
+                                "<span class='book-subtitle' title={{subtitleStr}}>{{subtitleStr}}</span>",
+                            "</div>",
+                            "<div class='third-row'>",
+                                "<span class='book-publisher'>{{ publisher }}</span>",
+                            "</div>",
+                        "</div>",
+                        "<div class='cleaner'></div>",
+                    "</div>"
+                ].join(""))
+            }
+        });
+    });
+
+    var googleApiKey = 'AIzaSyDScttZJqg9HNeVLkwNUjROk64j8NWQ8HA';
+    function initGoogleApi() {
+        gapi.client.setApiKey(googleApiKey);
+        gapi.client.load('books', 'v1', function() {
+            console.log('load books api');
+        });
+    }
+	</script>
+
+  </body>
+</html>
