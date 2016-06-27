@@ -1,0 +1,41 @@
+
+{% extends "bookocr/base.html" %}
+
+{% block sidebar %}
+		<div class="container">
+	  		<div class="navbar-header">
+	    		<a class="navbar-brand" href="{% url 'index' %}">Book OCR</a>
+			</div>
+		</div>
+{% endblock %}
+
+{% block content %}	
+<div class="container">
+	<div class="row">
+		<div class="col-lg-10">
+			<h1 style="margin-bottom:30px">안녕하세요. </h1>
+			<p>지금 무슨 책을 읽고 계신가요? </p>
+			<p>기억하고 싶은 문구가 있다면 사진을 찍어보세요.</p>	
+			<p><button type="button" class="btn btn-default"><a href="{% url 'form' %}">문구 추가하기 </a></button>	</p>
+		</div>
+	</div>
+
+	{% if quote_list %}
+	<div class="row">
+		<div class="col-lg-10">
+			<ul>
+			{% for quote in quote_list %}
+				<li>{{ quote.date }}</li>
+				<li>{{ quote.book }}</li>
+				<li>{{ quote.photo }}</li>
+				<hr>
+			{% endfor %}
+			</ul>
+		</div>
+	</div>
+	{% endif %} 
+</div>
+
+{% endblock content %}
+
+
