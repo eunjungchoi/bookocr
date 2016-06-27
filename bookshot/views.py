@@ -30,10 +30,14 @@ def index(request):
 	}
 	return render(request, 'bookocr/index.html', context)
 
+@login_required
+def detail(request):
+	pass
+
 
 @login_required
 def form(request):
-	return redirect(request, 'bookocr/form.html')
+	return render(request, 'bookocr/form.html')
 
 
 @login_required
