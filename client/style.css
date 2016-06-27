@@ -148,6 +148,15 @@ p + p {
 /*
  *
  */
+
+a.tt-suggestion.typebook-result-item {
+  display: block;
+  color: initial;
+}
+a.tt-suggestion.typebook-result-item:hover {
+  text-decoration: none;
+}
+
 .tt-suggestion .img-wrapper {
   float: left;
   width: 65px;

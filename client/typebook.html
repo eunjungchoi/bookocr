@@ -14,7 +14,8 @@
       <h1 class="title">TypeBook</h1>
 
       <h2 class="example-name">Type a book name..</h2>
-      <div class="">
+
+      <div class="row">
         <input class="typebook typeahead" type="text" placeholder="책을 입력하세요.">
       </div>
 
@@ -79,26 +80,33 @@
         });
 
         function transformGoogleApiResult(response) {
-            var query = $typebook.typeahead('val');
+            var query  = $typebook.typeahead('val');
+            var query0 = query.replace(/ /g, '');
 
             var items = response.items;
                 items = _.map(items, function(item, i) {
                     return _.get(item, 'volumeInfo', {});
                 });
-                items = _.filter(items, function(volume, i) {
-                    if (volume.title     && volume.title.indexOf(query) !== -1)              { return true }
-                    if (volume.subtitle  && volume.subtitle.indexOf(query) !== -1)           { return true }
-                    if (volume.authors   && volume.authors.join(' ').indexOf(query) !== -1)  { return true }
-                    if (volume.publisher && volume.publisher.indexOf(query) !== -1)          { return true }
-                    return false;
-                });
-                //
+
+            // filter
+            items = _.filter(items, function(volume, i) {
+                if (volume.title     && volume.title.replace(/ /g, '').indexOf(query0) !== -1)              { return true }
+                if (volume.subtitle  && volume.subtitle.replace(/ /g, '').indexOf(query0) !== -1)           { return true }
+                if (volume.authors   && volume.authors.join(' ').replace(/ /g, '').indexOf(query0) !== -1)  { return true }
+                if (volume.publisher && volume.publisher.replace(/ /g, '').indexOf(query0) !== -1)          { return true }
+                //console.log(i, 'filter out:', volume.title, query0, volume.title.replace(/ /g, '').indexOf(query0));
+                return false;
+            });
+            //if (response.items.length !== items.length) {
+            //    console.log('filtered:', response.items.length, '=>', items.length);
+            //}
+            //
 
             var result = _.map(items, function(volume, i) {
                 //console.log(i, volume);
-                var title    = _.get(volume, 'title');
-                var subtitle = _.get(volume, 'subtitle');
-                var authors  = _.get(volume, 'authors', []);
+                var title    = volume.title;
+                var subtitle = volume.subtitle;
+                var authors  = volume.authors || [];
                 var author1  = authors[0];
                 var isbn13 = (_.find(_.get(volume, 'industryIdentifiers', []), function(ident) {
                     return ident.type === "ISBN_13";
@@ -106,41 +114,31 @@
                 var isbn10 = (_.find(_.get(volume, 'industryIdentifiers', []), function(ident) {
                     return ident.type === "ISBN_10";
                 })||{}).identifier;
-                var pageCount = _.get(volume, 'pageCount');
-                var categories = _.get(volume, 'categories');
-                var publisher = _.get(volume, 'publisher');
-                var publishedDate = _.get(volume, 'publishedDate');
-                var description = _.get(volume, 'description');
+                var pageCount = volume.pageCount;
+                var categories = volume.categories;
+                var publisher = volume.publisher;
+                var publishedDate = volume.publishedDate;
+                var description = volume.description;
                 var thumbnail = _.get(volume, 'imageLinks.thumbnail');
                 var thumbnailSmall = _.get(volume, 'imageLinks.smallThumbnail');
                 //
-                var previewLink = _.get(volume, 'previewLink');
+                var previewLink = volume.previewLink;
+                var canonicalVolumeLink = volume.canonicalVolumeLink;
 
                 //
-                var fulltitle = title;
-                if (subtitle) {
-                    fulltitle += ' - ' + subtitle;
-                }
-                var fulltitleHtml  = '<span class="book-title">' + title + '</span>';
-                if (subtitle && subtitle.trim().length > 0) {
-                    fulltitleHtml += ' - ' + '<span class="book-subtitle">' + subtitle + '</span>';
-                }
                 var subtitleStr = '';
                 if (subtitle) {
                     subtitleStr += '- ' + subtitle;
                 }
+                var idStr    = 'typebook-result-item-' + i;
+                var classStr = 'typebook-result-item';
 
                 //
-                var value = fulltitle;
-                if (author1) {
-                    value += ', ' + author1;
-                }
-                //
                 return {
+                    idStr: idStr,
+                    classStr: classStr,
                     title        : title,
                     subtitle     : subtitle,
-                    //fulltitle    : fulltitle,
-                    //fulltitleHtml: fulltitleHtml,
                     subtitleStr: subtitleStr,
                     authors  : authors,
                     author1  : author1,
@@ -149,6 +147,9 @@
                     publisher: publisher,
                     publishedDate: publishedDate,
                     thumbnail: thumbnailSmall || thumbnail,
+                    //
+                    previewLink: previewLink,
+                    canonicalVolumeLink: canonicalVolumeLink,
                     //
                     //item : item,
                     value: title,
@@ -161,11 +162,11 @@
             name: 'book',
             source: bestPictures,
             display: 'value',
-            hint: false,
+            hint: true,
             templates: {
                 empty: '<div class="empty-message">적당한 책이 없습니다.</div>',
                 suggestion: Handlebars.compile([
-                    "<div>",
+                    "<div href='{{canonicalVolumeLink}}' target='_blank' id='{{idStr}}' class='{{classStr}}'>",
                         "<div class='img-wrapper'>",
                             "<img class='thumbnail' src='{{thumbnail}}' />",
                         "</div>",
@@ -173,6 +174,7 @@
                             "<div class='first-row'>",
                                 "<span class='book-title'>{{title}}</span>",
                                 ", <span class='book-author'>{{ authorsStr }}</span>",
+                                " <a href='{{canonicalVolumeLink}}' target='_blank' style='display: none;'>바로가기</a>",
                             "</div>",
                             "<div class='second-row'>",
                                 "<span class='book-subtitle' title={{subtitleStr}}>{{subtitleStr}}</span>",
@@ -185,6 +187,14 @@
                     "</div>"
                 ].join(""))
             }
+        });
+
+        $typebook.on('typeahead:select', function(ev, itemObj) {
+            var $el   = $('#' + itemObj.idStr);
+            var $link = $el.find('a');
+
+            //
+            window.open($link.attr('href'), '_blank');
         });
     });
 
