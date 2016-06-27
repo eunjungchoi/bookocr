@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from bookshot.models import *
 
+
 def log_in(request):
 	if request.user.is_authenticated():
 		return redirect(reverse('index'))
@@ -29,6 +30,7 @@ def index(request):
 		'user' : user,
 	}
 	return render(request, 'index.html', context)
+
 
 @login_required
 def detail(request):
