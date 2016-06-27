@@ -19,7 +19,12 @@
 
 	<nav id="nav" class="navbar navbar-default">
 		{% block sidebar %}
-		<h1>안녕하세요. BookOCR 입니다. </h1>
+		<div class="container">
+			<div class="navbar-header">
+	    		<a class="navbar-brand" href="{% url 'index' %}">BookOCR</a>
+			</div>
+			<p class="navbar-text navbar-right">{{ user.username }} 님이 로그인하셨습니다. <a href="{% url 'log_out' %}" class="navbar-link">로그아웃</a></p>
+		</div>
 		{% endblock %}
 	</nav>
 
