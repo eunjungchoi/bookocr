@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Quote(models.Model):
 	user = models.ForeignKey(User)
-	book = models.ForeignKey(Book)
+	# book = models.ForeignKey(Book)
 	date = models.DateField()
 	quotation = models.TextField(max_length=1000)
 	photo = models.ImageField(upload_to='static/bookshot')
