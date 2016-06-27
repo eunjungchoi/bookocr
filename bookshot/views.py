@@ -10,7 +10,7 @@ from bookshot.models import *
 def log_in(request):
 	if request.user.is_authenticated():
 		return redirect(reverse('index'))
-	return render(request, 'bookocr/login.html')
+	return render(request, 'login.html')
 
 
 @login_required
@@ -28,7 +28,7 @@ def index(request):
 		'quote_list' : quote_list,
 		'user' : user,
 	}
-	return render(request, 'bookocr/index.html', context)
+	return render(request, 'index.html', context)
 
 @login_required
 def detail(request):
@@ -37,16 +37,16 @@ def detail(request):
 
 @login_required
 def form(request):
-	return render(request, 'bookocr/form.html')
+	return render(request, 'form.html')
 
 
 @login_required
 def add(request):
 	q = Quote(
 		user=request.user,
-		book=request.POST['book'],
+		# book=request.POST['book'],
 		date=request.POST['date'],
-		photo=request.POST['photo']
+		photo=request.FILES['photo']
 		)
 	q.save()
 

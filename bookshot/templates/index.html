@@ -1,5 +1,4 @@
-
-{% extends "bookocr/base.html" %}
+{% extends "base.html" %}
 
 {% block sidebar %}
 		<div class="container">
@@ -25,9 +24,9 @@
 		<div class="col-lg-10">
 			<ul>
 			{% for quote in quote_list %}
-				<li>{{ quote.date }}</li>
-				<li>{{ quote.book }}</li>
-				<li>{{ quote.photo }}</li>
+				<li>{{ quote.date }}</li>				
+ 				<img src="/{{ quote.photo.url }}" width="500px" height="300px"/>
+
 				<hr>
 			{% endfor %}
 			</ul>
