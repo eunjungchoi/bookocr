@@ -15,7 +15,7 @@
 		<div class="col-lg-10">
 			{% for quote in quote_list %}
 				<p>{{ quote.date }}</p>			
- 				<img src="/{{ quote.photo.url }}" width="400px"/>  " blar blar blar ..."
+ 				<img src="{{ quote.photo.url }}" width="400px"/>  " blar blar blar ..."
 				<hr>
 			{% endfor %}
 		</div>

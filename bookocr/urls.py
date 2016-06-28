@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from bookshot import views
 
 
 urlpatterns = [
     url(r'', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True, }),    
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
     url(r'^login/$', views.log_in, name='log_in'),
@@ -28,3 +31,4 @@ urlpatterns = [
     url(r'^form/$', views.form, name='form'),
     url(r'^add/$', views.add, name='add'),
 ]
+ # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,7 +9,7 @@ class Quote(models.Model):
 	# book = models.ForeignKey('Book')
 	date = models.DateField()
 	quotation = models.TextField(max_length=1000)
-	photo = models.ImageField(upload_to='static/bookshot')
+	photo = models.ImageField(upload_to='bookshot')
 
 	def __str__(self):
 		return self.quotation

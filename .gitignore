@@ -3,5 +3,6 @@
 *.sqlite3
 
 staticfiles
+media
 
 .env
