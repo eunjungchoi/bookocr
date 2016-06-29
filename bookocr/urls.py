@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^form/$', views.form, name='form'),
     url(r'^add/$', views.add, name='add'),
     #
+    url(r'^test/$', views.test_index, name='index'),
     url(r'^test/me$', views.test_me, name='me'),
 ]
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

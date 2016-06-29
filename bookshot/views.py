@@ -55,7 +55,18 @@ def add(request):
 
 	return redirect(reverse('index'))
 
+#
 
+def test_index(request):
+	quote_list = Quote.objects.order_by('-date')
+
+	context = {
+		'quote_list' : quote_list,
+	}
+	return render(request, '_client/index.html', context)
+
+
+@login_required
 def test_me(request):
 	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
 	user = request.user

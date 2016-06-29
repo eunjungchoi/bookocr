@@ -1,0 +1,46 @@
+{% load humanize %}
+<div class="thumbnail">
+	<img src="{{ quote.photo.url }}" style="max-width: 350px; max-height: 200px;" />
+	<div class="caption">
+		<time class="pull-right" datetime="{{ quote.date }}" title="{{ quote.date }}">{{ quote.date|naturalday }}</time>
+
+		<!--
+		<h3>Thumbnail label</h3>
+		-->
+
+		<p class="quote" style="margin-top: 20px; padding-left:30px;">
+			<span class="quotation-mark" style='
+				clear: both;
+				float: left;
+				font-size: 60px;
+				line-height: 45px;
+				font-family: "Apple SD Gothic Neo", 나눔고딕, NanumGothic, AppleGothic, 맑은고딕, Dotum;
+				color: #acacac;
+				padding-right: 10px;
+				position: absolute;
+				margin-left: -35px;
+			' >“</span>
+			{{ quote.quotation|default:"Say something..." }}
+		</p>
+
+		<div class="text-right">
+			-
+			<a href="" class="booktitle">
+				스토너
+				<span class="author">존 윌리엄스</span>
+			</a>
+		</div>
+
+		<div class="writer">
+			<img src="" />
+
+			{{ quote.user.username }}
+		</div>
+
+		<!--p>
+			<a href="#" class="btn btn-primary" role="button">Button</a> 
+			<a href="#" class="btn btn-default" role="button">Button</a>
+		</p-->
+	</div>
+</div>
+
