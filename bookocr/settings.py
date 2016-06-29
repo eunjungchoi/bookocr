@@ -35,53 +35,53 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'bookshot.apps.BookshotConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'social.apps.django_app.default',
-    'whitenoise.runserver_nostatic',
+	'bookshot.apps.BookshotConfig',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'social.apps.django_app.default',
+	'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE_CLASSES = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 
 ROOT_URLCONF = 'bookocr.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'debug': DEBUG,
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
-            ],
-        },
-    },
+	{
+	    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+	    'DIRS': [],
+	    'APP_DIRS': True,
+	    'OPTIONS': {
+	        'debug': DEBUG,
+	        'context_processors': [
+	            'django.contrib.auth.context_processors.auth',
+	            'django.contrib.messages.context_processors.messages',
+	            'django.template.context_processors.debug',
+	            'django.template.context_processors.request',
+	            'django.template.context_processors.i18n',
+	            'django.template.context_processors.media',
+	            'django.template.context_processors.static',
+	            'django.template.context_processors.tz',
+	            'social.apps.django_app.context_processors.backends',
+	            'social.apps.django_app.context_processors.login_redirect',
+	        ],
+	    },
+	},
 ]
 
 WSGI_APPLICATION = 'bookocr.wsgi.application'
@@ -91,10 +91,10 @@ WSGI_APPLICATION = 'bookocr.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+	'default': {
+	    'ENGINE': 'django.db.backends.sqlite3',
+	    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	}
 }
 
 
@@ -102,24 +102,24 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+	    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+	    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+	    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+	    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
 AUTHENTICATION_BACKENDS = (
-    'social.backends.facebook.FacebookOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
+	'social.backends.facebook.FacebookOAuth2',
+	'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -175,7 +175,7 @@ STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static'),
+	os.path.join(PROJECT_ROOT, 'static'),
 ]
 
 # Simplified static file serving.
