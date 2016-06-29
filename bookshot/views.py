@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+
 from bookshot.models import *
 
 
@@ -55,5 +56,14 @@ def add(request):
 	return redirect(reverse('index'))
 
 
+def test_me(request):
+	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
+	user = request.user
+
+	context = {
+		'quote_list' : quote_list,
+		'user' : user,
+	}
+	return render(request, '_client/user.html', context)
 
 
