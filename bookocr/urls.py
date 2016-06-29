@@ -34,5 +34,6 @@ urlpatterns = [
     #
     url(r'^test/$', views.test_index, name='index'),
     url(r'^test/me$', views.test_me, name='me'),
+    url(r'^test/quotes/new$', views.test_new_quote, name='new_quote'),
 ]
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

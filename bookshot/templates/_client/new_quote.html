@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}	
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+
+			<h4>문구를 담아 주세요.</h4>
+
+			<form class="form-horizontal" action="{% url 'add' %}" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+
+				<div class="form-group">
+					<label class="control-label hidden-xs col-sm-2">책</label>
+					<div class="col-xs-12 col-sm-10">
+						<input type="text" class="form-control" name="book-title" placeholder="책 제목">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-xs-12">
+						<div class="form-control">
+							<label class="control-label col-xs-2">사진</label>
+							<div class="col-xs-10">
+								<div class="image-drop-box" style="
+									display: none;
+									width: 100%;
+									height: 150px;
+									border: 1px solid wheat;
+									border-radius: 3px;
+									margin: 5px 0;
+								">
+								</div>
+								<input type="file" class="x-form-control" name="photo" id="photo"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label hidden-xs col-sm-2">문구</label>
+					<div class="col-xs-12 col-sm-10">
+						<textarea class="form-control" name="quote-text" placeholder="내용.."></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-xs-12 text-right">
+						<button type="submit" class="btn btn-primary">등록</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+

@@ -78,3 +78,13 @@ def test_me(request):
 	return render(request, '_client/user.html', context)
 
 
+def test_new_quote(request):
+	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
+	user = request.user
+
+	context = {
+		'quote_list' : quote_list,
+		'user' : user,
+	}
+	return render(request, '_client/new_quote.html', context)
+
