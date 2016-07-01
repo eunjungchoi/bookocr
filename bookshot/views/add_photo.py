@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from datetime import date
 from bookshot.models import *
 
 
@@ -17,8 +18,8 @@ def form(request):
 def add(request):
 	q = Quote(
 		user=request.user,
-		# book=request.POST['book'],
-		date=request.POST['date'],
+		book=request.POST['book-title'],
+		date=date.today(),
 		photo=request.FILES['photo']
 		)
 	q.save()
