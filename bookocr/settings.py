@@ -45,9 +45,11 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 	'social.apps.django_app.default',
 	'whitenoise.runserver_nostatic',
-	#'storages', # 
-	'django_s3_storage', #
+	'storages', # 
+	# 'django_s3_storage',
 ]
+
+
 
 MIDDLEWARE_CLASSES = [
 	'django.middleware.security.SecurityMiddleware',
@@ -178,7 +180,7 @@ INTERNAL_IPS = [
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-# STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [
@@ -187,7 +189,7 @@ STATICFILES_DIRS = [
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -215,13 +217,14 @@ os.environ['S3_USE_SIGV4'] = 'True' # https://github.com/boto/boto/issues/2916
 # We also use it in the next setting.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-# This is used by the `static` template tag from `static`, if you're using that. Or if anything else
-# refers directly to STATIC_URL. So it's safest to always set it.
-STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+if not DEBUG:
+	# This is used by the `static` template tag from `static`, if you're using that. Or if anything else
+	# refers directly to STATIC_URL. So it's safest to always set it.
+	STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
 
-# Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
-# you run `collectstatic`).
-STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+	# Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
+	# you run `collectstatic`).
+	STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 
