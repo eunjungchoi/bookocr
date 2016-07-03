@@ -204,8 +204,8 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 }
 
 AWS_STORAGE_BUCKET_NAME = 'bookocr'
-AWS_ACCESS_KEY_ID = 'AKIAIBW7HWVT4KVLKLEQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 # os.environ['AWS_DEFAULT_REGION'] = 'ap-northeast-2'
 AWS_REGION = 'ap-northeast-2' #"us-east-1"
 AWS_S3_HOST = 's3-%s.amazonaws.com' % AWS_REGION
@@ -217,7 +217,7 @@ os.environ['S3_USE_SIGV4'] = 'True' # https://github.com/boto/boto/issues/2916
 # We also use it in the next setting.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-if not DEBUG:
+if True:#not DEBUG:
 	# This is used by the `static` template tag from `static`, if you're using that. Or if anything else
 	# refers directly to STATIC_URL. So it's safest to always set it.
 	# STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
