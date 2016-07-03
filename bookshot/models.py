@@ -21,7 +21,7 @@ class Quote(models.Model):
 			self.created_at = timezone.now()
 		self.updated_at = timezone.now()
 
-		return super(self, Quote).save(*args, **kwargs)
+		return super(Quote, self).save(*args, **kwargs)
 
 	def __str__(self):
 		return self.quotation

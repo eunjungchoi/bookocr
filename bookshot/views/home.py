@@ -9,7 +9,7 @@ from bookshot.models import *
 
 @login_required
 def index(request):
-	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
+	quote_list = Quote.objects.filter(user=request.user).order_by('-id')
 	user = request.user
 
 	context = {
@@ -20,7 +20,7 @@ def index(request):
 
 
 def test_index(request):
-	quote_list = Quote.objects.order_by('-date')
+	quote_list = Quote.objects.order_by('-id')
 
 	context = {
 		'quote_list' : quote_list,

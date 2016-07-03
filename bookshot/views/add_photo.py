@@ -18,8 +18,8 @@ def form(request):
 def add(request):
 	q = Quote(
 		user=request.user,
-		book=request.POST['book-title'],
-		date=date.today(),
+		# book=request.POST['book-title'],
+		# date=date.today(),
 		photo=request.FILES['photo']
 		)
 	q.save()

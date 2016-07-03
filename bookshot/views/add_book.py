@@ -19,8 +19,9 @@ def bookform(request):
 
 @login_required
 def add_book(request):
+	title = request.POST.get('title', False)
 	b = Book(
-		title=request.POST.get('title', False)
+		title=title
 		)
 	b.save()
 
