@@ -21,22 +21,19 @@
                     <label class="control-label hidden-xs col-sm-2">사진</label>
 					<div class="col-xs-12 col-sm-10">
 						<div class="form-control">
-							<label class="control-label col-xs-2 visible-xs">사진</label>
-							<div class="col-xs-10 col-sm-12">
-								<div class="image-drop-box" style="
-									display: none;
-									width: 100%;
-									height: 150px;
-									border: 1px solid wheat;
-									border-radius: 3px;
-									margin: 5px 0;
-								">
-								</div>
+							<label class="control-label col-xs-3 visible-xs">사진</label>
+							<div class="col-xs-9 col-sm-12">
 								<input type="file" class="x-form-control" name="photo" id="photo" accept="image/*" multiple onchange="handleFiles(this.files)" />
 							</div>
 						</div>
 					</div>
                     <div class="image-preview-container col-xs-12">
+						<div class="file-drop-box">
+							<div class="guide">
+								<i class="glyphicon glyphicon-picture"></i>
+								<p>이미지를 여기다 드래그 해주세요.</p>
+							</div>
+						</div>
                     </div>
 				</div>
 
@@ -92,6 +89,42 @@ function handleFiles(files) {
         reader.readAsDataURL(file);
     }
 }
+
+$(function() {
+	var $dropbox = $('.file-drop-box');
+	$dropbox
+		.on('dragenter', function(ev) {
+			$dropbox.addClass('is-dragging-in');
+				console.log('dragenter', ev);
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('dragover', function(ev) {
+				console.log('dragover');
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('dragleave', function(ev) {
+			$dropbox.removeClass('is-dragging-in');
+				console.log('dragleave', ev);
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('drop', function(ev) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			$dropbox.removeClass('is-dragging-in');
+
+			var dt = ev.originalEvent.dataTransfer;
+			var files = dt.files;
+
+			//
+			handleFiles(files);
+		})
+	;
+		
+});
+
 </script>
 {% endblock content %}
 
