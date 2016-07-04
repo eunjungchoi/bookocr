@@ -18,10 +18,11 @@
 				</div>
 
 				<div class="form-group">
-					<div class="col-xs-12">
+                    <label class="control-label hidden-xs col-sm-2">사진</label>
+					<div class="col-xs-12 col-sm-10">
 						<div class="form-control">
-							<label class="control-label col-xs-2">사진</label>
-							<div class="col-xs-10">
+							<label class="control-label col-xs-2 visible-xs">사진</label>
+							<div class="col-xs-10 col-sm-12">
 								<div class="image-drop-box" style="
 									display: none;
 									width: 100%;
@@ -31,16 +32,18 @@
 									margin: 5px 0;
 								">
 								</div>
-								<input type="file" class="x-form-control" name="photo" id="photo"/>
+								<input type="file" class="x-form-control" name="photo" id="photo" accept="image/*" multiple onchange="handleFiles(this.files)" />
 							</div>
 						</div>
 					</div>
+                    <div class="image-preview-container col-xs-12">
+                    </div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label hidden-xs col-sm-2">문구</label>
 					<div class="col-xs-12 col-sm-10">
-						<textarea class="form-control" name="quote-text" placeholder="내용.."></textarea>
+						<textarea class="form-control" name="quotation" placeholder="내용.."></textarea>
 					</div>
 				</div>
 
@@ -53,5 +56,42 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+function handleFiles(files) {
+
+	// add selected image to preview
+    var $preview = $('.image-preview-container');
+    $preview.empty();
+
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var imageType = /^image\//;
+
+        if (!imageType.test(file.type)) {
+            continue;
+        }
+
+        var img = document.createElement("img");
+            img.classList.add("obj");
+            img.file = file;
+            img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
+        $preview.append(
+                $('<div class="thumbnail" />')
+                    .append(img)
+        ); // Assuming that "preview" is the div output where the content will be displayed.
+
+        //
+        var reader = new FileReader();
+        reader.onload = (function(aImg) { 
+            return function(e) { 
+                aImg.src = e.target.result; 
+            }; 
+        })(img);
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 {% endblock content %}
 
