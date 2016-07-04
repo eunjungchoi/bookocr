@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="http://twitter.com/favicons/favicon.ico">
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
   </head>
   <body>
     <div class="container">
@@ -20,36 +21,51 @@
       </div>
 
     <!-- -->
+        
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-    <script src="https://apis.google.com/js/client.js?onload=initGoogleApi"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
 	<script type="text/javascript">
+    /*
+     * Google Auth
+     */
+    var googleApiKey = 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I';
+    function initGoogleApi() {
+        gapi.client.setApiKey(googleApiKey);
+        gapi.client.load('books', 'v1', function() {
+            console.log('load books api');
+        });
+    }
+
+    /*
+     * typebook
+     */
     var $typebook;
     $(function() {
-        var substringMatcher = function(strs) {
-            return function findMatches(q, cb) {
-                // an array that will be populated with substring matches
-                var matches = [];
+        //var substringMatcher = function(strs) {
+        //    return function findMatches(q, cb) {
+        //        // an array that will be populated with substring matches
+        //        var matches = [];
 
-                // regex used to determine if a string contains the substring `q`
-                var substrRegex = new RegExp(q, 'i');
+        //        // regex used to determine if a string contains the substring `q`
+        //        var substrRegex = new RegExp(q, 'i');
 
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function(i, str) {
-                    if (substrRegex.test(str)) {
-                        matches.push(str);
-                    }
-                });
+        //        // iterate through the pool of strings and for any string that
+        //        // contains the substring `q`, add it to the `matches` array
+        //        $.each(strs, function(i, str) {
+        //            if (substrRegex.test(str)) {
+        //                matches.push(str);
+        //            }
+        //        });
 
-                cb(matches);
-            };
-        };
+        //        cb(matches);
+        //    };
+        //};
 
-        var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ];
+        //var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ];
 
         //$('#the-basics .typeahead').typeahead({
         //    hint: true,
@@ -61,13 +77,13 @@
         //});
 
         //
-        var url = 'https://content.googleapis.com/books/v1/volumes?key=' + googleApiKey + '&maxResults=20&orderBy=relevance&q=%QUERY';
-        var bestPictures = new Bloodhound({
+        var googleRequestUrl = 'https://content.googleapis.com/books/v1/volumes?key=' + googleApiKey + '&maxResults=20&orderBy=relevance&q=%QUERY';
+        var googleBooks = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             //prefetch: '../data/films/post_1960.json',
             remote: {
-                url: url,
+                url: googleRequestUrl,
                 wildcard: '%QUERY',
                 //prepare: function(query, settings) {
                 //    console.log('prepare:', query, settings);
@@ -83,25 +99,43 @@
             var query  = $typebook.typeahead('val');
             var query0 = query.replace(/ /g, '');
 
-            var items = response.items;
-                items = _.map(items, function(item, i) {
+            var items0 = response.items;
+                items1 = _.map(items0, function(item, i) {
                     return _.get(item, 'volumeInfo', {});
                 });
 
+            function buildQueryFilter(query) {
+                return function (title) {
+                    if (!title) {
+                        return false;
+                    }
+
+                    // case-insensitive
+                    title = title.toLowerCase();
+                    query = query.toLowerCase();
+
+                    // whitespace-insensitive
+                    title = title.replace(/ /g, '');
+                    query = query.replace(/ /g, '');
+
+                    return title.indexOf(query) !== -1;
+                }
+            }
+            var searchQuery = buildQueryFilter(query);
+
             // filter
-            items = _.filter(items, function(volume, i) {
-                if (volume.title     && volume.title.replace(/ /g, '').indexOf(query0) !== -1)              { return true }
-                if (volume.subtitle  && volume.subtitle.replace(/ /g, '').indexOf(query0) !== -1)           { return true }
-                if (volume.authors   && volume.authors.join(' ').replace(/ /g, '').indexOf(query0) !== -1)  { return true }
-                if (volume.publisher && volume.publisher.replace(/ /g, '').indexOf(query0) !== -1)          { return true }
+            var items = _.filter(items1, function(volume, i) {
+                if (searchQuery(volume.title    ))  { return true }
+                if (searchQuery(volume.subtitle ))  { return true }
+                if (searchQuery(volume.authors  ))  { return true }
+                if (searchQuery(volume.publisher))  { return true }
                 //console.log(i, 'filter out:', volume.title, query0, volume.title.replace(/ /g, '').indexOf(query0));
                 return false;
             });
-            //if (response.items.length !== items.length) {
-            //    console.log('filtered:', response.items.length, '=>', items.length);
-            //}
+            if (response.items.length !== items.length) {
+                console.log('filtered:', items1.length, '=>', items.length);
+            }
             //
-
             var result = _.map(items, function(volume, i) {
                 //console.log(i, volume);
                 var title    = volume.title;
@@ -137,8 +171,8 @@
                 return {
                     idStr: idStr,
                     classStr: classStr,
-                    title        : title,
-                    subtitle     : subtitle,
+                    title      : title,
+                    subtitle   : subtitle,
                     subtitleStr: subtitleStr,
                     authors  : authors,
                     author1  : author1,
@@ -160,11 +194,13 @@
 
         $typebook = $('.typebook').typeahead(null, {
             name: 'book',
-            source: bestPictures,
+            source: googleBooks,
             display: 'value',
             hint: true,
             templates: {
-                empty: '<div class="empty-message">적당한 책이 없습니다.</div>',
+                //notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
+                empty: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
+                pending: '<div class="pending-message">Searching... <i class="glyphicon glyphicon-refresh"></i></div>',
                 suggestion: Handlebars.compile([
                     "<div href='{{canonicalVolumeLink}}' target='_blank' id='{{idStr}}' class='{{classStr}}'>",
                         "<div class='img-wrapper'>",
@@ -187,7 +223,10 @@
                     "</div>"
                 ].join(""))
             }
-        });
+        })
+        .on('typeahead:asyncrequest', function() {})
+        .on('typeahead:asynccancel typeahead:asyncreceive', function() {})
+        ;
 
         $typebook.on('typeahead:select', function(ev, itemObj) {
             var $el   = $('#' + itemObj.idStr);
@@ -198,14 +237,8 @@
         });
     });
 
-    var googleApiKey = 'AIzaSyDScttZJqg9HNeVLkwNUjROk64j8NWQ8HA';
-    function initGoogleApi() {
-        gapi.client.setApiKey(googleApiKey);
-        gapi.client.load('books', 'v1', function() {
-            console.log('load books api');
-        });
-    }
 	</script>
+    <script src="https://apis.google.com/js/client.js?onload=initGoogleApi"></script>
 
   </body>
 </html>
