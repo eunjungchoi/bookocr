@@ -49,10 +49,10 @@
 					float: none; width: 120px; margin-left: auto; margin-right: auto;
 				">BookOCR</a>
 			</div>
-
 			<div class="navbar-right pull-right" style="position: absolute; top: 0; right: 8px;">
 				{% if user.username %}
 				<a class="dropdown-toggle btn navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<img src="{{ profile_picture_url }}" width="30" height="30">
 					<i class="glyphicon glyphicon-user"></i>
 					{{ user.username|truncatechars:10 }} 
 					<i class="caret"></i>
