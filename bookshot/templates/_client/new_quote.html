@@ -5,10 +5,9 @@
 	<div class="row">
 		<div class="col-xs-12">
 
-			<h4>문구를 담아 주세요.</h4>
+			<form class="form-horizontal" action="{% url 'add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
-			<form class="form-horizontal" action="{% url 'add' %}" method="post" enctype="multipart/form-data">
-				{% csrf_token %}
+				<h4>마음에 든 문구를 담아 주세요.</h4>
 
 				<div class="form-group">
 					<label class="control-label hidden-xs col-sm-2">책</label>
@@ -20,7 +19,7 @@
 				<div class="form-group">
                     <label class="control-label hidden-xs col-sm-2">사진</label>
 					<div class="col-xs-12 col-sm-10">
-						<div class="form-control">
+						<div class="photo-form-control form-control">
 							<label class="control-label col-xs-3 visible-xs">사진</label>
 							<div class="col-xs-9 col-sm-12">
 								<input type="file" class="x-form-control" name="photo" id="photo" accept="image/*" multiple onchange="handleFiles(this.files)" />

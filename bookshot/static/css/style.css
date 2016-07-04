@@ -52,3 +52,15 @@
 	.file-drop-box .guide {
 		visibility: hidden;
 	}
+
+
+
+.photo-form-control.form-control {
+	border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.file-drop-box {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top-style: none;
+}
