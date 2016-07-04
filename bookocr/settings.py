@@ -148,14 +148,11 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Asia/Seoul' #'UTC'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -204,9 +201,8 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 }
 
 AWS_STORAGE_BUCKET_NAME = 'bookocr'
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-# os.environ['AWS_DEFAULT_REGION'] = 'ap-northeast-2'
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_REGION = 'ap-northeast-2' #"us-east-1"
 AWS_S3_HOST = 's3-%s.amazonaws.com' % AWS_REGION
 os.environ['S3_USE_SIGV4'] = 'True' # https://github.com/boto/boto/issues/2916
@@ -244,15 +240,6 @@ if not DEBUG:
 
 # # The region to connect to when storing files.
 # AWS_REGION = 'ap-northeast-2' #"us-east-1"
-
-# # The AWS access key used to access the storage buckets.
-# AWS_ACCESS_KEY_ID = 'AKIAIBW7HWVT4KVLKLEQ'
-
-# # The AWS secret access key used to access the storage buckets.
-# AWS_SECRET_ACCESS_KEY = '6mQr1b6Ywev6nt7d4FCRjxXlPibBABOS3a8iU/NE'
-
-# # The S3 bucket used to store uploaded files.
-# AWS_S3_BUCKET_NAME = "bookocr"
 
 # # The S3 calling format to use to connect to the bucket.
 # AWS_S3_CALLING_FORMAT = "boto.s3.connection.OrdinaryCallingFormat"
