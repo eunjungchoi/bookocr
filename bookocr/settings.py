@@ -217,7 +217,7 @@ os.environ['S3_USE_SIGV4'] = 'True' # https://github.com/boto/boto/issues/2916
 # We also use it in the next setting.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-if True:#not DEBUG:
+if not DEBUG:
 	# This is used by the `static` template tag from `static`, if you're using that. Or if anything else
 	# refers directly to STATIC_URL. So it's safest to always set it.
 	# STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
