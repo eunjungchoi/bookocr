@@ -29,6 +29,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <script src="typebook.js"></script>
+    <script src="typebook.googlebooks.js"></script>
 
 	<script type="text/javascript">
 
@@ -37,7 +38,10 @@
          */
         $(function() {
             var googleApiKey = 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I';
-            var $typebook = $('.typebook').typebook(googleApiKey);
+            var $typebook = $('.typebook').typebook({
+                engine: 'GoogleBooks',
+                apiKey: googleApiKey,
+            });
         });
 
 	</script>
