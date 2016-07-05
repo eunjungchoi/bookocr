@@ -30,21 +30,17 @@
         var apiKey = options['apiKey'];
         var engine = new Engine(apiKey);
 
-        // 1. bind auth
-        engine.auth();
+        // 1. authorize
+        engine.init();
 
-        // 2. bind typeahead
-        // build google request bloodhound with GoogleApiKey
-        var bloodhound = engine.build({ $typebook: $($el) });
-
-        // typeahead
+        // 2. typeahead
         //var args = Array.prototype.slice.apply(arguments);
         //args.shift();
         //args.shift();
         //var $typebook = $el.typeahead.apply($el, args);
         $typebook = $el.typeahead(options, _.assign({
             name: 'book',
-            source: bloodhound,
+            source: engine.source({ $typebook: $($el) }),
             display: 'value',
             hint: true,
             templates: {

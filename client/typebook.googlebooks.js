@@ -14,6 +14,10 @@
         this.apiKey = apiKey;
     }
 
+    GoogleBooksEngine.prototype.init = function() {
+        this.auth();
+    };
+
     GoogleBooksEngine.prototype.auth = function() {
         // insert google api initializer
         //
@@ -141,7 +145,7 @@
         return result;
     };
 
-    GoogleBooksEngine.prototype.build = function(options) {
+    GoogleBooksEngine.prototype.source = function(options) {
         this.$typebook = options.$typebook;
 
         //var googleRequestUrl = 'https://content.googleapis.com/books/v1/volumes?key=' + this.apiKey + '&maxResults=20&orderBy=relevance&q=%QUERY';
