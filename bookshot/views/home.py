@@ -13,7 +13,8 @@ def index(request):
 	quote_list = Quote.objects.filter(user=request.user).order_by('-id')
 	user = request.user
 	social = user.social_auth.get()
-	profile_picture_url = 'https://graph.facebook.com/{0}/picture?type=small'.format(social.uid)
+	#profile_picture_url = 'https://graph.facebook.com/{0}/picture?type=small'.format(social.uid)
+	profile_picture_url = 'https://graph.facebook.com/{0}/picture'.format(social.uid)
 
 	context = {
 		'quote_list' : quote_list,

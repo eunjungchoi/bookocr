@@ -6,8 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 	{% if debug %}
 	<script src="{% static 'js/jquery.min.js' %}"></script>
@@ -51,12 +53,21 @@
 			</div>
 			<div class="navbar-right pull-right" style="position: absolute; top: 0; right: 8px;">
 				{% if user.username %}
-				<a class="dropdown-toggle btn navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-					<img src="{{ profile_picture_url }}" width="30" height="30">
-					<i class="glyphicon glyphicon-user"></i>
-					{{ user.username|truncatechars:10 }} 
+				<span class="user-link dropdown-toggle btn x-navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<span class="user-profile-image">
+						{% if profile_picture_url %}
+							<img src="{{ profile_picture_url }}" class="wrapper round-wrapper" >
+						{% else %}
+							<span class="wrapper">
+								<i class="glyphicon glyphicon-user"></i>
+							</span>
+						{% endif %}
+					</span>
+					<span class="username">
+						{{ user.username|truncatechars:10 }} 
+					</span>
 					<i class="caret"></i>
-				</a>
+				</span>
 				<ul class="dropdown-menu" style="right: 0; left: auto;">
 					<li><a href="#">Action</a></li>
 					<li role="separator" class="divider"></li>
