@@ -16,14 +16,9 @@ def form(request):
 
 @login_required
 def add(request):
-	book_title = request.POST['book-title']
-
-	try:
-		book = Book.objects.get(title=book_title)
-	except Book.DoesNotExist:
-		book = Book.objects.create(
-			title = book_title
-		)
+	book, created = Book.objects.get_or_create(
+		title=request.POST['book-title']
+	)
 
 	q = Quote.objects.create(
 		user=request.user,
