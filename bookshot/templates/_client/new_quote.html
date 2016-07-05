@@ -26,7 +26,7 @@
 							</div>
 						</div>
 					</div>
-                    <div class="image-preview-container col-xs-12">
+                    <div class="image-preview-container col-xs-12 col-sm-offset-2 col-sm-10">
 						<div class="file-drop-box">
 							<div class="guide">
 								<i class="glyphicon glyphicon-picture"></i>
@@ -54,9 +54,7 @@
 </div>
 
 <script>
-
 function handleFiles(files) {
-
 	// add selected image to preview
     var $preview = $('.image-preview-container');
     $preview.empty();
@@ -88,9 +86,7 @@ function handleFiles(files) {
         reader.readAsDataURL(file);
     }
 }
-
-$(function() {
-	var $dropbox = $('.file-drop-box');
+function bindDragNDrop($dropbox ) {
 	$dropbox
 		.on('dragenter', function(ev) {
 			$dropbox.addClass('is-dragging-in');
@@ -121,9 +117,40 @@ $(function() {
 			handleFiles(files);
 		})
 	;
-		
+}
+
+function bindTypebook($el) {
+	var $typebook = $($el).typebook({
+		engine: 'GoogleBooks',
+		apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
+	});
+}
+
+
+$(function() {
+	//
+	bindDragNDrop($('.file-drop-box'));
+
+	//
+	bindTypebook($('input[name="book-title"]'));
 });
 
 </script>
+{% if DEBUG %}
+	{% load staticfiles %}
+	<script src="{% static 'libs/typeahead.0.11.1.min.js' %}"></script>
+	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
+	<script src="{% static 'libs/handlebars.4.0.5.min.js' %}"></script>
+{% else %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+{% endif %}
+<script src="{% static 'libs/typebook/typebook.js' %}"></script>
+<script src="{% static 'libs/typebook/typebook.googlebooks.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
+<link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
+
 {% endblock content %}
 
