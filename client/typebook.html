@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>TypeBook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="http://twitter.com/favicons/favicon.ico">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">TypeBook</h1>
+
+      <h2 class="example-name">Type a book name..</h2>
+
+      <div class="row">
+        <input class="typebook typeahead" type="text" placeholder="책을 입력하세요.">
+      </div>
+
+    <!-- -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="typebook.js"></script>
+    <script src="typebook.googlebooks.js"></script>
+
+	<script type="text/javascript">
+
+        /*
+         * typebook
+         */
+        $(function() {
+            var $typebook = $('.typebook').typebook({
+                engine: 'GoogleBooks',
+                apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
+            });
+
+            // bind click
+            $typebook.on('typeahead:select', function(ev, itemObj) {
+                var $el   = $('#' + itemObj.idStr);
+                var $link = $el.find('a');
+                //
+                window.open($link.attr('href'), '_blank');
+            });
+        });
+
+	</script>
+
+  </body>
+</html>
