@@ -41,6 +41,9 @@
 					<div class="col-xs-12 col-sm-10">
 						<textarea class="form-control" name="quotation" placeholder="최고의 시절이었고..."></textarea>
 					</div>
+					<div class="">
+                        <button type="button" class="btn"><i class="glyphicon glyphicon-eye-open"></i></button>
+					</div>
 				</div>
 
 				<div class="form-group">
@@ -120,12 +123,72 @@ function bindDragNDrop($dropbox ) {
 }
 
 function bindTypebook($el) {
-	var $typebook = $($el).typebook({
-		engine: 'GoogleBooks',
-		apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
-	}, {
-		limit: 10,
-	});
+	//var $typebook = $($el).typebook({
+	//	engine: 'GoogleBooks',
+	//	apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
+	//}, {
+	//	limit: 10,
+	//});
+
+	//// build engine
+	//var Engine = $.fn.typebook.engines['GoogleBooks'];
+	//var apiKey = 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I';
+	//var engine = new Engine(apiKey);
+
+	//// 1. authorize
+	//engine.init();
+
+	//// 2. typeahead
+    //var source = engine.source({ $typebook: $($el) });
+    ////source.add(['Detroit Lions', 'Green Bay Packers', 'Chicago Bears']);
+
+    // bloodhound
+	var apiKey = 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I';
+    var source = new GoogleBooksAuth(apiKey);
+
+	var $typebook = $el.typeahead({
+        //minLength: 0,
+    }, _.assign({
+		name: 'book',
+		//source: engine.source({ $typebook: $($el) }),
+        source: source,
+		//source: function (q, sync) {
+		//	if (q === '') {
+		//		sync(source.get('Detroit Lions', 'Green Bay Packers', 'Chicago Bears'));
+		//	}
+		//	else {
+		//		source.search(q, sync);
+		//	}
+		//},
+        limit: 10,
+		display: 'value',
+		hint: true,
+		templates: {
+			notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
+			pending: '<div class="pending-message">Searching... <i class="glyphicon glyphicon-refresh"></i></div>',
+			suggestion: function(context) {
+				return `<div href='${context.canonicalVolumeLink}' target='_blank' id='${context.idStr}' class='${context.classStr}'>
+					<div class='img-wrapper'>
+						<img class='thumbnail' src='${context.thumbnail}' />
+					</div>
+					<div class='book-info'>
+						<div class='first-row'>
+							<span class='book-title'>${context.title}</span>
+							, <span class='book-author'>${context. authorsStr }</span>
+							 <a href='${context.canonicalVolumeLink}' target='_blank' style='display: none;'>바로가기</a>
+						</div>
+						<div class='second-row'>
+							<span class='book-subtitle' title=${context.subtitleStr}>${context.subtitleStr}</span>
+						</div>
+						<div class='third-row'>
+							<span class='book-publisher'>${context.publisher}</span>
+						</div>
+					</div>
+					<div class='cleaner'></div>
+				</div>`;
+            }
+		},
+	}));
 }
 
 
@@ -140,7 +203,8 @@ $(function() {
 </script>
 {% if debug %}
 	{% load staticfiles %}
-	<script src="{% static 'libs/typeahead-0.11.1/typeahead.bundle.js' %}"></script>
+	<script src="{% static 'libs/typeahead-0.11.1/typeahead.jquery.js' %}"></script>
+	<script src="{% static 'libs/typeahead-0.11.1/bloodhound.js' %}"></script>
 	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
 	<script src="{% static 'libs/handlebars.4.0.5.min.js' %}"></script>
 {% else %}
@@ -149,7 +213,8 @@ $(function() {
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 {% endif %}
 <script src="{% static 'libs/typebook/typebook.js' %}"></script>
-<script src="{% static 'libs/typebook/typebook.googlebooks.js' %}"></script>
+<!--<script src="{% static 'libs/typebook/typebook.googlebooks.js' %}"></script>-->
+<script src="{% static 'libs/typebook/google_books_auth.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
 <link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
