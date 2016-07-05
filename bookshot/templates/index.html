@@ -13,9 +13,12 @@
 	{% if quote_list %}
 	<div class="row">
 		<div class="col-lg-10">
-			{% for quote in quote_list %}
-				<p>{{ quote }}</p>			
- 				<img src="{{ quote.photo.url }}" width="400px"/>  " blar blar blar ..."
+<!-- 		### for test
+ -->			{% for quote in quote_list %}
+				<p> 책 :{{ quote.book }}</p>
+				<p> 문구 : {{ quote.quotation }}</p>
+				<p> 업데이트 시각: {{ quote.updated_at }}</p>		
+ 				<img src="{{ quote.photo.url }}" width="400px"/>
 				<hr>
 			{% endfor %}
 		</div>

@@ -16,13 +16,21 @@ def form(request):
 
 @login_required
 def add(request):
-	q = Quote(
-		user=request.user,
-		# book=request.POST['book-title'],
-		# date=date.today(),
-		photo=request.FILES['photo']
+	book_title = request.POST['book-title']
+
+	try:
+		book = Book.objects.get(title=book_title)
+	except Book.DoesNotExist:
+		book = Book.objects.create(
+			title = book_title
 		)
-	q.save()
+
+	q = Quote.objects.create(
+		user=request.user,
+		book=book,
+		photo=request.FILES['photo'],
+		quotation=request.POST['quotation'],
+	)
 
 	return redirect(reverse('index'))
 
@@ -36,3 +44,4 @@ def test_new_quote(request):
 		'user' : user,
 	}
 	return render(request, '_client/new_quote.html', context)
+
