@@ -91,7 +91,6 @@ GoogleBooksAuth.prototype.prepare = function(query, settings) {
 
 GoogleBooksAuth.prototype.transform = function(response) {
     var query = this.query;
-    console.log('#transform] with query:', query);
 
     var volumes1 = _.map(response.items, function(item, i) {
         return _.get(item, 'volumeInfo', {});
