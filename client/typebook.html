@@ -37,10 +37,17 @@
          * typebook
          */
         $(function() {
-            var googleApiKey = 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I';
             var $typebook = $('.typebook').typebook({
                 engine: 'GoogleBooks',
-                apiKey: googleApiKey,
+                apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
+            });
+
+            // bind click
+            $typebook.on('typeahead:select', function(ev, itemObj) {
+                var $el   = $('#' + itemObj.idStr);
+                var $link = $el.find('a');
+                //
+                window.open($link.attr('href'), '_blank');
             });
         });
 

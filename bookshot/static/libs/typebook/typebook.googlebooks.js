@@ -18,6 +18,23 @@
         this.auth();
     };
 
+    function insertScript(attrs) {
+        attrs = attrs || {};
+
+        var scriptEl = document.createElement('script');
+        for(var key in attrs) {
+            scriptEl[key] = attrs[key];
+        }
+
+        document.getElementsByTagName("script")[0].parentNode.appendChild(scriptEl);
+    }
+    function insertScriptSrc(src, attrs) {
+        attrs = attrs || {};
+        attrs['src'] = src;
+
+        return insertScript(attrs);
+    }
+
     GoogleBooksEngine.prototype.auth = function() {
         // insert google api initializer
         //
@@ -29,25 +46,22 @@
         //      }
         //
         var handlerName = "initGoogleApi_" + Date.now();
-        var initScriptEl = document.createElement('script');
-        initScriptEl.type = "text/javascript";
-        initScriptEl.innerText = [
+        var innerText = [
             "function " + handlerName + "() {",
                 "gapi.client.setApiKey('" + this.apiKey + "');",
                 "gapi.client.load('books', 'v1', function() {",
                 '});',
             "}",
         ].join('\n');
-        document.getElementsByTagName("script")[0].parentNode.appendChild(initScriptEl);
+        insertScript({type: 'text/javascrpt', innerText: innerText});
 
         // insert google api client script
         if (typeof gapi === 'undefined' || typeof (gapi||{})['client'] === 'undefined') {
-            var scriptEl = document.createElement('script');
-            scriptEl.async = true;
-            scriptEl.src = "https://apis.google.com/js/client.js?onload=" + 'initGoogleApi';
-            document.getElementsByTagName("script")[0].parentNode.appendChild(scriptEl);
+            insertScriptSrc("https://apis.google.com/js/client.js?onload=" + 'initGoogleApi', { async: true });
         }
     };
+
+    var DEFAULT_IMAGE_COVER = 'https://www.google.com/googlebooks/images/no_cover_thumb.gif';
 
     GoogleBooksEngine.prototype.transform = function(response) {
         var query = this.$typebook.typeahead('val');
@@ -58,7 +72,7 @@
 
         //
         function buildQueryFilter(query) {
-            return function (title) {
+            return function(title) {
                 if (!title) {
                     return false;
                 }
@@ -87,6 +101,8 @@
         });
         if (response.items.length !== volumes.length) {
             console.log('filtered:', volumes1.length, '=>', volumes.length);
+            //console.log(volumes1);
+            //console.log(volumes);
         }
         //
         var result = _.map(volumes, function(volume, i) {
@@ -133,7 +149,7 @@
                 isbn     : isbn13,
                 publisher: publisher,
                 publishedDate: publishedDate,
-                thumbnail: thumbnailSmall || thumbnail,
+                thumbnail: thumbnailSmall || thumbnail || DEFAULT_IMAGE_COVER,
                 //
                 previewLink: previewLink,
                 canonicalVolumeLink: canonicalVolumeLink,

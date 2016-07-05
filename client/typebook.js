@@ -71,15 +71,6 @@
             }
         }, datasets));
 
-        // bind click
-        $typebook.on('typeahead:select', function(ev, itemObj) {
-            var $el   = $('#' + itemObj.idStr);
-            var $link = $el.find('a');
-
-            //
-            window.open($link.attr('href'), '_blank');
-        });
-
         return $typebook;
     }
 

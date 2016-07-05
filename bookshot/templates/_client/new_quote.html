@@ -12,7 +12,7 @@
 				<div class="form-group">
 					<label class="control-label hidden-xs col-sm-2">책</label>
 					<div class="col-xs-12 col-sm-10">
-						<input type="text" class="form-control" name="book-title" placeholder="책 제목">
+						<input type="text" class="form-control" name="book-title" placeholder="책 제목을 입력해 주세요.">
 					</div>
 				</div>
 
@@ -39,7 +39,7 @@
 				<div class="form-group">
 					<label class="control-label hidden-xs col-sm-2">문구</label>
 					<div class="col-xs-12 col-sm-10">
-						<textarea class="form-control" name="quotation" placeholder="내용.."></textarea>
+						<textarea class="form-control" name="quotation" placeholder="최고의 시절이었고..."></textarea>
 					</div>
 				</div>
 
@@ -123,6 +123,8 @@ function bindTypebook($el) {
 	var $typebook = $($el).typebook({
 		engine: 'GoogleBooks',
 		apiKey: 'AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I',
+	}, {
+		limit: 10,
 	});
 }
 
@@ -136,9 +138,9 @@ $(function() {
 });
 
 </script>
-{% if DEBUG %}
+{% if debug %}
 	{% load staticfiles %}
-	<script src="{% static 'libs/typeahead.0.11.1.min.js' %}"></script>
+	<script src="{% static 'libs/typeahead-0.11.1/typeahead.bundle.js' %}"></script>
 	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
 	<script src="{% static 'libs/handlebars.4.0.5.min.js' %}"></script>
 {% else %}

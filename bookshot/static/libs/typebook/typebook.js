@@ -44,8 +44,7 @@
             display: 'value',
             hint: true,
             templates: {
-                //notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
-                empty: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
+                notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
                 pending: '<div class="pending-message">Searching... <i class="glyphicon glyphicon-refresh"></i></div>',
                 suggestion: Handlebars.compile([
                     "<div href='{{canonicalVolumeLink}}' target='_blank' id='{{idStr}}' class='{{classStr}}'>",
@@ -71,17 +70,7 @@
             }
         }, datasets));
 
-        // bind click
-        $typebook.on('typeahead:select', function(ev, itemObj) {
-            var $el   = $('#' + itemObj.idStr);
-            var $link = $el.find('a');
-
-            //
-            window.open($link.attr('href'), '_blank');
-        });
-
         return $typebook;
     }
-
 });
 
