@@ -33,7 +33,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 
     url(r'^quotes/new$', views.quote.new, name='new_quote'),
-    url(r'^form/$', views.quote.form, name='form'),
     url(r'^add/$', views.quote.add, name='add'),
     #url(r'^(?P<quote_id>[0-9]+)$', views.detail, name='detail'),
 

@@ -10,11 +10,6 @@ from bookshot.models import *
 
 
 @login_required
-def form(request):
-	return render(request, 'form.html')
-
-
-@login_required
 def add(request):
 	q = Quote.objects.create(
 		user=request.user,
