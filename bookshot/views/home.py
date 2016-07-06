@@ -25,24 +25,6 @@ from bookshot.models import *
 
 @login_required
 def index(request):
-<<<<<<< HEAD
-	quote_list = Quote.objects.filter(user=request.user).order_by('-id')
-	user = request.user
-	social = user.social_auth.get()
-	#profile_picture_url = 'https://graph.facebook.com/{0}/picture?type=small'.format(social.uid)
-	profile_picture_url = 'https://graph.facebook.com/{0}/picture'.format(social.uid)
-
-	context = {
-		'quote_list' : quote_list,
-		'user' : user,
-		'profile_picture_url' : profile_picture_url
-	}
-	return render(request, 'index.html', context)
-
-
-def test_index(request):
-=======
->>>>>>> origin/master
 	quote_list = Quote.objects.order_by('-id')
 
 	context = {
@@ -54,7 +36,4 @@ def test_index(request):
 @login_required
 def detail(request):
 	pass
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
