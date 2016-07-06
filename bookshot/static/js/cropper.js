@@ -181,7 +181,7 @@
             }
 
             //
-            if (selectRect === undefined) {
+            if (selectRect == null) { // null or undefined
                 selectRect = {
                     x: 0,
                     y: 0,
