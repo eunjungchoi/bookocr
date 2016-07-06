@@ -4,17 +4,18 @@ function handleFiles(files) {
     // post to server AJAX
 
     // render preview
-    var $preview = $('.image-preview-container');
-    renderImagePreview(files, $preview)
-    .then(function(imgEl) {
-        activateOCR(imgEl);
-    })
+    var $preview = $('.image-preview-container'),
+        $inner   = $preview.find('.image-preview-container-inner .thumbnail');
+    renderImagePreview(files, $preview, $inner)
+        .then(function(imgEl) {
+            //activateOCR(imgEl);
+        })
     ;
 }
 
 function activateOCR(imgEl) {
     //// show cropper
-    //var cropper = showCropper($preview);
+    //var cropper = initCropper($preview);
     //cropper.on('select', function(ev) {
     //    var selectedArea;
 
@@ -27,14 +28,15 @@ function activateOCR(imgEl) {
     //});
 
     var $img = $(imgEl);
-    initCropper($img);
+    var cropper = initCropper($img);
+    var $toolbar = addCropToolbar(cropper, $img.parent(), $img)
 }
 
 // add selected image to preview
-function renderImagePreview(files, $preview) {
+function renderImagePreview(files, $container, $inner) {
 
     // empty preview
-    $preview.empty();
+    $inner.empty();
 
     var file;
     for (var i = 0; i < files.length; i++) {
@@ -47,50 +49,39 @@ function renderImagePreview(files, $preview) {
         break;
     }
 
-    // promise
-    var dfd = jQuery.Deferred();
-
     // 
     // create image element
     var img = document.createElement("img");
         img.classList.add("obj");
         img.file = file;
         img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
-    $preview.append(
-            $('<div class="thumbnail" />')
-                .append(img)
-    ); // Assuming that "preview" is the div output where the content will be displayed.
+    $inner.append(img); // Assuming that "preview" is the div output where the content will be displayed.
 
     // build reader
     var reader = new FileReader();
     reader.onload = (function(_img) {
-        return function(e) { 
-            _img.src = e.target.result; 
+        return function(ev) { 
+            _img.src = ev.target.result; 
         }; 
     })(img);
-    reader.onerror = function(err) {
-        dfd.reject(err);
-    };
     reader.readAsDataURL(file);
 
-    img.onload = function() {
-        dfd.resolve(this);
-    };
-    img.onerror = function(err) {
-        dfd.reject(err);
-    };
+    // promise
+    var dfd = jQuery.Deferred();
+    reader.onerror = function(err) { dfd.reject(err) };
+
+    img.onload  = function()    { dfd.resolve(this) };
+    img.onerror = function(err) { dfd.reject(err)   };
 
     return dfd.promise();
 }
 
-function showCropper($preview) {
-}
 
-function bindDragNDrop($dropbox ) {
+function bindDragNDrop($dropbox) {
 	$dropbox
 		.on('dragenter', function(ev) {
 			$dropbox.addClass('is-dragging-in');
-				console.log('dragenter', ev);
+				console.log('dragenter', this, ev);
 			ev.preventDefault();
 			ev.stopPropagation();
 		})
@@ -136,8 +127,100 @@ function initCropper($img) {
         h: height * (1.0 - (0.25)*2),
     };
     var fullSize = { w: width, h: height };
-    cropper.init($parent, selectRect, null, fullSize);
+    cropper.init($parent, null, null, fullSize);
+
+    return cropper;
 }
+
+function addCropToolbar(cropper, $wrap, $img) {
+    // render save button
+    var imgSrc = $img.attr('src');
+
+    var $form;
+    var $cropInfo,
+        $saveBtn,
+        $description
+    ;
+    var $toolbar = $(`
+        <div class="tool-layer"></div>
+    `).append(
+        ($form = $(`
+            <form method="POST">
+                <input type="hidden" name="img_url" value="${imgSrc}" />
+                <input type="hidden" name="x" value="" />
+                <input type="hidden" name="y" value="" />
+                <input type="hidden" name="w" value="" />
+                <input type="hidden" name="h" value="" />
+            </form>`).append([
+                ($cropInfo = $(`<span class="crop-info"></span>`)),
+                $(`<div class="cropper-button-wrapper"></div>`).append(
+                    ($saveBtn = $(`
+                        <button class="cropper-button" target="_blank">Save</button>
+                    `))
+                )
+            ])
+        )
+    );
+
+    // $saveBtn
+    var _isSaving = false;
+    $saveBtn.on('click', function(ev) {
+        console.log('click:', ev);
+        ev.preventDefault();
+        //if (_isSaving) { return }
+
+        //// POST image
+        //const pageMeta = C.getPageMeta();
+        //var imgData = $form.serializeArray()
+        //    .reduce((memo, obj) => {
+        //        memo[obj.name] = obj.value;
+        //        return memo;
+        //    }, { 
+        //        page_meta: pageMeta,
+        //    });
+        ////
+        //image_store.post(imgData);
+        //_isSaving = true;
+
+        ////
+        //moveCloneFx(cropper.$selection(), imgSrc);
+
+        //$saveBtn.addClass(C.C_DISABLED);
+    });
+    //image_store.on('post post:fail', function() {
+    //    _isSaving = false;
+    //    $saveBtn.removeClass(C.C_DISABLED);
+    //});
+
+    //
+    // cropper events
+    //
+    cropper.on('change', function(ev, x,y,w,h) {
+        $toolbar.hide();
+    });
+    cropper.on('select:start', function(ev, x,y,w,h) {});
+    cropper.on('release', function() {});
+
+    cropper.on('select', function(ev, x,y,w,h) {
+        var $selection = cropper.$selection();
+
+        // update crop-rect info
+        $form
+            .find('input[name="x"]').val(x).end()
+            .find('input[name="y"]').val(y).end()
+            .find('input[name="w"]').val(w).end()
+            .find('input[name="h"]').val(h).end();
+        $cropInfo.text(`x ${x} y ${y} w ${w} h ${h}`);
+
+        //
+        $toolbar
+            .show()
+            .appendTo($selection);
+    });
+
+    return $toolbar;
+}
+
 
 function bindTypebook($el) {
     //var source = new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
@@ -188,8 +271,8 @@ function bindTypebook($el) {
 
 $(function() {
 	//
-    var $fileDropBox = $('.file-drop-box');
-	bindDragNDrop($fileDropBox);
+    var $droppable = $('.file-droppable');
+	bindDragNDrop($droppable);
 
 	//
     var $bookInput = $('input[name="book-title"]');
