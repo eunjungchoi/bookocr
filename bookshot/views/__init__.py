@@ -1,7 +1,8 @@
-from .authentication import *
-from .home import *
-from .add_book import *
-from .add_photo import *
-from .me import *
+from . import auth
 
+from .home import index
+
+from . import book
+from . import quote
+from . import user
 

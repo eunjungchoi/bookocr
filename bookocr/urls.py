@@ -25,19 +25,21 @@ urlpatterns = [
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True, }),    
     url(r'^admin/', admin.site.urls),
 
-    url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.log_in, name='log_in'),
-    url(r'^logout/$', views.log_out, name='log_out'),
-    url(r'^(?P<quote_id>[0-9]+)$', views.detail, name='detail'),
-    url(r'^form/$', views.form, name='form'),
-    url(r'^add/$', views.add, name='add'),
+    url(r'^login/$',  views.auth.log_in, name='log_in'),
+    url(r'^logout/$', views.auth.log_out, name='log_out'),
 
-    url(r'^bookform/$', views.bookform, name='bookform'),
-    url(r'^addbook/$', views.add_book, name='add_book'),
     #
-    url(r'^test/$', views.test_index, name='index'),
-    url(r'^test/me$', views.test_me, name='me'),
-    url(r'^test/quotes/new$', views.test_new_quote, name='new_quote'),
+    #url(r'^$', views.index, name='_index'),
+    url(r'^$', views.index, name='index'),
+
+    url(r'^quotes/new$', views.quote.new, name='new_quote'),
+    url(r'^add/$', views.quote.add, name='add'),
+    #url(r'^(?P<quote_id>[0-9]+)$', views.detail, name='detail'),
+
+    url(r'^bookform/$', views.book.form, name='bookform'),
+    url(r'^addbook/$', views.book.add, name='add_book'),
+
+    url(r'^me$', views.user.me, name='me'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #
