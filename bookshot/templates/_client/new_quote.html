@@ -41,6 +41,11 @@
 					<div class="col-xs-12 col-sm-10">
 						<textarea class="form-control" name="quotation" placeholder="최고의 시절이었고..."></textarea>
 					</div>
+					<!--
+					<div class="">
+                        <button type="button" class="btn"><i class="glyphicon glyphicon-eye-open"></i></button>
+					</div>
+					-->
 				</div>
 
 				<div class="form-group">
@@ -55,6 +60,9 @@
 
 <script>
 function handleFiles(files) {
+    renderImagePreview(files);
+}
+function renderImagePreview(files) {
 	// add selected image to preview
     var $preview = $('.image-preview-container');
     $preview.empty();

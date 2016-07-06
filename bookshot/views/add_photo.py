@@ -26,13 +26,13 @@ def add(request):
 	return redirect(reverse('index'))
 
 
+@login_required
 def test_new_quote(request):
-	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
-	user = request.user
+	#recent_books = request.user.recent_books()[:3]
+	recent_books = ('살인자의 기억법', '스토너')
 
 	context = {
-		'quote_list' : quote_list,
-		'user' : user,
+		recent_books: recent_books,
 	}
 	return render(request, '_client/new_quote.html', context)
 
