@@ -1,0 +1,199 @@
+<script type="text/javascript">
+
+function handleFiles(files) {
+    // post to server AJAX
+
+    // render preview
+    var $preview = $('.image-preview-container');
+    renderImagePreview(files, $preview)
+    .then(function(imgEl) {
+        activateOCR(imgEl);
+    })
+    ;
+}
+
+function activateOCR(imgEl) {
+    //// show cropper
+    //var cropper = showCropper($preview);
+    //cropper.on('select', function(ev) {
+    //    var selectedArea;
+
+    //    postTextDetection(selectedArea)
+    //        .then(function(recognizedText) {
+
+    //            // render to textarea
+
+    //        });
+    //});
+
+    var $img = $(imgEl);
+    initCropper($img);
+}
+
+// add selected image to preview
+function renderImagePreview(files, $preview) {
+
+    // empty preview
+    $preview.empty();
+
+    var file;
+    for (var i = 0; i < files.length; i++) {
+        file = files[0];
+        var imageType = /^image\//;
+
+        if (!imageType.test(file.type)) {
+            continue;
+        }
+        break;
+    }
+
+    // promise
+    var dfd = jQuery.Deferred();
+
+    // 
+    // create image element
+    var img = document.createElement("img");
+        img.classList.add("obj");
+        img.file = file;
+        img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
+    $preview.append(
+            $('<div class="thumbnail" />')
+                .append(img)
+    ); // Assuming that "preview" is the div output where the content will be displayed.
+
+    // build reader
+    var reader = new FileReader();
+    reader.onload = (function(_img) {
+        return function(e) { 
+            _img.src = e.target.result; 
+        }; 
+    })(img);
+    reader.onerror = function(err) {
+        dfd.reject(err);
+    };
+    reader.readAsDataURL(file);
+
+    img.onload = function() {
+        dfd.resolve(this);
+    };
+    img.onerror = function(err) {
+        dfd.reject(err);
+    };
+
+    return dfd.promise();
+}
+
+function showCropper($preview) {
+}
+
+function bindDragNDrop($dropbox ) {
+	$dropbox
+		.on('dragenter', function(ev) {
+			$dropbox.addClass('is-dragging-in');
+				console.log('dragenter', ev);
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('dragover', function(ev) {
+				console.log('dragover');
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('dragleave', function(ev) {
+			$dropbox.removeClass('is-dragging-in');
+				console.log('dragleave', ev);
+			ev.preventDefault();
+			ev.stopPropagation();
+		})
+		.on('drop', function(ev) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			$dropbox.removeClass('is-dragging-in');
+
+			var dt = ev.originalEvent.dataTransfer;
+			var files = dt.files;
+
+			//
+			handleFiles(files);
+		})
+	;
+}
+
+function initCropper($img) {
+    var $parent = $img.parent();
+
+    // cropper
+    var cropper = new Cropper();
+    $parent.data('cropper', cropper);
+
+    // init
+    var width  = $img.width(),
+        height = $img.height();
+    var selectRect = { // blindly select (15~-15%, 25~-25%)
+        x: width * 0.15, 
+        w: width * (1 - (0.15)*2),
+        y: height * 0.25,
+        h: height * (1.0 - (0.25)*2),
+    };
+    var fullSize = { w: width, h: height };
+    cropper.init($parent, selectRect, null, fullSize);
+}
+
+function bindTypebook($el) {
+    //var source = new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
+    var source = new BandiNLunis();
+	var $typebook = $el.typeahead({
+        //minLength: 0,
+    }, _.assign({
+		name: 'book',
+		//source: engine.source({ $typebook: $($el) }),
+        source: source,
+		//source: function (q, sync) {
+		//	if (q === '') {
+		//		sync(source.get('Detroit Lions', 'Green Bay Packers', 'Chicago Bears'));
+		//	}
+		//	else {
+		//		source.search(q, sync);
+		//	}
+		//},
+        limit: 10,
+		display: 'value',
+		hint: true,
+		templates: {
+			notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
+			pending: '<div class="pending-message">Searching... <i class="glyphicon glyphicon-refresh"></i></div>',
+			suggestion: function(context) {
+				return `<div target='_blank' id='${context.idStr}' class='${context.classStr}'>
+					<div class='img-wrapper thumbnail'>
+						<img class='' src='${context.thumbnail}' />
+					</div>
+					<div class='book-info'>
+						<div class='first-row'>
+							<span class='book-title'>${context.title}</span>, <span class='book-author'>${context. authorsStr }</span>
+						</div>
+						<div class='second-row ${context.subtitleStr && context.subtitleStr.length > 0 ? "" : "hide"}'>
+							<span class='book-subtitle' title=${context.subtitleStr}>${context.subtitleStr}</span>
+						</div>
+						<div class='third-row'>
+							<span class='book-publisher'>${context.publisher}</span>
+						</div>
+					</div>
+					<div class='cleaner'></div>
+				</div>`;
+            }
+		},
+	}));
+}
+
+
+$(function() {
+	//
+    var $fileDropBox = $('.file-drop-box');
+	bindDragNDrop($fileDropBox);
+
+	//
+    var $bookInput = $('input[name="book-title"]');
+	bindTypebook($bookInput);
+});
+</script>
+
