@@ -66,7 +66,3 @@ class QuoteTestCase(TestCase):
 		self.assertEqual(bool(initial_time.microsecond == quote.updated_at.microsecond), False)
 
 
-
-
-
-
