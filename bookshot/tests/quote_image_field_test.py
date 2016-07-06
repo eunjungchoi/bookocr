@@ -1,11 +1,13 @@
 import os
 
 from django.test import TestCase, override_settings, modify_settings
+from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
-from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 
 from django.conf import settings
 from django.contrib.auth.models import User
+
 from bookshot.models import Book, Quote
 
 
@@ -18,8 +20,13 @@ revert_aws_settings = {
 	'DEFAULT_FILE_STORAGE': 'django.core.files.storage.FileSystemStorage',
 }
 
+TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+# fixture image file
+IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
+
 @override_settings(
-	MEDIA_ROOT=os.path.join(settings.BASE_DIR, 'bookshot/tests/media'), 
+	MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), 
 	**revert_aws_settings)
 class QuoteImageFieldTestCase(TestCase):
 	def setUp(self):
@@ -37,12 +44,21 @@ class QuoteImageFieldTestCase(TestCase):
 		except:
 			pass
 
-	def test_saving_photo_field(self):
+	def test_saving_photo_field_text_file(self):
 		self.quote.photo = SimpleUploadedFile('best_file_eva.txt', b'these are the file contents!')
 		self.quote.save()
-		print('file saved:', self.quote.photo.path)
+		#print('file saved:', self.quote.photo.path)
 
 		exists = os.path.exists(self.quote.photo.path)
 		self.assertTrue(exists)
 		
+	def test_saving_photo_field_image_file(self):
+		image_content = open(IMAGE_FILEPATH, 'rb').read()
+		self.quote.photo = SimpleUploadedFile(name='IMG_6114.jpg', content=image_content, content_type='image/jpeg')
+		self.quote.save()
+
+		# open saved image
+		im = Image.open(self.quote.photo.path)
+		self.assertEqual(im.filename, os.path.realpath('bookshot/tests/media/bookshot/IMG_6114.jpg'))
+		self.assertEqual(im.size, (3264,2448))
 
