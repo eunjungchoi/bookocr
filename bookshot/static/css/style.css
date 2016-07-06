@@ -196,6 +196,7 @@ nav#nav {
 	}
 	.crop-tool-layer .cropper-button {
 		max-width: 100%;
+		width: 54px;
 	}
 
 

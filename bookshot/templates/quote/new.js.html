@@ -6,48 +6,65 @@ function handleFiles(files) {
     // render preview
     var $preview = $('.image-preview-container'),
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
+    var $textarea = $('textarea[name="quotation"]');
     renderImagePreview(files, $preview, $inner)
         .then(function(imgEl) {
             return activateOCR(imgEl);
+        })
+        .then(function(ocrResult) {
+            // update text
+            var text = ocrResult.text;
+            $textarea.val(text);
+
+            // focus
+            $textarea[0].focus();
+
+            // highlight
+            var $flasher = $('<div class="flasher form-control" />').css({
+                'position': 'absolute',
+                'width': 'calc(100% - 30px)',
+                'height': '100%',
+                'top': '0',
+                'left': '0',
+                'margin': '0 15px',
+                'background-color': 'yellow',
+            }).hide();
+            $textarea.after($flasher);
+            $flasher.show().fadeOut('slow');
         })
     ;
 }
 
 function activateOCR(imgEl) {
-    //// show cropper
-    //var cropper = initCropper($preview);
-    //cropper.on('select', function(ev) {
-    //    var selectedArea;
+    var dfd = $.Deferred();
 
-    //    postTextDetection(selectedArea)
-    //        .then(function(recognizedText) {
+    try {
+        var $img     = $(imgEl),
+            $wrapper = $img.parent();
+        
+        // show cropper
+        var cropper = initCropper($img, $wrapper);
+        
+        // bind crop toolbar
+            var $toolbar = addCropToolbar(cropper, $wrapper, $img, function(ocrResult) {
+                dfd.resolve(ocrResult);
+            });
 
-    //            // render to textarea
+        // select default cropped area
+        var width  = $img.width(),
+            height = $img.height();
+        var selectRect = { // blindly select (15~-15%, 25~-25%)
+            x: width * 0.15, 
+            w: width * (1 - (0.15)*2),
+            y: height * 0.25,
+            h: height * (1.0 - (0.25)*2),
+        };
+        cropper.select(selectRect);
 
-    //        });
-    //});
-
-    var $img     = $(imgEl),
-        $wrapper = $img.parent();
-    
-    // show cropper
-    var cropper = initCropper($img, $wrapper);
-    
-    // bind toolbar
-    var $toolbar = addCropToolbar(cropper, $wrapper, $img)
-
-    // select default cropped area
-    var width  = $img.width(),
-        height = $img.height();
-    var selectRect = { // blindly select (15~-15%, 25~-25%)
-        x: width * 0.15, 
-        w: width * (1 - (0.15)*2),
-        y: height * 0.25,
-        h: height * (1.0 - (0.25)*2),
-    };
-    cropper.select(selectRect);
-
-    return cropper;
+    } catch(err) {
+        dfd.reject(err);
+    }
+    return dfd.promise();
 }
 
 // add selected image to preview
@@ -148,7 +165,7 @@ function initCropper($img, $parent) {
     return cropper;
 }
 
-function addCropToolbar(cropper, $wrap, $img) {
+function addCropToolbar(cropper, $wrap, $img, onOCR) {
     // render save button
     var imgSrc = '';//$img.attr('src');
 
@@ -171,7 +188,7 @@ function addCropToolbar(cropper, $wrap, $img) {
                 ($cropInfo = $(`<span class="crop-info"></span>`)),
                 $(`<div class="cropper-button-wrapper"></div>`).append(
                     ($saveBtn = $(`
-                        <button class="cropper-button btn btn-xs" target="_blank">자동인식</button>
+                        <button class="cropper-button btn btn-xs" data-loading-text="인식중...">자동인식</button>
                     `))
                 )
             ])
@@ -183,30 +200,33 @@ function addCropToolbar(cropper, $wrap, $img) {
     $saveBtn.on('click', function(ev) {
         console.log('click:', ev);
         ev.preventDefault();
-        //if (_isSaving) { return }
+        if (_isSaving) { return }
 
-        //// POST image
-        //const pageMeta = C.getPageMeta();
-        //var imgData = $form.serializeArray()
-        //    .reduce((memo, obj) => {
-        //        memo[obj.name] = obj.value;
-        //        return memo;
-        //    }, { 
-        //        page_meta: pageMeta,
-        //    });
-        ////
-        //image_store.post(imgData);
-        //_isSaving = true;
+        // POST image
+        var imgData = $form.serializeArray().reduce((memo, obj) => {
+            memo[obj.name] = obj.value;
+            return memo;
+        });
+        var pr = postOCR(imgData);
 
-        ////
-        //moveCloneFx(cropper.$selection(), imgSrc);
+        _isSaving = true;
+        $saveBtn.button('loading')
 
-        //$saveBtn.addClass(C.C_DISABLED);
+        pr.then(function(ocrResult) {
+            _isSaving = false;
+            $saveBtn.button('reset')
+
+            //
+            if (typeof onOCR === 'function') {
+                onOCR(ocrResult);
+            }
+
+        }, function(err) {
+            console.error(err);
+
+            _isSaving = false;
+        });
     });
-    //image_store.on('post post:fail', function() {
-    //    _isSaving = false;
-    //    $saveBtn.removeClass(C.C_DISABLED);
-    //});
 
     //
     // cropper events
@@ -237,6 +257,18 @@ function addCropToolbar(cropper, $wrap, $img) {
     });
 
     return $toolbar;
+}
+
+function postOCR(imgData) {
+    var dfd = jQuery.Deferred();
+
+    setTimeout(function() {
+        dfd.resolve({
+            text: '봐! 나는 살or있어'
+        });
+    }, 3000 + (Math.random() * 1000) - 500)
+
+    return dfd.promise();
 }
 
 
