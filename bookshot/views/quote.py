@@ -27,7 +27,7 @@ def add(request):
 
 
 @login_required
-def test_new_quote(request):
+def new(request):
 	#recent_books = request.user.recent_books()[:3]
 	recent_books = ('살인자의 기억법', '스토너')
 

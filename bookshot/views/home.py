@@ -9,7 +9,7 @@ from bookshot.models import *
 
 
 @login_required
-def index(request):
+def _index(request):
 	quote_list = Quote.objects.filter(user=request.user).order_by('-id')
 	user = request.user
 	social = user.social_auth.get()
@@ -23,8 +23,8 @@ def index(request):
 	}
 	return render(request, 'index.html', context)
 
-
-def test_index(request):
+@login_required
+def index(request):
 	quote_list = Quote.objects.order_by('-id')
 
 	context = {
@@ -36,3 +36,4 @@ def test_index(request):
 @login_required
 def detail(request):
 	pass
+

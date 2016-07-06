@@ -5,16 +5,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-from bookshot.models import *
+
+
+def log_in(request):
+	if request.user.is_authenticated():
+		return redirect(reverse('index'))
+	return render(request, 'login.html')
 
 
 @login_required
-def test_me(request):
-	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
-	user = request.user
+def log_out(request):
+	logout(request)
+	return redirect(reverse('log_in'))
 
-	context = {
-		'quote_list' : quote_list,
-		'user' : user,
-	}
-	return render(request, '_client/user.html', context)

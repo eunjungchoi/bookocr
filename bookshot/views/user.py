@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import loader
@@ -7,22 +5,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-
 from bookshot.models import *
 
 
-
 @login_required
-def bookform(request):
-	return render(request,'bookform.html')
+def me(request):
+	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
+	user = request.user
 
-
-@login_required
-def add_book(request):
-	title = request.POST.get('title', False)
-	b = Book(
-		title=title
-		)
-	b.save()
-
-	return redirect(reverse('index'))
+	context = {
+		'quote_list' : quote_list,
+		'user' : user,
+	}
+	return render(request, '_client/user.html', context)
