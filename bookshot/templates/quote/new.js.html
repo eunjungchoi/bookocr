@@ -188,7 +188,7 @@ function addCropToolbar(cropper, $wrap, $img, onOCR) {
                 ($cropInfo = $(`<span class="crop-info"></span>`)),
                 $(`<div class="cropper-button-wrapper"></div>`).append(
                     ($saveBtn = $(`
-                        <button class="cropper-button btn btn-xs" data-loading-text="인식중...">자동인식</button>
+                        <button class="cropper-button btn btn-xs" data-loading-text="인식중 <i class='glyphicon glyphicon-refresh'></i>">자동인식</button>
                     `))
                 )
             ])
@@ -210,7 +210,7 @@ function addCropToolbar(cropper, $wrap, $img, onOCR) {
         var pr = postOCR(imgData);
 
         _isSaving = true;
-        $saveBtn.button('loading')
+        $saveBtn.button('loading');
 
         pr.then(function(ocrResult) {
             _isSaving = false;

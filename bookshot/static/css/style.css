@@ -199,4 +199,13 @@ nav#nav {
 		width: 54px;
 	}
 
+	.cropper-button.disabled {
+		padding: 1px 3px;
+	}
+		.cropper-button.disabled .glyphicon-refresh {
+			-animation: spin 1.7s infinite linear;
+			-webkit-animation: spin-webkit 1.7s infinite linear;
+		}
+
+
 
