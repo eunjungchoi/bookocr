@@ -29,5 +29,5 @@ def new(request):
 	context = {
 		recent_books: recent_books,
 	}
-	return render(request, '_client/new_quote.html', context)
+	return render(request, 'new_quote.html', context)
 

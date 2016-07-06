@@ -30,7 +30,7 @@ def index(request):
 	context = {
 		'quote_list' : quote_list,
 	}
-	return render(request, '_client/index.html', context)
+	return render(request, 'index.html', context)
 	
 
 @login_required

@@ -17,4 +17,4 @@ def me(request):
 		'quote_list' : quote_list,
 		'user' : user,
 	}
-	return render(request, '_client/user.html', context)
+	return render(request, 'user.html', context)
