@@ -86,6 +86,8 @@ nav#nav {
 
 		min-height: 200px;
 
+		padding: 4px;
+
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		border-top-left-radius: 0;
@@ -151,6 +153,7 @@ nav#nav {
 		position: relative;
 
 		margin-bottom: 0;
+		padding: 0;
 
 		background-color: transparent; /* show blue-ish on dragging */
 		border: none;
@@ -164,4 +167,35 @@ nav#nav {
 }
 .file-drop-box {
 }
+
+
+.image-preview-container-inner .crop-tool-layer {
+	display: block;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: relative;
+}
+	.crop-tool-layer .crop-info {
+		display: inline-block;
+		padding: 2px 5px;
+		color: grey;
+	}
+	.crop-tool-layer .cropper-button {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+
+		background-color: white;
+	}
+
+	/* don't over-show on small size */
+	.crop-tool-layer {
+		overflow: hidden;
+	}
+	.crop-tool-layer .crop-info {
+		white-space: nowrap;
+	}
+	.crop-tool-layer .cropper-button {
+		max-width: 100%;
+	}
+
 

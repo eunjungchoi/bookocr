@@ -8,7 +8,7 @@ function handleFiles(files) {
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
     renderImagePreview(files, $preview, $inner)
         .then(function(imgEl) {
-            //activateOCR(imgEl);
+            return activateOCR(imgEl);
         })
     ;
 }
@@ -27,9 +27,27 @@ function activateOCR(imgEl) {
     //        });
     //});
 
-    var $img = $(imgEl);
-    var cropper = initCropper($img);
-    var $toolbar = addCropToolbar(cropper, $img.parent(), $img)
+    var $img     = $(imgEl),
+        $wrapper = $img.parent();
+    
+    // show cropper
+    var cropper = initCropper($img, $wrapper);
+    
+    // bind toolbar
+    var $toolbar = addCropToolbar(cropper, $wrapper, $img)
+
+    // select default cropped area
+    var width  = $img.width(),
+        height = $img.height();
+    var selectRect = { // blindly select (15~-15%, 25~-25%)
+        x: width * 0.15, 
+        w: width * (1 - (0.15)*2),
+        y: height * 0.25,
+        h: height * (1.0 - (0.25)*2),
+    };
+    cropper.select(selectRect);
+
+    return cropper;
 }
 
 // add selected image to preview
@@ -110,9 +128,7 @@ function bindDragNDrop($dropbox) {
 	;
 }
 
-function initCropper($img) {
-    var $parent = $img.parent();
-
+function initCropper($img, $parent) {
     // cropper
     var cropper = new Cropper();
     $parent.data('cropper', cropper);
@@ -134,7 +150,7 @@ function initCropper($img) {
 
 function addCropToolbar(cropper, $wrap, $img) {
     // render save button
-    var imgSrc = $img.attr('src');
+    var imgSrc = '';//$img.attr('src');
 
     var $form;
     var $cropInfo,
@@ -142,7 +158,7 @@ function addCropToolbar(cropper, $wrap, $img) {
         $description
     ;
     var $toolbar = $(`
-        <div class="tool-layer"></div>
+        <div class="crop-tool-layer"></div>
     `).append(
         ($form = $(`
             <form method="POST">
@@ -155,7 +171,7 @@ function addCropToolbar(cropper, $wrap, $img) {
                 ($cropInfo = $(`<span class="crop-info"></span>`)),
                 $(`<div class="cropper-button-wrapper"></div>`).append(
                     ($saveBtn = $(`
-                        <button class="cropper-button" target="_blank">Save</button>
+                        <button class="cropper-button btn btn-xs" target="_blank">자동인식</button>
                     `))
                 )
             ])
@@ -210,7 +226,9 @@ function addCropToolbar(cropper, $wrap, $img) {
             .find('input[name="y"]').val(y).end()
             .find('input[name="w"]').val(w).end()
             .find('input[name="h"]').val(h).end();
-        $cropInfo.text(`x ${x} y ${y} w ${w} h ${h}`);
+
+        var cropInfoText = `x ${x} y ${y} w ${w} h ${h}`;
+        $cropInfo.attr('title', cropInfoText).text(cropInfoText);
 
         //
         $toolbar
