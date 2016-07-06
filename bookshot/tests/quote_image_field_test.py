@@ -62,3 +62,38 @@ class QuoteImageFieldTestCase(TestCase):
 		self.assertEqual(im.filename, os.path.realpath('bookshot/tests/media/bookshot/IMG_6114.jpg'))
 		self.assertEqual(im.size, (3264,2448))
 
+
+
+@override_settings(
+	MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), 
+	**revert_aws_settings)
+class QuotePhotoResizeTestCase(TestCase):
+	def setUp(self):
+		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
+		book = Book.objects.create(title="스토너")
+		self.quote = Quote(
+			user=user,
+			book=book,
+			quotation="봐, 나는 살아있어!"
+		)
+		self.image_content = open(IMAGE_FILEPATH, 'rb').read()
+
+	def tearDown(self):
+		try:
+			os.remove(self.quote.photo.path)
+		except:
+			pass
+
+
+	def test_resize_huge_image(self):
+		self.quote.photo = SimpleUploadedFile(name='IMG_6114.jpg', content=self.image_content, content_type='image/jpeg')
+
+		self.quote.resize_photo(max_width=640, max_height=640)
+		self.quote.save()
+
+		# open saved image
+		im = Image.open(self.quote.photo.path)
+		self.assertEqual(im.width, 640)
+		self.assertTrue(im.height <= 640)
+		
+
