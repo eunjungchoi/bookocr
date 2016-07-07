@@ -25,9 +25,7 @@ TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
 # fixture image file
 IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
 
-@override_settings(
-	MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), 
-	**revert_aws_settings)
+@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), **revert_aws_settings)
 class QuoteImageFieldTestCase(TestCase):
 	def setUp(self):
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
@@ -64,9 +62,7 @@ class QuoteImageFieldTestCase(TestCase):
 
 
 
-@override_settings(
-	MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), 
-	**revert_aws_settings)
+@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), **revert_aws_settings)
 class QuotePhotoResizeTestCase(TestCase):
 	def setUp(self):
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
@@ -88,12 +84,12 @@ class QuotePhotoResizeTestCase(TestCase):
 	def test_resize_huge_image(self):
 		self.quote.photo = SimpleUploadedFile(name='IMG_6114.jpg', content=self.image_content, content_type='image/jpeg')
 
+		# resize
 		self.quote.resize_photo(max_width=640, max_height=640)
 		self.quote.save()
 
-		# open saved image
+		# assert: open saved image
 		im = Image.open(self.quote.photo.path)
 		self.assertEqual(im.width, 640)
 		self.assertTrue(im.height <= 640)
-		
 
