@@ -44,6 +44,10 @@ def resize_image(file_path, resized_file_path):
 
 @login_required
 def add(request):
+	book, created = Book.objects.get_or_create(
+		title=request.POST['book-title']
+	)
+	
 	q = Quote.objects.create(
 		user=request.user,
 		book=book,
