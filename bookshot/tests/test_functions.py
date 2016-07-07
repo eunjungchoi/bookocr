@@ -1,10 +1,9 @@
 from unittest import TestCase
-from bookshot.views import calculate_size, resize_image
+from bookshot.views.quote import calculate_size, resize_image
 import os
 
 
 class ImageTestCase(TestCase):
-
 	maxDiff = None
 
 	def setUp(self):
