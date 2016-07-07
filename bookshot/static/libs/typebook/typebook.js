@@ -34,13 +34,6 @@
         engine.init();
 
         // 2. typeahead
-<<<<<<< HEAD
-        //var args = Array.prototype.slice.apply(arguments);
-        //args.shift();
-        //args.shift();
-        //var $typebook = $el.typeahead.apply($el, args);
-=======
->>>>>>> origin/master
         $typebook = $el.typeahead(options, _.assign({
             name: 'book',
             source: engine.source({ $typebook: $($el) }),
