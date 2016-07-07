@@ -5,7 +5,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
 from PIL import Image
 
-from django.conf import settings
 from django.contrib.auth.models import User
 
 from bookshot.models import Book, Quote
@@ -25,6 +24,9 @@ TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
 # fixture image file
 IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
 
+
+#
+# for demonstration purpose. see QuotePhotoResizeTestCase below for actualy test code
 @override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), **revert_aws_settings)
 class QuoteImageFieldTestCase(TestCase):
 	def setUp(self):
