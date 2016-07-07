@@ -1,13 +1,15 @@
 <script type="text/javascript">
 
 function handleFiles(files) {
+    // display file info
+    $('.file-info').text(files[0].name);
+
     // render preview
     var $preview = $('.image-preview-container'),
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
     var $textarea = $('textarea[name="quotation"]');
     renderImagePreview(files, $preview, $inner)
         .then(function(imgEl) {
-            return; // XXX
             return activateOCR(imgEl).then(function(ocrResult) {
                 // update text
                 var text = ocrResult.text;
@@ -44,9 +46,9 @@ function activateOCR(imgEl) {
         var cropper = initCropper($img, $wrapper);
         
         // bind crop toolbar
-            var $toolbar = addCropToolbar(cropper, $wrapper, $img, function(ocrResult) {
-                dfd.resolve(ocrResult);
-            });
+        var $toolbar = addCropToolbar(cropper, $wrapper, $img, function(ocrResult) {
+            dfd.resolve(ocrResult);
+        });
 
         // select default cropped area
         var width  = $img.width(),
@@ -88,7 +90,7 @@ function renderImagePreview(files, $container, $inner) {
         img.classList.add("obj");
         img.file = file;
         img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
-    $inner.append(img); // Assuming that "preview" is the div output where the content will be displayed.
+    $inner.append($('<div class="image-wrapper" />').append(img)); // Assuming that "preview" is the div output where the content will be displayed.
 
     // build reader
     var reader = new FileReader();
@@ -349,6 +351,7 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     });
     $dropZone.on("drop", function (e) {
         $dropZone.removeClass(mouseOverClass);
+        $inputFile.offset({top: 0, left: 0}); // reset input position.
     });
 
     // $input follows inside $clickZone. makes it clickable.
