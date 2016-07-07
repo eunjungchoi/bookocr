@@ -79,55 +79,86 @@ nav#nav {
  */
 
 .image-preview-container {
+	position: relative;
 }
-.file-drop-box {
-	min-height: 200px;
+	.image-preview-container-inner {
+		position: relative;
 
-	display: block;
-	/*width: 100%;*/
-	/*height: 34px;*/
-	padding: 6px 12px;
-	font-size: 14px;
-	line-height: 1.42857143;
-	color: #555;
-	background-color: #fff;
-	background-image: none;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	background-color: white;
-}
-	.file-drop-box.is-dragging-in {
+		min-height: 200px;
+
+		padding: 4px;
+
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		border-top-style: none;
+
+		background-color: white;
+	}
+
+	.file-droppable.is-dragging-in .image-preview-container-inner {
 		border-color: rgba(9, 80, 208, 1.0);
 		background-color: rgba(9, 80, 208, 0.2);
 	}
 
-	.file-drop-box .guide {
-		text-align: center;
-	}
-	.file-drop-box .guide i {
-		vertical-align: middle;
-		margin-top: 75px;
-		font-size: 30px;
-	}
-	.file-drop-box .guide p {
-		line-height: 3;
-	}
 
+	.file-droppable .file-drop-box {
+	}
 	.file-drop-box {
-		background-repeat: no-repeat;
-		background-image: url(/static/images/drop-guide.png);
-		background-position-x: center;
-		background-position-y: center;
-	}
-	.file-drop-box .guide {
-		visibility: hidden;
+		display: block;
+		position: absolute;
+		width: 100%;
+
+		/*height: 34px;*/
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.42857143;
+		color: #555;
+		background-color: transparent;
+		background-image: none;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+
+		-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+		-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	}
 
+		.file-drop-box .guide {
+			text-align: center;
+		}
+		.file-drop-box .guide i {
+			vertical-align: middle;
+			margin-top: 75px;
+			font-size: 30px;
+		}
+		.file-drop-box .guide p {
+			line-height: 3;
+		}
+
+		/*
+		.file-drop-box {
+			background-repeat: no-repeat;
+			background-image: url(/static/images/drop-guide.png);
+			background-position-x: center;
+			background-position-y: center;
+		}
+		.file-drop-box .guide {
+			visibility: hidden;
+		}
+		*/
+
+	.image-preview-container .thumbnail {
+		position: relative;
+
+		margin-bottom: 0;
+		padding: 0;
+
+		background-color: transparent; /* show blue-ish on dragging */
+		border: none;
+		box-shadow: none;
+	}
 
 
 .photo-form-control.form-control {
@@ -135,8 +166,46 @@ nav#nav {
     border-bottom-right-radius: 0;
 }
 .file-drop-box {
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-	border-top-style: none;
 }
+
+
+.image-preview-container-inner .crop-tool-layer {
+	display: block;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: relative;
+}
+	.crop-tool-layer .crop-info {
+		display: inline-block;
+		padding: 2px 5px;
+		color: grey;
+	}
+	.crop-tool-layer .cropper-button {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+
+		background-color: white;
+	}
+
+	/* don't over-show on small size */
+	.crop-tool-layer {
+		overflow: hidden;
+	}
+	.crop-tool-layer .crop-info {
+		white-space: nowrap;
+	}
+	.crop-tool-layer .cropper-button {
+		max-width: 100%;
+		width: 54px;
+	}
+
+	.cropper-button.disabled {
+		padding: 1px 3px;
+	}
+		.cropper-button.disabled .glyphicon-refresh {
+			-animation: spin 1.7s infinite linear;
+			-webkit-animation: spin-webkit 1.7s infinite linear;
+		}
+
+
 
