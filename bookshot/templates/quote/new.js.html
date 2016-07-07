@@ -1,36 +1,34 @@
 <script type="text/javascript">
 
 function handleFiles(files) {
-    // post to server AJAX
-
     // render preview
     var $preview = $('.image-preview-container'),
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
     var $textarea = $('textarea[name="quotation"]');
     renderImagePreview(files, $preview, $inner)
         .then(function(imgEl) {
-            return activateOCR(imgEl);
-        })
-        .then(function(ocrResult) {
-            // update text
-            var text = ocrResult.text;
-            $textarea.val(text);
+            return; // XXX
+            return activateOCR(imgEl).then(function(ocrResult) {
+                // update text
+                var text = ocrResult.text;
+                $textarea.val(text);
 
-            // focus
-            $textarea[0].focus();
+                // focus
+                $textarea[0].focus();
 
-            // highlight
-            var $flasher = $('<div class="flasher form-control" />').css({
-                'position': 'absolute',
-                'width': 'calc(100% - 30px)',
-                'height': '100%',
-                'top': '0',
-                'left': '0',
-                'margin': '0 15px',
-                'background-color': 'yellow',
-            }).hide();
-            $textarea.after($flasher);
-            $flasher.show().fadeOut('slow');
+                // highlight
+                var $flasher = $('<div class="flasher form-control" />').css({
+                    'position': 'absolute',
+                    'width': 'calc(100% - 30px)',
+                    'height': '100%',
+                    'top': '0',
+                    'left': '0',
+                    'margin': '0 15px',
+                    'background-color': 'yellow',
+                }).hide();
+                $textarea.after($flasher);
+                $flasher.show().fadeOut('slow');
+            });
         })
     ;
 }
@@ -113,21 +111,21 @@ function renderImagePreview(files, $container, $inner) {
 
 
 function bindDragNDrop($dropbox) {
-	$dropbox
+	return $dropbox
 		.on('dragenter', function(ev) {
 			$dropbox.addClass('is-dragging-in');
-				console.log('dragenter', this, ev);
+				//console.log('dragenter', this, ev);
 			ev.preventDefault();
 			ev.stopPropagation();
 		})
 		.on('dragover', function(ev) {
-				console.log('dragover');
+				//console.log('dragover');
 			ev.preventDefault();
 			ev.stopPropagation();
 		})
 		.on('dragleave', function(ev) {
 			$dropbox.removeClass('is-dragging-in');
-				console.log('dragleave', ev);
+				//console.log('dragleave', ev);
 			ev.preventDefault();
 			ev.stopPropagation();
 		})
@@ -135,6 +133,8 @@ function bindDragNDrop($dropbox) {
 			ev.preventDefault();
 			ev.stopPropagation();
 			$dropbox.removeClass('is-dragging-in');
+
+            // XXX: this doesn't set the files input
 
 			var dt = ev.originalEvent.dataTransfer;
 			var files = dt.files;
@@ -319,12 +319,85 @@ function bindTypebook($el) {
 }
 
 
-$(function() {
-	//
-    var $droppable = $('.file-droppable');
-	bindDragNDrop($droppable);
+function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
+    var ooleft    = $dropZone.offset().left;
+    var ooright   = $dropZone.outerWidth() + ooleft;
+    var ootop     = $dropZone.offset().top;
+    var oobottom  = $dropZone.outerHeight() + ootop;
 
-	//
+    // $input follows on drag
+    $dropZone.on("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $dropZone.addClass(mouseOverClass);
+
+        var x = e.pageX;
+        var y = e.pageY;
+
+        var top, left;
+        if (ooleft <= x&&x <= ooright && ootop <= y&&y <= oobottom) {
+            top  = y - 15;
+            left = x - 100;
+        } else {
+            top  = -400;
+            left = -400;
+        }
+        $inputFile.offset({ top: top, left: left });
+    });
+    $dropZone.on("dragleave", function (e) {
+        $dropZone.removeClass(mouseOverClass);
+    });
+    $dropZone.on("drop", function (e) {
+        $dropZone.removeClass(mouseOverClass);
+    });
+
+    // $input follows inside $clickZone. makes it clickable.
+    if ($clickZone && $clickZone.length > 0) {
+        var oleft   = $clickZone.offset().left;
+        var oright  = $clickZone.outerWidth() + oleft;
+        var otop    = $clickZone.offset().top;
+        var obottom = $clickZone.outerHeight() + otop;
+
+        $clickZone.mousemove(function (e) {
+            var x = e.pageX;
+            var y = e.pageY;
+            if (!(x < oleft || x > oright || y < otop || y > obottom)) {
+                $inputFile.offset({ top: y - 15, left: x - 160 });
+            } else {
+                $inputFile.offset({ top: -400, left: -400 });
+            }
+        });
+    }
+
+    return $dropZone;
+}
+
+
+// files input DnD
+$(function() {
+    var $droppable = $('.file-droppable');
+
+    // directly set dragover and drop
+	//bindDragNDrop($droppable);
+
+    // files input follows drag
+    var $inner  = $('.image-preview-container-inner');
+    var $inputFile = $('input#photo').css({
+        'position': 'absolute',
+        'opacity': 0,
+        //'width': '0.1px',
+        //'height': '0.1px',
+        //'overflow': 'hidden',
+        //'z-index': '-1', // XXX: cannot drop
+    }).appendTo($inner);
+    var $label = $inner.find('label[for="photo"]');
+    var $clickZone = null;
+    inputFollowsDrag($droppable, $clickZone, $inputFile, 'is-dragging-in');
+});
+
+
+// book type
+$(function() {
     var $bookInput = $('input[name="book-title"]');
 	bindTypebook($bookInput);
 });

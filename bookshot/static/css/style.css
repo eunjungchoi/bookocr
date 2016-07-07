@@ -97,11 +97,6 @@ nav#nav {
 		background-color: white;
 	}
 
-	.file-droppable.is-dragging-in .image-preview-container-inner {
-		border-color: rgba(9, 80, 208, 1.0);
-		background-color: rgba(9, 80, 208, 0.2);
-	}
-
 
 	.file-droppable .file-drop-box {
 		position: absolute;
@@ -120,6 +115,18 @@ nav#nav {
 		border-radius: 5px;
 	}
 
+
+	.file-droppable.is-dragging-in .image-preview-container-inner {
+		border-color: rgba(9, 80, 208, 1.0);
+		background-color: rgba(9, 80, 208, 0.2);
+	}
+	/* let guide be clickable */
+	.file-drop-box .guide:hover {
+		cursor: pointer;
+
+		border-color: rgba(9, 80, 208, 1.0);
+		background-color: rgba(9, 80, 208, 0.2);
+	}
 
 	/* override with image */
 	/*
