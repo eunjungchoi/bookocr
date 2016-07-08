@@ -25,10 +25,15 @@ class CalculateSizeTestCase(TestCase):
 		self.assertEqual(width, 640)
 		self.assertEqual(height, 640)
 
-	def test_keeps_ratio_of_original_size(self):
+	def test_keeps_ratio_of_original_size_when_landscape(self):
 		width, height = calculate_size(850, 567)
 		self.assertEqual(width, 640)
 		self.assertEqual(height, 426)
+
+	def test_keeps_ratio_of_original_size_when_portrait(self):
+		width, height = calculate_size(567, 850)
+		self.assertEqual(width, 426)
+		self.assertEqual(height, 640)
 
 	def test_pass_max_size_as_param(self):
 		width, height = calculate_size(850, 567, max_size=(850, 850))
@@ -52,5 +57,8 @@ class ResizeImageTestCase(TestCase):
 		image = Image.open(self.image_filename)
 		self.assertTrue(image.width > 640)
 		self.assertEqual(resized_image.width, 640)
+		self.assertTrue(resized_image.height < 640)
+
+
 
 

@@ -19,10 +19,10 @@ def calculate_size(width, height, max_size=(640, 640)):
 		new_height = height
 	elif width > height:
 		new_width = max_width
-		new_height = max_height / image_ratio 
+		new_height = new_width / image_ratio 
 	else: 
 		new_height = max_height
-		new_width  = max_width / image_ratio
+		new_width  = new_height * image_ratio
 
 	return int(new_width), int(new_height)
 
