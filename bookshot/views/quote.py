@@ -9,8 +9,8 @@ from datetime import date
 from PIL import Image
 from bookshot.models import *
 
-def calculate_size(width, height):
-	max_width, max_height = (640, 640)
+def calculate_size(width, height, max_size=(640, 640)):
+	max_width, max_height = max_size
 
 	image_ratio = width / float(height)
 
@@ -19,17 +19,16 @@ def calculate_size(width, height):
 		new_height = height
 	elif width > height:
 		new_width = max_width
-		new_height = max_height / image_ratio 
+		new_height = new_width / image_ratio 
 	else: 
 		new_height = max_height
-		new_width  = max_width / image_ratio
+		new_width  = new_height * image_ratio
 
 	return int(new_width), int(new_height)
 
 
 def resize_image(file_path, resized_file_path):
 	from PIL import Image
-	import os
 
 	image = Image.open(file_path)
 
@@ -40,6 +39,17 @@ def resize_image(file_path, resized_file_path):
 	resized_image.save(resized_file_path)
 
 	return resized_image
+
+
+def crop_image(file_path, cropped_file_path, box):
+	from PIL import Image
+
+	image = Image.open(file_path)
+
+	cropped_image = image.crop(box)
+	cropped_image.save(cropped_file_path)
+
+	return cropped_image
 
 
 @login_required
