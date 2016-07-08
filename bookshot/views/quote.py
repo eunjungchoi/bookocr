@@ -29,7 +29,6 @@ def calculate_size(width, height, max_size=(640, 640)):
 
 def resize_image(file_path, resized_file_path):
 	from PIL import Image
-	import os
 
 	image = Image.open(file_path)
 
@@ -40,6 +39,17 @@ def resize_image(file_path, resized_file_path):
 	resized_image.save(resized_file_path)
 
 	return resized_image
+
+
+def crop_image(file_path, cropped_file_path, box):
+	from PIL import Image
+
+	image = Image.open(file_path)
+
+	cropped_image = image.crop(box)
+	cropped_image.save(cropped_file_path)
+
+	return cropped_image
 
 
 @login_required
