@@ -9,8 +9,8 @@ from datetime import date
 from PIL import Image
 from bookshot.models import *
 
-def calculate_size(width, height):
-	max_width, max_height = (640, 640)
+def calculate_size(width, height, max_size=(640, 640)):
+	max_width, max_height = max_size
 
 	image_ratio = width / float(height)
 
