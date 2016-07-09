@@ -225,12 +225,19 @@ nav#nav {
 
 .image-preview-container-inner .crop-tool-layer {
 	display: block;
+    position: absolute;
+	width: 100%;
+
     background-color: rgba(0, 0, 0, 0.6);
-    position: relative;
 }
 	.crop-tool-layer .crop-info {
 		display: inline-block;
 		padding: 2px 5px;
+
+		font-family: sans-serif;
+		font-size: 11px;
+		line-height: 20px;
+
 		color: grey;
 	}
 	.crop-tool-layer .cropper-button {
