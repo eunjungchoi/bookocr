@@ -1,5 +1,4 @@
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed
 from django.template import loader
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -76,6 +75,10 @@ def ocr_new(request, book_id, quote_id):
 
 @login_required
 def ocr_update(request, book_id, quote_id):
+	if request.method != 'POST':
+		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
+
+	#
 	book  = get_object_or_404(Book, pk=book_id)
 	quote = get_object_or_404(Quote, pk=quote_id)
 
@@ -88,6 +91,7 @@ def ocr_update(request, book_id, quote_id):
 		'h': request.POST['crop-h'],
 	}
 
+	# update quote
 	quote.quotation = q_text
 	#quote._crop_info = crop_rect
 	#quote._ocr_raw_response = request.POST['ocr_raw_response']
