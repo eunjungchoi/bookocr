@@ -65,8 +65,8 @@ class Quote(models.Model):
 
 class Book(models.Model):
 	title = models.CharField(max_length=30)
-	isbn13 = models.CharField(max_length=13, null=False, blank=True)
-	cover_url = models.URLField(max_length=300, null=True, blank=True)
+	isbn13 = models.CharField(max_length=13, null=False, blank=True, default="0000000000000")
+	cover_url = models.URLField(max_length=300, null=True, blank=True, default=None)
 	_raw_response = JSONField(null=True, blank=True, default=None)
 
 	readers = models.ManyToManyField(User)
