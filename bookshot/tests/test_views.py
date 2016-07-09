@@ -1,12 +1,12 @@
 import os
 
-from django.test import TestCase
-from django.test import Client
+from django.test import TestCase, Client, RequestFactory
 
 from django.core.urlresolvers import resolve,reverse
 from django.contrib.auth.models import AnonymousUser, User
 from social.apps.django_app.default.models import UserSocialAuth
 
+from bookshot.views import home
 from bookshot.models import Quote, Book
 
 
@@ -38,4 +38,21 @@ class HomeTestCase(TestCase):
 		#
 		response = self.client.get('/')
 		self.assertEqual(response.status_code, 200)
+
+	def test_logged_in_user_with_request_factory(self):
+		user = create_user()
+
+		# Create an instance of a GET request.
+		factory = RequestFactory()
+		request = factory.get('/')
+
+		# Recall that middleware are not supported. You can simulate a
+		# logged-in user by setting request.user manually.
+		request.user = user
+
+		# test view
+		response = home.index(request)
+
+		self.assertEqual(response.status_code, 200)
+
 
