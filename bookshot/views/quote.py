@@ -34,7 +34,12 @@ def add(request):
 		quotation=request.POST['quotation'],
 	)
 
-	#
+	# TO DO 
+	# q.isbn13 =
+	# q.cover_url = 
+	# q._raw_response =
+	# q.save()
+	
 	Quote.resize_image(q.photo.path, q.photo.path)
 
 	#return redirect(reverse('index'))
