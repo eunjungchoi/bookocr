@@ -9,36 +9,6 @@ from datetime import date
 from PIL import Image
 from bookshot.models import *
 
-# def calculate_size(width, height, max_size=(640, 640)):
-# 	max_width, max_height = max_size
-
-# 	image_ratio = width / float(height)
-
-# 	if width < max_width and height < max_height:
-# 		new_width = width
-# 		new_height = height
-# 	elif width > height:
-# 		new_width = max_width
-# 		new_height = new_width / image_ratio 
-# 	else: 
-# 		new_height = max_height
-# 		new_width  = new_height * image_ratio
-
-# 	return int(new_width), int(new_height)
-
-
-# def resize_image(file_path, resized_file_path):
-# 	from PIL import Image
-
-# 	image = Image.open(file_path)
-
-# 	image_width, image_height = image.size
-# 	new_width, new_height = calculate_size(image_width, image_height)
-
-# 	resized_image = image.resize((new_width, new_height), Image.ANTIALIAS)	
-# 	resized_image.save(resized_file_path)
-
-# 	return resized_image
 
 
 def crop_image(file_path, cropped_file_path, box):
@@ -65,7 +35,7 @@ def add(request):
 	)
 
 	#
-	resize_image(q.photo.path, q.photo.path)
+	Quote.resize_image(q.photo.path, q.photo.path)
 
 	#return redirect(reverse('index'))
 	return redirect(reverse('ocr_quote', kwargs={"book_id": book.id, "quote_id": q.id}))

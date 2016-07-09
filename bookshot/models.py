@@ -14,6 +14,7 @@ class Quote(models.Model):
 	updated_at = models.DateTimeField(null=True, default=None)
 
 
+	@staticmethod
 	def calculate_image_dimension(width, height, max_size=(640, 640)):
 		max_width, max_height = max_size
 
@@ -32,6 +33,7 @@ class Quote(models.Model):
 		return int(new_width), int(new_height)
 
 
+	@staticmethod
 	def resize_image(file_path, resized_file_path):
 		from PIL import Image
 
