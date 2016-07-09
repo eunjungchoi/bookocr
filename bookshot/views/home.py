@@ -26,9 +26,14 @@ from bookshot.models import *
 @login_required
 def index(request):
 	quote_list = Quote.objects.order_by('-id')
+	
+	user = request.user
+	social = user.social_auth.get()
+	profile_picture_url = 'https://graph.facebook.com/{0}/picture'.format(social.uid)
 
 	context = {
 		'quote_list' : quote_list,
+		'profile_picture_url' : profile_picture_url,
 	}
 	return render(request, 'index.html', context)
 	
