@@ -7,65 +7,9 @@ function handleFiles(files) {
     // render preview
     var $preview = $('.image-preview-container'),
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
-    var $textarea = $('textarea[name="quotation"]');
-    renderImagePreview(files, $preview, $inner)
-        .then(function(imgEl) {
-            return activateOCR(imgEl).then(function(ocrResult) {
-                // update text
-                var text = ocrResult.text;
-                $textarea.val(text);
-
-                // focus
-                $textarea[0].focus();
-
-                // highlight
-                var $flasher = $('<div class="flasher form-control" />').css({
-                    'position': 'absolute',
-                    'width': 'calc(100% - 30px)',
-                    'height': '100%',
-                    'top': '0',
-                    'left': '0',
-                    'margin': '0 15px',
-                    'background-color': 'yellow',
-                }).hide();
-                $textarea.after($flasher);
-                $flasher.show().fadeOut('slow');
-            });
-        })
-    ;
+    var imgEl = renderImagePreview(files, $preview, $inner);
 }
 
-function activateOCR(imgEl) {
-    var dfd = $.Deferred();
-
-    try {
-        var $img     = $(imgEl),
-            $wrapper = $img.parent();
-        
-        // show cropper
-        var cropper = initCropper($img, $wrapper);
-        
-        // bind crop toolbar
-        var $toolbar = addCropToolbar(cropper, $wrapper, $img, function(ocrResult) {
-            dfd.resolve(ocrResult);
-        });
-
-        // select default cropped area
-        var width  = $img.width(),
-            height = $img.height();
-        var selectRect = { // blindly select (15~-15%, 25~-25%)
-            x: width * 0.15, 
-            w: width * (1 - (0.15)*2),
-            y: height * 0.25,
-            h: height * (1.0 - (0.25)*2),
-        };
-        cropper.select(selectRect);
-
-    } catch(err) {
-        dfd.reject(err);
-    }
-    return dfd.promise();
-}
 
 // add selected image to preview
 function renderImagePreview(files, $container, $inner) {
@@ -101,178 +45,43 @@ function renderImagePreview(files, $container, $inner) {
     })(img);
     reader.readAsDataURL(file);
 
-    // promise
-    var dfd = jQuery.Deferred();
-    reader.onerror = function(err) { dfd.reject(err) };
-
-    img.onload  = function()    { dfd.resolve(this) };
-    img.onerror = function(err) { dfd.reject(err)   };
-
-    return dfd.promise();
+    return img;
 }
 
-
-function bindDragNDrop($dropbox) {
-	return $dropbox
-		.on('dragenter', function(ev) {
-			$dropbox.addClass('is-dragging-in');
-				//console.log('dragenter', this, ev);
-			ev.preventDefault();
-			ev.stopPropagation();
-		})
-		.on('dragover', function(ev) {
-				//console.log('dragover');
-			ev.preventDefault();
-			ev.stopPropagation();
-		})
-		.on('dragleave', function(ev) {
-			$dropbox.removeClass('is-dragging-in');
-				//console.log('dragleave', ev);
-			ev.preventDefault();
-			ev.stopPropagation();
-		})
-		.on('drop', function(ev) {
-			ev.preventDefault();
-			ev.stopPropagation();
-			$dropbox.removeClass('is-dragging-in');
-
-            // XXX: this doesn't set the files input
-
-			var dt = ev.originalEvent.dataTransfer;
-			var files = dt.files;
-
-			//
-			handleFiles(files);
-		})
-	;
-}
-
-function initCropper($img, $parent) {
-    // cropper
-    var cropper = new Cropper();
-    $parent.data('cropper', cropper);
-
-    // init
-    var width  = $img.width(),
-        height = $img.height();
-    var selectRect = { // blindly select (15~-15%, 25~-25%)
-        x: width * 0.15, 
-        w: width * (1 - (0.15)*2),
-        y: height * 0.25,
-        h: height * (1.0 - (0.25)*2),
-    };
-    var fullSize = { w: width, h: height };
-    cropper.init($parent, null, null, fullSize);
-
-    return cropper;
-}
-
-function addCropToolbar(cropper, $wrap, $img, onOCR) {
-    // render save button
-    var imgSrc = '';//$img.attr('src');
-
-    var $form;
-    var $cropInfo,
-        $saveBtn,
-        $description
-    ;
-    var $toolbar = $(`
-        <div class="crop-tool-layer"></div>
-    `).append(
-        ($form = $(`
-            <form method="POST">
-                <input type="hidden" name="img_url" value="${imgSrc}" />
-                <input type="hidden" name="x" value="" />
-                <input type="hidden" name="y" value="" />
-                <input type="hidden" name="w" value="" />
-                <input type="hidden" name="h" value="" />
-            </form>`).append([
-                ($cropInfo = $(`<span class="crop-info"></span>`)),
-                $(`<div class="cropper-button-wrapper"></div>`).append(
-                    ($saveBtn = $(`
-                        <button class="cropper-button btn btn-xs" data-loading-text="인식중 <i class='glyphicon glyphicon-refresh'></i>">자동인식</button>
-                    `))
-                )
-            ])
-        )
-    );
-
-    // $saveBtn
-    var _isSaving = false;
-    $saveBtn.on('click', function(ev) {
-        console.log('click:', ev);
-        ev.preventDefault();
-        if (_isSaving) { return }
-
-        // POST image
-        var imgData = $form.serializeArray().reduce((memo, obj) => {
-            memo[obj.name] = obj.value;
-            return memo;
-        });
-        var pr = postOCR(imgData);
-
-        _isSaving = true;
-        $saveBtn.button('loading');
-
-        pr.then(function(ocrResult) {
-            _isSaving = false;
-            $saveBtn.button('reset')
-
-            //
-            if (typeof onOCR === 'function') {
-                onOCR(ocrResult);
-            }
-
-        }, function(err) {
-            console.error(err);
-
-            _isSaving = false;
-        });
-    });
-
-    //
-    // cropper events
-    //
-    cropper.on('change', function(ev, x,y,w,h) {
-        $toolbar.hide();
-    });
-    cropper.on('select:start', function(ev, x,y,w,h) {});
-    cropper.on('release', function() {});
-
-    cropper.on('select', function(ev, x,y,w,h) {
-        var $selection = cropper.$selection();
-
-        // update crop-rect info
-        $form
-            .find('input[name="x"]').val(x).end()
-            .find('input[name="y"]').val(y).end()
-            .find('input[name="w"]').val(w).end()
-            .find('input[name="h"]').val(h).end();
-
-        var cropInfoText = `x ${x} y ${y} w ${w} h ${h}`;
-        $cropInfo.attr('title', cropInfoText).text(cropInfoText);
-
-        //
-        $toolbar
-            .show()
-            .appendTo($selection);
-    });
-
-    return $toolbar;
-}
-
-function postOCR(imgData) {
-    var dfd = jQuery.Deferred();
-
-    setTimeout(function() {
-        dfd.resolve({
-            text: '봐! 나는 살or있어'
-        });
-    }, 3000 + (Math.random() * 1000) - 500)
-
-    return dfd.promise();
-}
-
+//function bindDragNDrop($dropbox) {
+//	return $dropbox
+//		.on('dragenter', function(ev) {
+//			$dropbox.addClass('is-dragging-in');
+//				//console.log('dragenter', this, ev);
+//			ev.preventDefault();
+//			ev.stopPropagation();
+//		})
+//		.on('dragover', function(ev) {
+//				//console.log('dragover');
+//			ev.preventDefault();
+//			ev.stopPropagation();
+//		})
+//		.on('dragleave', function(ev) {
+//			$dropbox.removeClass('is-dragging-in');
+//				//console.log('dragleave', ev);
+//			ev.preventDefault();
+//			ev.stopPropagation();
+//		})
+//		.on('drop', function(ev) {
+//			ev.preventDefault();
+//			ev.stopPropagation();
+//			$dropbox.removeClass('is-dragging-in');
+//
+//            // XXX: this doesn't set the files input
+//
+//			var dt = ev.originalEvent.dataTransfer;
+//			var files = dt.files;
+//
+//			//
+//			handleFiles(files);
+//		})
+//	;
+//}
 
 function bindTypebook($el) {
     //var source = new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
@@ -328,13 +137,16 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     var oobottom  = $dropZone.outerHeight() + ootop;
 
     // $input follows on drag
-    $dropZone.on("dragover", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+    $dropZone.on("dragenter", function (ev) {
+        console.log('dragenter.');
+    });
+    $dropZone.on("dragover", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
         $dropZone.addClass(mouseOverClass);
 
-        var x = e.pageX;
-        var y = e.pageY;
+        var x = ev.pageX;
+        var y = ev.pageY;
 
         var top, left;
         if (ooleft <= x&&x <= ooright && ootop <= y&&y <= oobottom) {
@@ -346,10 +158,14 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
         }
         $inputFile.offset({ top: top, left: left });
     });
-    $dropZone.on("dragleave", function (e) {
+    $dropZone.on("dragleave", function (ev) {
         $dropZone.removeClass(mouseOverClass);
     });
-    $dropZone.on("drop", function (e) {
+    $dropZone.on("drop", function (ev) {
+        console.log('drop.');
+        //ev.preventDefault();
+        //ev.stopPropagation();
+
         $dropZone.removeClass(mouseOverClass);
         $inputFile.offset({top: 0, left: 0}); // reset input position.
     });
@@ -387,7 +203,7 @@ $(function() {
     var $inner  = $('.image-preview-container-inner');
     var $inputFile = $('input#photo').css({
         'position': 'absolute',
-        'opacity': 0,
+        'opacity': 0, // 0,
         //'width': '0.1px',
         //'height': '0.1px',
         //'overflow': 'hidden',

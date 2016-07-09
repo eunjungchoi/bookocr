@@ -48,21 +48,21 @@
                     </div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group hidden">
 					<label class="control-label hidden-xs col-sm-2">문구</label>
 					<div class="col-xs-12 col-sm-10">
 						<textarea class="form-control" name="quotation" placeholder="최고의 시절이었고..."></textarea>
 					</div>
-					<!--
-					<div class="">
-                        <button type="button" class="btn"><i class="glyphicon glyphicon-eye-open"></i></button>
-					</div>
-					-->
 				</div>
 
 				<div class="form-group">
 					<div class="col-xs-12 text-right">
-						<button type="submit" class="btn btn-primary">등록</button>
+						<!--
+						<button name="save" class="btn btn-default">저장</button>
+						-->
+						<button type="submit" name="next" class="btn btn-primary">
+							다음 <i class='glyphicon glyphicon-chevron-right'></i>
+						</button>
 					</div>
 				</div>
 			</form>
@@ -89,11 +89,6 @@
 <link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
 <link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
 
-<script src="{% static 'libs/jcrop-0.9.12/js/jquery.Jcrop.js' %}"></script>
-<link href="{% static 'libs/jcrop-0.9.12/css/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css"></link>
-
-
-<script src="{% static 'js/cropper.js' %}"></script>
 {% include "quote/new.js.html" %}
 
 {% endblock content %}
