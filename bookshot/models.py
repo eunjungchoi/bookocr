@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.contrib.postgres.fields import JSONField
 
 
 class Quote(models.Model):
@@ -67,7 +66,7 @@ class Book(models.Model):
 	title = models.CharField(max_length=30)
 	isbn13 = models.CharField(max_length=13, null=False, blank=True, default="0000000000000")
 	cover_url = models.URLField(max_length=300, null=True, blank=True, default=None)
-	_raw_response = JSONField(null=True, blank=True, default=None)
+	_raw_response = models.TextField(null=True, blank=True, default=None)
 
 	readers = models.ManyToManyField(User)
 
