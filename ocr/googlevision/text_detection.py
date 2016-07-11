@@ -109,6 +109,7 @@ def highlight_faces(image, faces, output_filename):
 
 def detect_text(image_file, max_results=5, num_retries=3, **kwargs):
     ''' see https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/python/text '''
+    raise Exception("you shouldn't call this.")
     is_filename = False
     if isinstance(image_file, str):
         image_file  = open(image_file, 'rb')

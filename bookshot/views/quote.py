@@ -63,6 +63,37 @@ def ocr_update(request, book_id, quote_id):
 		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
 
 	#
+	crop_rect = {
+		'x': int(request.POST['crop-x']),
+		'y': int(request.POST['crop-y']),
+		'w': int(request.POST['crop-w']),
+		'h': int(request.POST['crop-h']),
+	}
+
+	# request
+	ocr_response = quote.read_text_from_image(crop_rect)
+	#text =  '봐, 나는 살or있어!'
+	text = ocr_response.get('responses', [{}])[0] \
+			.get('textAnnotations', [{}])[0] \
+				.get('description')
+
+	result = {
+		'uri': request.build_absolute_uri(request.path),
+		'image_url': request.build_absolute_uri(quote.photo.url),
+		'crop_rect': crop_rect,
+		'result': {
+			'text': '봐, 나는 살or있어!',
+		},
+		'response': ocr_response,
+	}
+
+	return JsonResponse(result, safe=False)
+
+
+@login_required
+def update(request, book_id, quote_id):
+	if request.method != 'POST':
+		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
 	book  = get_object_or_404(Book, pk=book_id)
 	quote = get_object_or_404(Quote, pk=quote_id)
 
