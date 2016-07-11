@@ -4,7 +4,7 @@ from django.test import TestCase, override_settings, modify_settings
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.base import ContentFile
 
-from mock import MagicMock, patch
+from mock import MagicMock, patch, ANY
 
 from PIL import Image
 
@@ -36,9 +36,9 @@ class QuoteReadImageTestCase(TestCase):
 		# stub
 		# stub: Quote.crop_image
 		self._Quote_crop_image = Quote.crop_image
-		Quote.crop_image = MagicMock(name='Quote.crop_image')
+		Quote.crop_image = MagicMock(name='Quote.crop_image', return_value='cropped_image.jpg')
 		# stub: detect_text
-		self.patcher = patch('bookshot.models.detect_text')
+		self.patcher = patch('bookshot.models.detect_text', return_value='{text: "넌 죽었어"}')
 		self.patcher.start()
 		
 
@@ -57,15 +57,21 @@ class QuoteReadImageTestCase(TestCase):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
 		#
 		Quote.crop_image.assert_called_once()
+		Quote.crop_image.assert_called_with(self.quote.photo.path, (10, 10, 210, 160))
 
 	def test_requests_cropped_image_to_ocr_service(self):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
 		#
 		bookshot.models.detect_text.assert_called_once()
 
-	#def test_saves_ocr_response(self):
-	#	pass
+	def test_returns_ocr_response(self):
+		response = self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
+		#
+		self.assertEqual(response, '{text: "넌 죽었어"}')
 
-	#def test_returns_ocr_response(self):
-	#	pass
+	def test_saves_ocr_response(self):
+		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
+		#
+		self.assertEqual(self.quote._ocr_reponse, '{text: "넌 죽었어"}')
+
 
