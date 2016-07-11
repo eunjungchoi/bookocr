@@ -15,7 +15,7 @@ class Quote(models.Model):
 
 
 	@staticmethod
-	def calculate_image_dimension(width, height, max_size):
+	def calculate_image_dimension(width, height, max_size=(640, 640)):
 		max_width, max_height = max_size
 
 		image_ratio = width / float(height)

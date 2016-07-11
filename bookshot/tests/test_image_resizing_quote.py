@@ -90,12 +90,14 @@ class QuotePhotoResizeTestCase(TestCase):
 		self.quote.resize_image(max_size=(640,640))
 		self.quote.save()
 
-		# verify prev state
-		import StringIO
-		big_im = Image.open(StringIO.StringIO(self.image_content))
+
+		# verify prev state	
+		from django.core.files.base import ContentFile
+		big_im = Image.open(ContentFile(self.image_content))
 		self.assertTrue(big_im.width  > 640)
 		self.assertTrue(big_im.height > 640)
-		
+
+
 		# assert: open saved image
 		small_im = Image.open(self.quote.photo.path)
 		self.assertTrue(small_im.width  == 640)

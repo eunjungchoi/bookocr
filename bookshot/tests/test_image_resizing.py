@@ -1,9 +1,11 @@
 import os
 from unittest import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from PIL import Image
+from django.contrib.auth.models import User
 
-from bookshot.models import Quote
+from bookshot.models import Quote, Book
 
 TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -47,18 +49,37 @@ class CalculateSizeTestCase(TestCase):
 
 class ResizeImageTestCase(TestCase):
 	def setUp(self):
-		self.image_filename        = os.path.join(TEST_ROOT, "fixtures/media/ritualcoffee3.jpg")
-		self.resize_image_filename = os.path.join(TEST_ROOT, "media/ritualcoffee3_resize.jpg")
+		
+		#setting
+		TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
+		self.IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
+
+		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
+		book = Book.objects.create(title="스토너")
+		self.quote = Quote(
+			user=user,
+			book=book,
+			quotation="봐, 나는 살아있어!"
+		)
+		self.image_content = open(self.IMAGE_FILEPATH, 'rb').read()
+
 
 	def tearDown(self):
-		if os.path.exists(self.resize_image_filename):
-			os.remove(self.resize_image_filename)
+		try:
+			os.remove(self.quote.photo.path)
+		except:
+			pass
+
 
 	def test_save_large_image_file_to_smaller_image(self):
-		resized_image = Quote.resize_image(self.image_filename, self.resize_image_filename)
 
-		image = Image.open(self.image_filename)
+		self.quote.photo = SimpleUploadedFile(name='IMG_6114.jpg', content=self.image_content, content_type='image/jpeg')
+		self.quote.resize_image(max_size=(640,640))
+		self.quote.save()
+
+		image = Image.open(self.IMAGE_FILEPATH)
 		self.assertTrue(image.width > 640)
-		self.assertEqual(resized_image.width, 640)
-		self.assertTrue(resized_image.height < 640)
+		self.assertEqual(self.quote.photo.width, 640)
+		self.assertTrue(self.quote.photo.height < 640)
+
 
