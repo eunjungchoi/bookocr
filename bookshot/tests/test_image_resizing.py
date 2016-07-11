@@ -1,13 +1,10 @@
 import os
-from unittest import TestCase
+from django.test import TestCase, override_settings, modify_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
-
-from PIL import Image
 from django.contrib.auth.models import User
 
+from PIL import Image
 from bookshot.models import Quote, Book
-
-TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 class CalculateSizeTestCase(TestCase):
@@ -47,11 +44,12 @@ class CalculateSizeTestCase(TestCase):
 
 
 
+## setting
+TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'))
 class ResizeImageTestCase(TestCase):
 	def setUp(self):
-		
-		#setting
-		TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
 		self.IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
 
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
