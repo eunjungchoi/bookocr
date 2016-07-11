@@ -5,6 +5,13 @@ function initCropper($img, $parent) {
     var cropper = new Cropper();
     $parent.data('cropper', cropper);
 
+    // getOriginalWidthOfImg
+    //  see http://stackoverflow.com/questions/318630/get-real-image-width-and-height-with-javascript-in-safari-chrome
+    var _img = new Image();
+    _img.src = $img.attr('src');
+    $img.data('original-width',  _img.width);
+    $img.data('original-height', _img.height);
+
     // init
     var width  = $img.width(),
         height = $img.height();
@@ -30,12 +37,19 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
         ev.preventDefault();
         if (_isSaving) { return }
 
-        // POST image
-        var imgData = $form.serializeArray().reduce((memo, obj) => {
+        // form data
+        var imageCropData = $form.serializeArray().reduce((memo, obj) => {
             memo[obj.name] = obj.value;
             return memo;
-        });
-        var pr = postOCR(imgData);
+        }, {});
+        // re-noramlize with image original size
+        imageCropData['crop-x'] = parseInt(parseFloat(imageCropData['crop-x']) / $img.width()  * $img.data('original-width' ));
+        imageCropData['crop-y'] = parseInt(parseFloat(imageCropData['crop-y']) / $img.height() * $img.data('original-height'));
+        imageCropData['crop-w'] = parseInt(parseFloat(imageCropData['crop-w']) / $img.width()  * $img.data('original-width' ));
+        imageCropData['crop-h'] = parseInt(parseFloat(imageCropData['crop-h']) / $img.height() * $img.data('original-height'));
+
+        // POST
+        var pr = postOCR(imageCropData);
 
         _isSaving = true;
         $saveBtn.button('loading');
@@ -47,6 +61,7 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
             dfd.resolve(ocrResult);
         }, function(err) {
             _isSaving = false;
+            $saveBtn.button('reset')
             dfd.reject(err);
         });
     });
@@ -82,17 +97,21 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
     return dfd.promise();
 }
 
-// XXX: implement me
-function postOCR(imgData) {
-    var dfd = jQuery.Deferred();
+function postOCR(imageCropData) {
+    //var dfd = jQuery.Deferred();
+    //setTimeout(function() {
+    //    dfd.resolve({
+    //        text: '봐! 나는 살or있어'
+    //    });
+    //}, 3000 + (Math.random() * 1000) - 500)
+    //return dfd.promise();
 
-    setTimeout(function() {
-        dfd.resolve({
-            text: '봐! 나는 살or있어'
-        });
-    }, 3000 + (Math.random() * 1000) - 500)
+    return $.ajax({
+        method: 'post',
+        url: "{% url 'post_quote_ocr' book_id=book.id quote_id=quote.id %}",
+        data: imageCropData,
+    });
 
-    return dfd.promise();
 }
 
 
