@@ -298,3 +298,10 @@ if not DEBUG:
 # # Whether to enable gzip compression for static files.
 # AWS_S3_GZIP_STATIC = True
 
+#
+# Test specific
+#
+
+
+TEST_RUNNER = 'bookocr.test.runner.BookOCRTestRunner' # 'django.test.runner.DiscoverRunner'
+
