@@ -1,1 +1,1 @@
-../settings.py
+__init__.py
