@@ -1,6 +1,10 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
+from ocr.googlevision import detect_text
 
 
 class Quote(models.Model):
