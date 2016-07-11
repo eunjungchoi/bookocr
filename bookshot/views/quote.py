@@ -11,16 +11,6 @@ from bookshot.models import *
 
 
 
-def crop_image(file_path, cropped_file_path, box):
-	from PIL import Image
-
-	image = Image.open(file_path)
-
-	cropped_image = image.crop(box)
-	cropped_image.save(cropped_file_path)
-
-	return cropped_image
-
 
 @login_required
 def add(request):
@@ -65,6 +55,9 @@ def ocr_request(request, book_id, quote_id):
 def ocr_update(request, book_id, quote_id):
 	if request.method != 'POST':
 		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
+
+	#ocr_response = {}
+	#text =  '봐, 나는 살or있어!'
 
 	#
 	book  = get_object_or_404(Book, pk=book_id)
