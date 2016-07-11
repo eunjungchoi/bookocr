@@ -26,24 +26,23 @@ def crop_image(file_path, cropped_file_path, box):
 def add(request):
 	book, created = Book.objects.get_or_create(
 		title=request.POST['book-title'])
-	
-	q = Quote.objects.create(
+
+	q = Quote(
 		user=request.user,
 		book=book,
 		photo=request.FILES['photo'],
 		quotation=request.POST['quotation'],
 	)
-
-	# TO DO 
-	# q.isbn13 =
-	# q.cover_url = 
-	# q._raw_response =
-	# q.save()
+	q.resize_image(max_size=(640,640))
+	q.save()
 	
-	Quote.resize_image(q.photo.path, q.photo.path)
-
-	#return redirect(reverse('index'))
 	return redirect(reverse('ocr_quote', kwargs={"book_id": book.id, "quote_id": q.id}))
+
+# 	# TO DO 
+# 	# q.isbn13 =
+# 	# q.cover_url = 
+# 	# q._raw_response =
+# 	# q.save()
 
 
 @login_required

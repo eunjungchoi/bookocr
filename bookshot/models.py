@@ -15,7 +15,7 @@ class Quote(models.Model):
 
 
 	@staticmethod
-	def calculate_image_dimension(width, height, max_size=(640, 640)):
+	def calculate_image_dimension(width, height, max_size):
 		max_width, max_height = max_size
 
 		image_ratio = width / float(height)
@@ -33,19 +33,22 @@ class Quote(models.Model):
 		return int(new_width), int(new_height)
 
 
-	@staticmethod
-	def resize_image(file_path, resized_file_path):
+	def resize_image(self, max_size):
 		from PIL import Image
+		import io
+		import os
+		from django.core.files.uploadedfile import SimpleUploadedFile
 
-		image = Image.open(file_path)
-
+		image = Image.open(self.photo)
 		image_width, image_height = image.size
-		new_width, new_height = Quote.calculate_image_dimension(image_width, image_height)
+		new_width, new_height = Quote.calculate_image_dimension(image_width, image_height, max_size)
 
 		resized_image = image.resize((new_width, new_height), Image.ANTIALIAS)	
-		resized_image.save(resized_file_path)
 
-		return resized_image
+		tempfile_io = io.BytesIO()
+		resized_image.save(tempfile_io, format=image.format)
+
+		self.photo = SimpleUploadedFile(name=self.photo.name, content=tempfile_io.getvalue(), content_type='image/jpeg')
 
 
 	def save(self, *args, **kwargs):
