@@ -10,15 +10,6 @@ from django.contrib.auth.models import User
 from bookshot.models import Book, Quote
 
 
-# TODO: use environment specific settings, 
-# see http://stackoverflow.com/a/15325966/1405998
-revert_aws_settings = {
-	'STATIC_URL': '/static/',
-	'STATICFILES_STORAGE': 'whitenoise.django.GzipManifestStaticFilesStorage',
-	'MEDIA_URL':  '/media/',
-	'DEFAULT_FILE_STORAGE': 'django.core.files.storage.FileSystemStorage',
-}
-
 TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # fixture image file
@@ -27,7 +18,7 @@ IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
 
 #
 # for demonstration purpose. see QuotePhotoResizeTestCase below for actualy test code
-@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), **revert_aws_settings)
+@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'))
 class QuoteImageFieldTestCase(TestCase):
 	def setUp(self):
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
@@ -64,7 +55,7 @@ class QuoteImageFieldTestCase(TestCase):
 
 
 
-@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'), **revert_aws_settings)
+@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'))
 class QuotePhotoResizeTestCase(TestCase):
 	def setUp(self):
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
