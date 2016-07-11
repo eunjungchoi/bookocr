@@ -35,14 +35,14 @@ def add(request):
 	)
 	q.resize_image(max_size=(640,640))
 	q.save()
-	
-	return redirect(reverse('ocr_quote', kwargs={"book_id": book.id, "quote_id": q.id}))
 
 # 	# TO DO 
 # 	# q.isbn13 =
 # 	# q.cover_url = 
 # 	# q._raw_response =
 # 	# q.save()
+	
+	return redirect(reverse('new_quote_ocr', kwargs={"book_id": book.id, "quote_id": q.id}))
 
 
 @login_required
