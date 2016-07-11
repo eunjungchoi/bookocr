@@ -1,4 +1,5 @@
 import os
+from unittest import skip
 
 from django.test import TestCase, override_settings, modify_settings
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
@@ -26,12 +27,11 @@ class QuoteReadImageTestCase(TestCase):
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
 		book = Book.objects.create(title="스토너")
 		#
-		self.quote = Quote(
+		self.quote = Quote.objects.create(
 			user=user,
 			book=book,
 			photo=SimpleUploadedFile(name='IMG_6114.jpg', content=IMAGE_CONTENT),
-			quotation="봐, 나는 살아있어!"
-		)
+			quotation="봐, 나는 살아있어!")
 
 		# stub
 		# stub: Quote.crop_image
@@ -40,7 +40,6 @@ class QuoteReadImageTestCase(TestCase):
 		# stub: detect_text
 		self.patcher = patch('bookshot.models.detect_text', return_value='{text: "넌 죽었어"}')
 		self.patcher.start()
-		
 
 	def tearDown(self):
 		try:
@@ -57,7 +56,9 @@ class QuoteReadImageTestCase(TestCase):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
 		#
 		Quote.crop_image.assert_called_once()
-		Quote.crop_image.assert_called_with(self.quote.photo.path, (10, 10, 210, 160))
+		#Quote.crop_image.assert_called_with(self.quote.photo.path, {"x": 10, "y": 10, "w": 200, "h": 150})
+		pos_args = Quote.crop_image.call_args[0]
+		self.assertEqual(pos_args[0:2], (self.quote.photo.path, {"x": 10, "y": 10, "w": 200, "h": 150}))
 
 	def test_requests_cropped_image_to_ocr_service(self):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
@@ -69,9 +70,23 @@ class QuoteReadImageTestCase(TestCase):
 		#
 		self.assertEqual(response, '{text: "넌 죽었어"}')
 
+	@skip('not impl.')
 	def test_saves_ocr_response(self):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
 		#
 		self.assertEqual(self.quote._ocr_reponse, '{text: "넌 죽었어"}')
+
+	@override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'))
+	def test_cropped_file_is_removed_after_call(self):
+		# restore Quote.crop_image
+		Quote.crop_image = self._Quote_crop_image
+
+		# may receive cropped_filepath=
+		cropped_filepath = os.path.join(TEST_ROOT, 'media/cropped_file.jpg')
+		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150}, cropped_filepath=cropped_filepath)
+
+		#
+		bookshot.models.detect_text.assert_called_once_with(cropped_filepath)
+		self.assertFalse(os.path.exists(cropped_filepath))
 
 
