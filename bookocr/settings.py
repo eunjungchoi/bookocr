@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 	'whitenoise.runserver_nostatic',
 	'storages', # 
 	# 'django_s3_storage',
+	# tests
+	'django_nose',
 ]
 
 
