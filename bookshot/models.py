@@ -3,6 +3,18 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
+def recent_books(self):
+	books = Book.objects.filter(quote__user=self).order_by('-quote__updated_at').distinct()
+
+	for book in books:
+		quote = Quote.objects.filter(book=book).order_by('-updated_at')[0]
+		book.updated_at = quote.updated_at
+
+	return books
+
+User.add_to_class("recent_books", recent_books)
+
+
 class Quote(models.Model):
 	quotation = models.TextField(max_length=1000)
 	photo = models.ImageField(upload_to='bookshot')
@@ -25,8 +37,8 @@ class Quote(models.Model):
 			new_height = height
 		elif width > height:
 			new_width = max_width
-			new_height = new_width / image_ratio 
-		else: 
+			new_height = new_width / image_ratio
+		else:
 			new_height = max_height
 			new_width  = new_height * image_ratio
 
@@ -43,7 +55,7 @@ class Quote(models.Model):
 		image_width, image_height = image.size
 		new_width, new_height = Quote.calculate_image_dimension(image_width, image_height, max_size)
 
-		resized_image = image.resize((new_width, new_height), Image.ANTIALIAS)	
+		resized_image = image.resize((new_width, new_height), Image.ANTIALIAS)
 
 		tempfile_io = io.BytesIO()
 		resized_image.save(tempfile_io, format=image.format)
@@ -82,11 +94,11 @@ class Book(models.Model):
 			c = int(isbn[i])
 			if i % 2:
 				w = 3
-			else: 
+			else:
 				w = 1
 			sum += w * c
 		r = 10 - (sum % 10)
-		if r == 10: 
+		if r == 10:
 			return '0'
 		else:
 			return str(r)
