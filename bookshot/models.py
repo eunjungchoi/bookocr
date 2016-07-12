@@ -76,10 +76,9 @@ class Quote(models.Model):
 		return self.quotation
 
 
-
 class Book(models.Model):
 	title = models.CharField(max_length=30)
-	isbn13 = models.CharField(max_length=13, null=False, blank=True, default="0000000000000")
+	_isbn13 = models.CharField(max_length=13, null=False, blank=True, default="0000000000000", db_column="isbn13")
 	cover_url = models.URLField(max_length=300, null=True, blank=True, default=None)
 	_raw_response = models.TextField(null=True, blank=True, default=None)
 
@@ -112,15 +111,26 @@ class Book(models.Model):
 		return prefix + check
 
 
-	def save(self, *args, **kwargs):
+	@property
+	def isbn13(self):
+		return self._isbn13
+
+
+	@isbn13.setter
+	def isbn13(self, value):
 		import re
 
-		if len(self.isbn13) ==10:
-			self.isbn13 = Book.convert_10_to_13(self.isbn13)
+		if len(value) == 10:
+			self._isbn13 = Book.convert_10_to_13(value)
+		else:
+			self._isbn13 = value
 
-		self.isbn13 = re.sub('[-]', '', self.isbn13)
+		self._isbn13 = re.sub('[-]', '', self._isbn13)
 
-		return super(Book, self).save(*args, **kwargs)
+
+	@property
+	def raw_response(self):
+		return _raw_response
 
 
 	def __str__(self):
