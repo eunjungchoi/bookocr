@@ -72,12 +72,12 @@ def ocr_update(request, book_id, quote_id):
 
 	#
 	q_text    = request.POST['quotation']
-	crop_rect = {
-		'x': request.POST['crop-x'],
-		'y': request.POST['crop-y'],
-		'w': request.POST['crop-w'],
-		'h': request.POST['crop-h'],
-	}
+	#crop_rect = {
+	#	'x': request.POST['crop-x'],
+	#	'y': request.POST['crop-y'],
+	#	'w': request.POST['crop-w'],
+	#	'h': request.POST['crop-h'],
+	#}
 
 	# update quote
 	quote.quotation = q_text
