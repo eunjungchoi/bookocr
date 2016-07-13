@@ -1,7 +1,12 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+def detect_text(*args, **kwargs):
+    import json
+    return json.loads('{"responses": [{"textAnnotations": [{"description": "봐, 나는 살or있어!"}]}]}')
 
 def recent_books(self):
 	books = Book.objects.filter(quote__user=self).order_by('-quote__updated_at').distinct()
@@ -25,6 +30,39 @@ class Quote(models.Model):
 	created_at = models.DateTimeField(null=True, default=None)
 	updated_at = models.DateTimeField(null=True, default=None)
 
+	def read_image(self, crop_rect):
+		# crop
+		ts = int(timezone.now().timestamp())
+		cropped_filename, ext = os.path.splitext(self.photo.path)
+		cropped_tag      = 'crop-{x}-{y}-{w}-{h}-{ts}'.format(**crop_rect, ts=ts)
+		cropped_filepath = '{cropped_filename}.{cropped_tag}.{ext}'.format(**locals())
+		#
+		box = (crop_rect['x'], crop_rect['y'], crop_rect['x'] + crop_rect['w'], crop_rect['y'] + crop_rect['h'])
+		Quote.crop_image(self.photo.path, cropped_filepath, box)
+	
+		# detect
+		try:
+			response = detect_text(cropped_filepath)
+			return response
+		finally:
+			pass
+			#os.remove(cropped_image)
+
+	@staticmethod
+	def crop_image(file_path, cropped_filepath, box):
+		from PIL import Image
+
+		image = Image.open(file_path)
+		cropped_image = image.crop(box)
+
+		if not cropped_filepath:
+			ts = int(timezone.now().timestamp())
+			cropped_filename, ext = os.path.splitext(file_path)
+			cropped_tag      = 'crop-{x}-{y}-{w}-{h}-{ts}'.format(**crop_rect, ts=ts)
+			cropped_filepath = '{cropped_filename}.{cropped_tag}{ext}'.format(**locals())
+
+		cropped_image.save(cropped_filepath)
+		return cropped_filepath
 
 	@staticmethod
 	def calculate_image_dimension(width, height, max_size=(640, 640)):
