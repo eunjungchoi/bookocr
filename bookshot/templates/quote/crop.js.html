@@ -129,7 +129,7 @@ $(function() {
     // bind ocr
     bindCropperWithOCR(cropper, $_wrapper, $img).then(function(ocrResult) { 
         //console.log(ocrResult);
-        $textarea.val(ocrResult.text);
+        $textarea.val(ocrResult.result.text);
         $textarea[0].focus();
     }, function(err) { 
         console.error(err);
