@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 
-			<form name="ocr-form" class="form-horizontal" action="{% url 'ocr_update' book_id=book.id quote_id=quote.id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form name="ocr-form" class="form-horizontal" action="{% url 'put_quote' book_id=book.id quote_id=quote.id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
 				<h4>마음에 든 문구를 담아 주세요.</h4>
 
