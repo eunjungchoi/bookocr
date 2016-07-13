@@ -16,6 +16,16 @@ def create_user(username='jhk', email='jh@gggmail.com', password='jhpassword', *
 	return user
 
 
+''' 
+
+Simple view tests
+
+	see 
+
+	- https://docs.djangoproject.com/en/1.9/topics/testing/tools/
+	- https://docs.djangoproject.com/en/1.9/topics/testing/advanced/#django.test.RequestFactory
+
+'''
 class HomeTestCase(TestCase):
 
 	def test_root_path_exists(self):
@@ -30,6 +40,14 @@ class HomeTestCase(TestCase):
 		
 		self.assertEqual(response.status_code, 302)
 		self.assertTrue(response.url.startswith('/login'))
+
+	def test_unlogged_in_user_redirection_renders_page_correctly(self):
+		response = self.client.get('/', follow=True)
+		
+		#
+		self.assertContains(response, "로그인하기")
+		self.assertTemplateUsed(response, 'login.html')
+
 
 	def test_logged_in_user_gets_a_welcome(self):
 		user = create_user()

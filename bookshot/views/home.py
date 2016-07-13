@@ -10,9 +10,9 @@ from bookshot.models import *
 
 
 def profile(request):
-    return {
+	return {
 		"profile_picture_url": "https://graph.facebook.com/{0}/picture".format(request.user.social_auth.get().uid),
-    }
+	}
 
 
 @login_required
