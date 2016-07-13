@@ -28,8 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(os.environ.get('DEBUG'))
 
 
-LOGIN_URL = '/login/' # XXX
-ALLOWED_HOSTS = [] # XXX
+LOGIN_URL = '/login/'
 
 
 # Application definition
