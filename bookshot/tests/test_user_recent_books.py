@@ -10,13 +10,13 @@ class UserRecentBooksTestCase(TestCase):
 	def setUp(self):
 		self.user1 = User.objects.create_user('jhk1', 'jh1@gggmail.com')
 		self.book1 = Book.objects.create(title="스토너1")
-		self.quote1 = Quote(
+		self.quote1 = Quote.objects.create(
 			user=self.user1,
 			book=self.book1,
 			quotation="봐, 나는 살아있어1")
 		#
 		self.book3 = Book.objects.create(title="스토너3")
-		self.quote3 = Quote(
+		self.quote3 = Quote.objects.create(
 			user=self.user1,
 			book=self.book3,
 			quotation="봐, 나는 살아있어3")
@@ -24,7 +24,7 @@ class UserRecentBooksTestCase(TestCase):
 		#
 		self.user2 = User.objects.create_user('jhk2', 'jh2@gggmail.com')
 		self.book2 = Book.objects.create(title="스토너2")
-		self.quote2 = Quote(
+		self.quote2 = Quote.objects.create(
 			user=self.user2,
 			book=self.book2,
 			quotation="봐, 나는 살아있어1")
@@ -67,9 +67,9 @@ class UserRecentBooksQuerySetTestCase(TestCase):
 		self.book3 = Book.objects.create(title="스토너3")
 
 		# creating quote connects user and book, and updates books updated_at time
-		quote1 = Quote(user=self.user, book=self.book1, quotation="1")
-		quote2 = Quote(user=self.user, book=self.book2, quotation="2")
-		quote3 = Quote(user=self.user, book=self.book3, quotation="3")
+		quote1 = Quote.objects.create(user=self.user, book=self.book1, quotation="1")
+		quote2 = Quote.objects.create(user=self.user, book=self.book2, quotation="2")
+		quote3 = Quote.objects.create(user=self.user, book=self.book3, quotation="3")
 
 
 	def test_can_apply_queryset_methods(self):
@@ -101,5 +101,3 @@ class UserRecentBooksQuerySetTestCase(TestCase):
 		books = self.user.recent_books()
 
 		self.assertIsInstance(books, QuerySet)
-
-

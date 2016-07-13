@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	'django.contrib.humanize',
 	'social.apps.django_app.default',
-	'storages', # 
+	'storages', #
 	# 'django_s3_storage',
 ]
 
@@ -81,6 +81,7 @@ TEMPLATES = [
 	            'django.template.context_processors.tz',
 	            'social.apps.django_app.context_processors.backends',
 	            'social.apps.django_app.context_processors.login_redirect',
+				'bookshot.views.home.profile',
 	        ],
 	    },
 	},
@@ -132,7 +133,7 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
- 
+
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
   'fields': 'id, name, email, age_range'
@@ -187,5 +188,3 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-

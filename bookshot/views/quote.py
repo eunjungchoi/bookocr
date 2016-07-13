@@ -58,6 +58,10 @@ def ocr_new(request, book_id, quote_id):
 	return render(request, 'quote/crop.html', context)
 
 @login_required
+def ocr_request(request, book_id, quote_id):
+	pass
+
+@login_required
 def ocr_update(request, book_id, quote_id):
 	if request.method != 'POST':
 		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
@@ -79,7 +83,7 @@ def ocr_update(request, book_id, quote_id):
 	quote.quotation = q_text
 	#quote._crop_info = crop_rect
 	#quote._ocr_raw_response = request.POST['ocr_raw_response']
-	#quote.save()
+	quote.save()
 
 	return redirect(reverse('index'))
 

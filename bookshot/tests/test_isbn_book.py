@@ -28,5 +28,5 @@ class BookISBNfilterTestCase(TestCase):
 		self.book = Book.objects.create(title="반쪼가리 자작", isbn13='978-89374-62412')
 
 
-	def test_remove_dash_from_isbn13(self):		
+	def test_remove_dash_from_isbn13(self):
 		self.assertEqual(self.book.isbn13, "9788937462412")
