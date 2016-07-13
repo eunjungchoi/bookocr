@@ -79,7 +79,7 @@ def ocr_update(request, book_id, quote_id):
 	quote.quotation = q_text
 	#quote._crop_info = crop_rect
 	#quote._ocr_raw_response = request.POST['ocr_raw_response']
-	#quote.save()
+	quote.save()
 
 	return redirect(reverse('index'))
 
