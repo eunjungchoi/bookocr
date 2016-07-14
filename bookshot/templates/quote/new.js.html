@@ -83,23 +83,25 @@ function renderImagePreview(files, $container, $inner) {
 //	;
 //}
 
-function bindTypebook($el) {
+function bindTypebook($el, defaultData) {
     //var source = new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
-    var source = new BandiNLunis();
+	var source = new BandiNLunis({
+		local: defaultData,
+	});
 	var $typebook = $el.typeahead({
-        //minLength: 0,
+        minLength: 0,
     }, _.assign({
 		name: 'book',
-		//source: engine.source({ $typebook: $($el) }),
-        source: source,
-		//source: function (q, sync) {
-		//	if (q === '') {
-		//		sync(source.get('Detroit Lions', 'Green Bay Packers', 'Chicago Bears'));
-		//	}
-		//	else {
-		//		source.search(q, sync);
-		//	}
-		//},
+        //source: source,
+		source: function (q, sync) {
+			if (q === '') {
+				//sync(source.get('Detroit Lions', 'Green Bay Packers', 'Chicago Bears'));
+				sync(defaultData);
+			}
+			else {
+				source.search(q, sync);
+			}
+		},
         limit: 10,
 		display: 'value',
 		hint: true,
@@ -107,19 +109,19 @@ function bindTypebook($el) {
 			notFound: '<div class="empty-message">적당한 책을 찾을 수가 없습니다.</div>',
 			pending: '<div class="pending-message">Searching... <i class="glyphicon glyphicon-refresh"></i></div>',
 			suggestion: function(context) {
-				return `<div target='_blank' id='${context.idStr}' class='${context.classStr}'>
+				return `<div target='_blank' id='${context.idStr||""}' class='${context.classStr||""}'>
 					<div class='img-wrapper thumbnail'>
 						<img class='' src='${context.thumbnail}' />
 					</div>
 					<div class='book-info'>
 						<div class='first-row'>
-							<span class='book-title'>${context.title}</span>, <span class='book-author'>${context. authorsStr }</span>
+							<span class='book-title'>${context.title}</span>, <span class='book-author'>${context.authorsStr||""}</span>
 						</div>
 						<div class='second-row ${context.subtitleStr && context.subtitleStr.length > 0 ? "" : "hide"}'>
 							<span class='book-subtitle' title=${context.subtitleStr}>${context.subtitleStr}</span>
 						</div>
 						<div class='third-row'>
-							<span class='book-publisher'>${context.publisher}</span>
+							<span class='book-publisher'>${context.publisher||""}</span>
 						</div>
 					</div>
 					<div class='cleaner'></div>
@@ -218,7 +220,21 @@ $(function() {
 // book type
 $(function() {
     var $bookInput = $('input[name="book-title"]');
-	bindTypebook($bookInput);
+	var recentBooks = JSON.parse('{{recent_books|safe}}');
+        recentBooks = _.map(recentBooks, function(book) {
+            return {
+                idStr: book.id,
+                title: book.title,
+                subtitle: null,
+                isbn: book.isbn13,
+                thumbnail: book.cover_url,
+                publisher: null,
+                authorStr: null,
+                value: book.title,
+            }
+        });
+
+	bindTypebook($bookInput, recentBooks);
 });
 </script>
 

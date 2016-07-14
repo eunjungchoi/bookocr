@@ -83,11 +83,19 @@ def ocr_update(request, book_id, quote_id):
 
 @login_required
 def new(request):
-	#recent_books = request.user.recent_books()[:3]
-	recent_books = ('살인자의 기억법', '스토너')
+	from django.core.serializers import serialize
+	import json
+
+	recent_books = request.user.recent_books()[:3]
+	recent_books = [{
+		"id"    : b.id,
+		"title" : b.title,
+		"isbn13": b.isbn13,
+		"cover-url": b.cover_url,
+	} for b in recent_books]
 
 	context = {
-		'recent_books': recent_books,
+		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
 
