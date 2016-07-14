@@ -168,7 +168,7 @@ class Book(models.Model):
 
 	@property
 	def raw_response(self):
-		return _raw_response
+		return self._raw_response
 
 
 	def __str__(self):
