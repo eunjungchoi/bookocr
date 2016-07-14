@@ -34,29 +34,8 @@ BandiNLunis.prototype = _.create(Bloodhound.prototype);
 
 // override
 BandiNLunis.prototype.initialize = function() {
-
-    // auth
-    authorize(this.apiKey);
-
     return Bloodhound.prototype.initialize.apply(this, arguments);
 };
-
-function insertScript(attrs) {
-    attrs = attrs || {};
-
-    var scriptEl = document.createElement('script');
-    for(var key in attrs) {
-        scriptEl[key] = attrs[key];
-    }
-
-    document.getElementsByTagName("script")[0].parentNode.appendChild(scriptEl);
-}
-function insertScriptSrc(src, attrs) {
-    attrs = attrs || {};
-    attrs['src'] = src;
-
-    return insertScript(attrs);
-}
 
 function stripTag(htmlStr) {
     //var container = document.createElement('div');
@@ -178,7 +157,9 @@ BandiNLunis.prototype.transform = function(response) {
             isDVD     : isDVD,
             isAbroad  : isAbroad,
 
+            //
             value: title,
+            raw: volume,
         };
     });
 
