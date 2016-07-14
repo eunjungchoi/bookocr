@@ -58,6 +58,32 @@ class UserRecentBooksTestCase(TestCase):
 		books = list(books)
 		self.assertEqual(books, [self.book1, self.book3])
 
+	def test_books_order_changes_if_updated(self):
+		# re-save quote1, updating book1's updated time
+		self.quote1.save()
+
+		#
+		books = self.user1.recent_books()
+
+		#
+		books = list(books)
+		self.assertEqual(books, [self.book1, self.book3])
+
+	def test_remove_duplicate_books(self):
+		# add quote for same book
+		quote4 = Quote.objects.create(
+			user=self.user1,
+			book=self.book3,
+			quotation="봐, 나는 살아있어4")
+
+		#
+		books = self.user1.recent_books()
+		
+		#
+		books = list(books)
+		self.assertEqual(len(books), 2)
+		self.assertEqual(books.count(self.book3), 1)
+
 
 class UserRecentBooksQuerySetTestCase(TestCase):
 	def setUp(self):
