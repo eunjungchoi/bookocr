@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from django.http import JsonResponse
 
 from datetime import date
 from PIL import Image
@@ -54,7 +55,27 @@ def ocr_new(request, book_id, quote_id):
 
 @login_required
 def ocr_request(request, book_id, quote_id):
-	pass
+	quote = Quote.objects.get(id=quote_id)
+
+	crop_rect = {
+		'x' : int(request.POST['crop-x']),
+		'y' : int(request.POST['crop-y']),
+		'w' : int(request.POST['crop-w']),
+		'h' : int(request.POST['crop-h']),
+	}
+
+	response = quote.read_image(crop_rect)
+
+	json = {
+		'uri' : reverse(viewname='post_quote_ocr', args=[book_id, quote_id]),
+		'image_url' : quote.photo.url,
+		'crop_rect' : crop_rect,
+		'result' : {
+			'text' : response['responses'][0]['textAnnotations'][0]['description'],
+		},
+	}
+	return JsonResponse(json)
+
 
 @login_required
 def ocr_update(request, book_id, quote_id):
