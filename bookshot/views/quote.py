@@ -14,8 +14,19 @@ from bookshot.models import *
 
 @login_required
 def add(request):
-	book, created = Book.objects.get_or_create(
-		title=request.POST['book-title'])
+	try:
+		book = Book.objects.get(
+			title=request.POST['book-title'],
+		)
+	except Book.DoesNotExist:
+		book = Book(
+			title=request.POST['book-title'],
+			authors=request.POST['book-authors'],
+			cover_url =request.POST['book-cover-url'],
+			_raw_response =request.POST['book-response'],
+		)
+		book.isbn13 = request.POST['book-isbn']
+		book.save()
 
 	q = Quote(
 		user=request.user,
@@ -26,12 +37,6 @@ def add(request):
 	q.resize_image(max_size=(640,640))
 	q.save()
 
-# 	# TO DO 
-# 	# q.isbn13 =
-# 	# q.cover_url = 
-# 	# q._raw_response =
-# 	# q.save()
-	
 	return redirect(reverse('new_quote_ocr', kwargs={"book_id": book.id, "quote_id": q.id}))
 
 
@@ -99,4 +104,3 @@ def new(request):
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
-
