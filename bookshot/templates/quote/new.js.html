@@ -254,6 +254,7 @@ $(function() {
 
         $bookFormG
             .find('input[name="book-isbn"]'     ).val(bookObj.isbn               ).end()
+            .find('input[name="book-authors"]'  ).val(bookObj.authorsStr         ).end()
             .find('input[name="book-cover-url"]').val(bookObj.thumbnail          ).end()
             .find('input[name="book-response"]' ).val(JSON.stringify(bookObj.raw)).end()
         ;
