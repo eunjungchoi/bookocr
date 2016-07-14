@@ -9,12 +9,6 @@ from django.template import RequestContext
 from bookshot.models import *
 
 
-def profile(request):
-	return {
-		"profile_picture_url": "https://graph.facebook.com/{0}/picture".format(request.user.social_auth.get().uid),
-	}
-
-
 @login_required
 def index(request):
 	quote_list = Quote.objects.order_by('-id')
