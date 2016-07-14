@@ -6,11 +6,20 @@ a.tt-suggestion.typebook-result-item:hover {
   text-decoration: none;
 }
 
+.typeahead, .tt-input, .tt-hint {
+  font-size: inherit;
+}
+
+.tt-suggestion {
+  line-height: 20px;
+}
 .tt-suggestion .img-wrapper {
   float: left;
   width: 65px;
   text-align: center;
   margin-right: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 .tt-suggestion img.thumbnail {
   max-height: 80px;
@@ -20,12 +29,16 @@ a.tt-suggestion.typebook-result-item:hover {
 .tt-suggestion .book-info {
   width: calc(100% - 70px);
   margin-left: 70px;
+  padding-top: 10px;
+  padding-left: 8px;
 }
 .tt-suggestion .book-title {
   font-weight: bold;
 }
 .tt-suggestion .book-subtitle {
   font-size: 90%;
+  line-height: 18px;
+  padding-left: 0.4em;
 
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -34,13 +47,25 @@ a.tt-suggestion.typebook-result-item:hover {
   display: inline-block;
 }
 
+.tt-suggestion .book-isbn {
+  font-size: 12px;
+  color: #aaa;
+}
+	.tt-suggestion:hover .book-isbn {
+	  color: white;
+	}
+
 .tt-suggestion .book-author {
-  font-size: 95%;
+  font-size: 85%;
 }
 .tt-suggestion .book-publisher {
   font-size: 85%;
   color: #999;
   float: right;
+  padding-right: 10px;
+}
+.tt-suggestion:hover .book-publisher {
+  color: white;
 }
 
 .tt-suggestion .cleaner {

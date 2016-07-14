@@ -88,20 +88,25 @@ function bindTypebook($el, defaultData) {
 	var source = new BandiNLunis({
 		local: defaultData,
 	});
+
+    var minLength = _.isEmpty(defaultData) ? 1 : 0;
+
 	var $typebook = $el.typeahead({
-        minLength: 0,
+        minLength: minLength,
     }, _.assign({
 		name: 'book',
         //source: source,
-		source: function (q, sync) {
+		source: function (q, sync, async) {
 			if (q === '') {
 				//sync(source.get('Detroit Lions', 'Green Bay Packers', 'Chicago Bears'));
 				sync(defaultData);
 			}
 			else {
-				source.search(q, sync);
+				source.search(q, sync, async);
 			}
 		},
+        sufficient: 10, // 5
+
         limit: 10,
 		display: 'value',
 		hint: true,
@@ -111,17 +116,19 @@ function bindTypebook($el, defaultData) {
 			suggestion: function(context) {
 				return `<div target='_blank' id='${context.idStr||""}' class='${context.classStr||""}'>
 					<div class='img-wrapper thumbnail'>
-						<img class='' src='${context.thumbnail}' />
+						<img class='' src='${context.thumbnail||""}' />
 					</div>
 					<div class='book-info'>
 						<div class='first-row'>
-							<span class='book-title'>${context.title}</span>, <span class='book-author'>${context.authorsStr||""}</span>
+							<span class='book-title'>${context.title}</span>
+							<div class='book-subtitle ${context.subtitleStr && context.subtitleStr.length > 0 ? "" : "hide"}' title="${context.subtitleStr}">${context.subtitleStr}</div>
 						</div>
-						<div class='second-row ${context.subtitleStr && context.subtitleStr.length > 0 ? "" : "hide"}'>
-							<span class='book-subtitle' title=${context.subtitleStr}>${context.subtitleStr}</span>
+						<div class='second-row'>
+                            <span class='book-author'>${context.authorsStr||""}</span>
+							<span class='book-publisher'>${context.publisher||""}</span>
 						</div>
 						<div class='third-row'>
-							<span class='book-publisher'>${context.publisher||""}</span>
+							<div class='book-isbn'>${context.isbn}</div>
 						</div>
 					</div>
 					<div class='cleaner'></div>
@@ -129,6 +136,8 @@ function bindTypebook($el, defaultData) {
             }
 		},
 	}));
+
+    return $typebook;
 }
 
 
@@ -219,22 +228,36 @@ $(function() {
 
 // book type
 $(function() {
-    var $bookInput = $('input[name="book-title"]');
-	var recentBooks = JSON.parse('{{recent_books|safe}}');
+    var $bookFormG = $('.book-form-group');
+    var $bookInput = $bookFormG.find('input[name="book-title"]');
+	var recentBooks = JSON.parse('{{recent_books|escapejs}}');
+        recentBooks = _.filter(recentBooks, function(book) { // ignore legacy data
+            return !!book.raw_response;
+        });
         recentBooks = _.map(recentBooks, function(book) {
             return {
                 idStr: book.id,
                 title: book.title,
-                subtitle: null,
+                subtitle: '',
                 isbn: book.isbn13,
                 thumbnail: book.cover_url,
-                publisher: null,
-                authorStr: null,
+                publisher: '',
+                authorStr: '',
+                //
                 value: book.title,
+                raw: book.raw_response||'',
             }
         });
 
-	bindTypebook($bookInput, recentBooks);
+	var $typebook = bindTypebook($bookInput, recentBooks).on('typeahead:select', function(ev, bookObj) {
+        console.log('selected:', bookObj);
+
+        $bookFormG
+            .find('input[name="book-isbn"]'     ).val(bookObj.isbn               ).end()
+            .find('input[name="book-cover-url"]').val(bookObj.thumbnail          ).end()
+            .find('input[name="book-response"]' ).val(JSON.stringify(bookObj.raw)).end()
+        ;
+    });
 });
 </script>
 

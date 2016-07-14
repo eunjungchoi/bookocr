@@ -91,7 +91,8 @@ def new(request):
 		"id"    : b.id,
 		"title" : b.title,
 		"isbn13": b.isbn13,
-		"cover-url": b.cover_url,
+		"cover_url": b.cover_url,
+		"raw_response": json.loads(b.raw_response),
 	} for b in recent_books]
 
 	context = {

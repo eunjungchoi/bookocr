@@ -157,7 +157,9 @@ BandiNLunis.prototype.transform = function(response) {
             isDVD     : isDVD,
             isAbroad  : isAbroad,
 
+            //
             value: title,
+            raw: volume,
         };
     });
 
