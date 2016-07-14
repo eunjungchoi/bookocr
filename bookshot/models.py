@@ -39,7 +39,7 @@ class Quote(models.Model):
 		#
 		box = (crop_rect['x'], crop_rect['y'], crop_rect['x'] + crop_rect['w'], crop_rect['y'] + crop_rect['h'])
 		Quote.crop_image(self.photo.path, cropped_filepath, box)
-	
+
 		# detect
 		try:
 			response = detect_text(cropped_filepath)
@@ -116,7 +116,7 @@ class Quote(models.Model):
 
 class Book(models.Model):
 	title = models.CharField(max_length=30)
-	_isbn13 = models.CharField(max_length=13, null=False, blank=True, default="0000000000000", db_column="isbn13")
+	_isbn13 = models.CharField(max_length=13, null=False, blank=True, db_column="isbn13")
 	cover_url = models.URLField(max_length=300, null=True, blank=True, default=None)
 	_raw_response = models.TextField(null=True, blank=True, default=None)
 
