@@ -7,7 +7,8 @@ from ocr.googlevision import get_vision_service
 from mock import MagicMock, patch, ANY, sentinel
 
 import ocr.googlevision.text_detection
-
+from ocr.googlevision.text_detection import GoogleCredentials
+from oauth2client.service_account import _JWTAccessCredentials
 
 patch_discoverty_build = patch.object(ocr.googlevision.text_detection.discovery, 'build')
 
@@ -44,7 +45,7 @@ class GetVisionServiceByCredentialsTestCase(TestCase):
 		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
 
 	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
-	@patch.object(ocr.googlevision.text_detection.GoogleCredentials, 'get_application_default')
+	@patch.object(GoogleCredentials, 'get_application_default')
 	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
 		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
 		get_app_default.return_value = sentinel.CREDENTIALS
@@ -58,7 +59,28 @@ class GetVisionServiceByCredentialsTestCase(TestCase):
 		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
 
 
-def test_proper_http_request():
-	pass
+	@patch.object(_JWTAccessCredentials, 'from_json_keyfile_dict')
+	def test_passing__credentials__builds_service_with_credentials(self, from_json_keyfile_dict, discovery_build):
+		'''passing `credentials` as a json data builds service with credentials built '''
+
+		fake_json_data = {
+			"type": "service_account",
+			"project_id": "projectid",
+			"private_key_id": "12345abcdefg",
+			"private_key": "-----BEGIN PRIVATE KEY-----\nABCE12334\n-----END PRIVATE KEY-----\n",
+			"client_email": "projectid@projectid.iam.gserviceaccount.com",
+			"client_id": "12345",
+			"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+			"token_uri": "https://accounts.google.com/o/oauth2/token",
+			"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+			"client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/projectid%40projectid.iam.gserviceaccount.com"
+		}
+		service = get_vision_service(credentials=fake_json_data)
+		#
+		#_args, kwargs = discovery_build.call_args
+		#self.assertIsInstance(kwargs['credentials'], GoogleCredentials)
+
+		# cannot test actual build, it checks signature.
+		from_json_keyfile_dict.assert_called_once()
 
 
