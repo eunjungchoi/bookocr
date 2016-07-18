@@ -57,19 +57,19 @@ def ocr_new(request, book_id, quote_id):
 def ocr_request(request, book_id, quote_id):
 	quote = Quote.objects.get(id=quote_id)
 
-	crop_rect = {
+	area_rect = {
 		'x' : int(request.POST['crop-x']),
 		'y' : int(request.POST['crop-y']),
 		'w' : int(request.POST['crop-w']),
 		'h' : int(request.POST['crop-h']),
 	}
 
-	response = quote.read_image(crop_rect)
+	response = quote.read_text_from_image(area_rect)
 
 	json = {
 		'uri' : reverse(viewname='post_quote_ocr', args=[book_id, quote_id]),
 		'image_url' : quote.photo.url,
-		'crop_rect' : crop_rect,
+		'crop_rect' : area_rect,
 		'result' : {
 			'text' : response['responses'][0]['textAnnotations'][0]['description'],
 		},

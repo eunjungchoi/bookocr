@@ -30,7 +30,7 @@ class Quote(models.Model):
 	created_at = models.DateTimeField(null=True, default=None)
 	updated_at = models.DateTimeField(null=True, default=None)
 
-	def read_image(self, crop_rect):
+	def read_text_from_image(self, crop_rect):
 		# crop
 		ts = int(timezone.now().timestamp())
 		cropped_filename, ext = os.path.splitext(self.photo.path)
