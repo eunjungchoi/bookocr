@@ -4,8 +4,7 @@ import os, sys
 
 from googleapiclient import errors
 
-from .get_vision_service import get_vision_service
-
+from .annotate_images import annotate_images
 
 def detect_text(image_file, max_results=5, num_retries=3, **kwargs):
     ''' see https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/python/text '''

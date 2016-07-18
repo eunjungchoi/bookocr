@@ -188,3 +188,29 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+#
+# Google API
+#
+
+# Sever API key
+# tailing underscore(_) stands that it's application made, not by google
+GOOGLE_SERVER_APIKEY_ = os.environ.get('GOOGLE_SERVER_APIKEY_')
+
+# Server Account key
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+
+# Server Account key, each values
+# Use this if you cannot specify a file (eg, heroku)
+GOOGLE_APPLICATION_CREDENTIALS__type                        = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__type')
+GOOGLE_APPLICATION_CREDENTIALS__project_id                  = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__project_id')
+GOOGLE_APPLICATION_CREDENTIALS__private_key_id              = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__private_key_id')
+GOOGLE_APPLICATION_CREDENTIALS__private_key                 = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__private_key')
+GOOGLE_APPLICATION_CREDENTIALS__client_email                = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__client_email')
+GOOGLE_APPLICATION_CREDENTIALS__client_id                   = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__client_id')
+GOOGLE_APPLICATION_CREDENTIALS__auth_uri                    = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__auth_uri')
+GOOGLE_APPLICATION_CREDENTIALS__token_uri                   = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__token_uri')
+GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url')
+GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url        = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url')
+

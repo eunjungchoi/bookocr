@@ -10,8 +10,9 @@ from oauth2client.service_account import _JWTAccessCredentials
 
 from mock import MagicMock, patch, ANY, sentinel
 
-patch_discoverty_build = patch.object(ocr.googlevision.get_vision_service.discovery, 'build')
 
+
+patch_discoverty_build = patch.object(ocr.googlevision.get_vision_service.discovery, 'build')
 
 @patch_discoverty_build
 class GetVisionServiceByArgumentTestCase(TestCase):
@@ -83,4 +84,82 @@ class GetVisionServiceByEnvionrmentVariable(TestCase):
 		get_app_default.assert_called_once()
 		_args, kwargs = build.call_args
 		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
+
+
+@patch_discoverty_build
+class GetVisionServiceByEnvionrmentVariable(TestCase):
+	@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': 'ABCD1234'})
+	def test_setting_environment_variable_GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
+		'''setting environment variable GOOGLE_SERVER_APIKEY_ builds service with `developerKey` option '''
+		service = get_vision_service()
+		#
+		build.assert_called_once()
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['developerKey'], 'ABCD1234')
+
+	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
+	@patch.object(GoogleCredentials, 'get_application_default')
+	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
+		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
+		get_app_default.return_value = sentinel.CREDENTIALS
+
+		#
+		service = get_vision_service()
+
+		#
+		get_app_default.assert_called_once()
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
+
+
+
+@patch_discoverty_build
+class GetVisionServiceBySettings(TestCase):
+
+	def setUp(self):
+		class FakeSetting: 
+			pass
+		self.settings = FakeSetting()
+
+	def test_passing_object_with__GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
+		self.settings.GOOGLE_SERVER_APIKEY_ = 'ABCD1234'
+		service = get_vision_service(settings=self.settings)
+		#
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['developerKey'], 'ABCD1234')
+
+	def test_passing_object_with__GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, build):
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS = sentinel.CREDENTIALS
+
+		#
+		service = get_vision_service(settings=self.settings)
+
+		#
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
+
+
+	@patch.object(_JWTAccessCredentials, 'from_json_keyfile_dict')
+	def test_passing_object_with__each_of__GOOGLE_APPLICATION_CREDENTIALS___builds_GoogleCredentials(self, from_json_keyfile_dict, discovery_build):
+
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__type                        = "service_account",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__project_id                  = "projectid",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key_id              = "12345abcdefg",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key                 = "-----BEGIN PRIVATE KEY-----\nABCE12334\n-----END PRIVATE KEY-----\n",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_email                = "projectid@projectid.iam.gserviceaccount.com",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_id                   = "12345",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_uri                    = "https://accounts.google.com/o/oauth2/auth",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__token_uri                   = "https://accounts.google.com/o/oauth2/token",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url        = "https://www.googleapis.com/robot/v1/metadata/x509/projectid%40projectid.iam.gserviceaccount.com"
+
+		#
+		service = get_vision_service(settings=self.settings)
+		#
+		#_args, kwargs = discovery_build.call_args
+		#self.assertIsInstance(kwargs['credentials'], GoogleCredentials)
+
+		# cannot test actual build, it checks signature.
+		from_json_keyfile_dict.assert_called_once()
+
 

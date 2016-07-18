@@ -3,7 +3,7 @@
 import os, sys
 import pprint
 
-from .get_vision_service import get_vision_service
+from .annotate_images import annotate_images
 from .image_process import highlight_polygons
 
 def detect_face(face_file, max_results=4):
