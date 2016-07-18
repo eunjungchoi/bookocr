@@ -13,6 +13,13 @@ from oauth2client.client import GoogleCredentials
 from PIL import Image
 from PIL import ImageDraw
 
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+import httplib2
+httplib2.debuglevel = 2
+
 DISCOVERY_URL='https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'
 
 def get_vision_service(api_key=None, credentials=None):
@@ -32,9 +39,13 @@ def get_vision_service(api_key=None, credentials=None):
       # default Service account keys
       else:
           # look for GOOGLE_APPLICATION_CREDENTIALS= , and others
+          print(GoogleCredentials.get_application_default)
           credentials = GoogleCredentials.get_application_default()
+          print(credentials)
           options['credentials'] = credentials
+          print(options)
 
+    print('vision', 'v1', DISCOVERY_URL, options)
     service = discovery.build('vision', 'v1', discoveryServiceUrl=DISCOVERY_URL, **options)
     return service
 
