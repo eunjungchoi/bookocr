@@ -24,6 +24,7 @@ IMAGE_CONTENT  = open(IMAGE_FILEPATH, 'rb').read()
 @override_settings(MEDIA_ROOT=os.path.join(TEST_ROOT, 'media'))
 class QuoteReadImageTestCase(TestCase):
 	def setUp(self):
+		# create fixtures
 		user = User.objects.create_user('jhk', 'jh@gggmail.com', 'jhpassword')
 		book = Book.objects.create(title="스토너")
 		#
@@ -33,7 +34,6 @@ class QuoteReadImageTestCase(TestCase):
 			photo=SimpleUploadedFile(name='IMG_6114.jpg', content=IMAGE_CONTENT),
 			quotation="봐, 나는 살아있어!")
 
-		# stub
 		# stub: Quote.crop_image
 		self._Quote_crop_image = Quote.crop_image
 		Quote.crop_image = MagicMock(name='Quote.crop_image', return_value='cropped_image.jpg')
@@ -58,7 +58,7 @@ class QuoteReadImageTestCase(TestCase):
 		Quote.crop_image.assert_called_once()
 		#Quote.crop_image.assert_called_with(self.quote.photo.path, {"x": 10, "y": 10, "w": 200, "h": 150})
 		pos_args = Quote.crop_image.call_args[0]
-		self.assertEqual(pos_args[0:2], (self.quote.photo.path, {"x": 10, "y": 10, "w": 200, "h": 150}))
+		self.assertEqual(pos_args[0:2], (self.quote.photo.path, (10, 10, 210, 160)))
 
 	def test_requests_cropped_image_to_ocr_service(self):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150})
