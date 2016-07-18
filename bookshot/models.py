@@ -6,9 +6,6 @@ from django.utils import timezone
 
 from django.conf import settings
 
-#def detect_text(*args, **kwargs):
-#    import json
-#    return json.loads('{"responses": [{"textAnnotations": [{"description": "봐, 나는 살or있어!"}]}]}')
 from ocr.googlevision import detect_text
 
 def recent_books(self):

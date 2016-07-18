@@ -4,11 +4,12 @@ from unittest import TestCase
 
 import ocr.googlevision.get_vision_service 
 from ocr.googlevision.get_vision_service  import get_vision_service
+from ocr.googlevision import detect_text
 
 from ocr.googlevision.get_vision_service import GoogleCredentials
 from oauth2client.service_account import _JWTAccessCredentials
 
-from mock import MagicMock, patch, ANY, sentinel
+from mock import MagicMock, patch, ANY, sentinel, mock_open, Mock
 
 
 
@@ -31,7 +32,7 @@ class _AbstractGetVisionServiceTestCaseBase(TestCase):
 
 		#
 		_args, kwargs = discovery_build.call_args
-		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
+		self.assertEqual(kwargs['credentials'], sentinel.FAKE_CREDENTIALS)
 
 	def assert_build_credentials_from_dict(self, from_json_keyfile_dict):
 		#
@@ -55,7 +56,7 @@ class GetVisionServiceByArgumentTestCase(_AbstractGetVisionServiceTestCaseBase):
 
 	def test_passing__credentials__builds_service_with_credentials(self, discovery_build):
 		'''passing `credentials` builds service with `credentials` option '''
-		service = get_vision_service(credentials=sentinel.CREDENTIALS)
+		service = get_vision_service(credentials=sentinel.FAKE_CREDENTIALS)
 		#
 		self.assert_build_called_with_credentials(discovery_build)
 
@@ -92,11 +93,12 @@ class GetVisionServiceByEnvionrmentVariable(_AbstractGetVisionServiceTestCaseBas
 		#
 		self.assert_build_called_with_developerKey(build, 'ABCD1234')
 
+
 	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
 	@patch.object(GoogleCredentials, 'get_application_default')
 	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
 		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
-		get_app_default.return_value = sentinel.CREDENTIALS
+		get_app_default.return_value = sentinel.FAKE_CREDENTIALS
 
 		#
 		service = get_vision_service()
@@ -118,7 +120,7 @@ class GetVisionServiceByEnvionrmentVariable(_AbstractGetVisionServiceTestCaseBas
 	@patch.object(GoogleCredentials, 'get_application_default')
 	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
 		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
-		get_app_default.return_value = sentinel.CREDENTIALS
+		get_app_default.return_value = sentinel.FAKE_CREDENTIALS
 
 		#
 		service = get_vision_service()
@@ -137,39 +139,40 @@ class GetVisionServiceBySettings(_AbstractGetVisionServiceTestCaseBase):
 
 	def test_passing_object_with__GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
 		self.settings.GOOGLE_SERVER_APIKEY_ = 'ABCD1234'
-
 		#
 		service = get_vision_service(settings=self.settings)
-
 		#
 		self.assert_build_called_with_developerKey(build, 'ABCD1234')
 
-	def test_passing_object_with__GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, build):
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS = sentinel.CREDENTIALS
+
+	@patch.object(ocr.googlevision.get_vision_service, '_get_application_default_credential_from_file')
+	def test_passing_object_with__GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS = 'fake_credential.json'
+		get_app_default.return_value = sentinel.FAKE_CREDENTIALS
 
 		#
 		service = get_vision_service(settings=self.settings)
-
 		#
 		self.assert_build_called_with_credentials(build)
 
 
 	@patch.object(_JWTAccessCredentials, 'from_json_keyfile_dict')
-	def test_passing_object_with__each_of__GOOGLE_APPLICATION_CREDENTIALS___builds_GoogleCredentials(self, from_json_keyfile_dict, discovery_build):
+	def test_passing_object_with__each_of__GOOGLE_APPLICATION_CREDENTIALS____builds_GoogleCredentials(self, from_json_keyfile_dict, discovery_build):
 
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__type                        = "service_account",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__project_id                  = "projectid",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key_id              = "12345abcdefg",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key                 = "-----BEGIN PRIVATE KEY-----\nABCE12334\n-----END PRIVATE KEY-----\n",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_email                = "projectid@projectid.iam.gserviceaccount.com",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_id                   = "12345",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_uri                    = "https://accounts.google.com/o/oauth2/auth",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__token_uri                   = "https://accounts.google.com/o/oauth2/token",
-		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs",
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__type                        = "service_account"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__project_id                  = "projectid"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key_id              = "12345abcdefg"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__private_key                 = "-----BEGIN PRIVATE KEY-----\nABCE12334\n-----END PRIVATE KEY-----\n"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_email                = "projectid@projectid.iam.gserviceaccount.com"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_id                   = "12345"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_uri                    = "https://accounts.google.com/o/oauth2/auth"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__token_uri                   = "https://accounts.google.com/o/oauth2/token"
+		self.settings.GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
 		self.settings.GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url        = "https://www.googleapis.com/robot/v1/metadata/x509/projectid%40projectid.iam.gserviceaccount.com"
 
 		#
 		service = get_vision_service(settings=self.settings)
 		#
 		self.assert_build_credentials_from_dict(from_json_keyfile_dict)
+
 

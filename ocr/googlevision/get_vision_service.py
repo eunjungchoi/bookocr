@@ -38,15 +38,20 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 		if credentials and not api_key:
 			if isinstance(credentials, dict): 
 				credentials = _get_application_default_credential_from_dict(credentials)
+			else:
+				credentials = _get_application_default_credential_from_file(credentials)
 			options['credentials'] = credentials
 		# GOOGLE_SERVER_APIKEY_=
 		elif api_key and not credentials:
 			options['developerKey'] = api_key
 		# merge keys starting with GOOGLE_APPLICATION_CREDENTIALS__
 		else:
+			settings_tuple = [(key, getattr(settings, key)) for key in dir(settings)]
+
 			# build with partials
 			PREFIX = 'GOOGLE_APPLICATION_CREDENTIALS__'
-			cred_dict = dict((key.replace(PREFIX, ''),value[0]) for key,value in settings.__dict__.items() if key.startswith(PREFIX))
+			cred_dict = dict((key.replace(PREFIX, '').lower(), value) for (key,value) in settings_tuple if key.startswith(PREFIX))
+
 			#
 			credentials = _get_application_default_credential_from_dict(cred_dict)
 			options['credentials'] = credentials
@@ -67,6 +72,9 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 	return service
 
 
+
+
+from oauth2client.client import _get_application_default_credential_from_file
 from oauth2client.client import AUTHORIZED_USER, SERVICE_ACCOUNT, ApplicationDefaultCredentialsError, _raise_exception_for_missing_fields, GoogleCredentials
 
 # copied from oauth2cilent/client.py
@@ -102,4 +110,13 @@ def _get_application_default_credential_from_dict(client_credentials):
 		return _JWTAccessCredentials.from_json_keyfile_dict(
 				client_credentials)
 
+
+#def _get_application_default_credential_from_file(filename):
+#	"""Build the Application Default Credentials from file."""
+#	# read the credentials from the file
+#	with open(filename) as file_obj:
+#		import json
+#		client_credentials = json.load(file_obj)
+#
+#	return _get_application_default_credential_from_dict(client_credentials)
 
