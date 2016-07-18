@@ -4,9 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-#def detect_text(*args, **kwargs):
-#    import json
-#    return json.loads('{"responses": [{"textAnnotations": [{"description": "봐, 나는 살or있어!"}]}]}')
+from django.conf import settings
+
 from ocr.googlevision import detect_text
 
 def recent_books(self):
@@ -43,7 +42,7 @@ class Quote(models.Model):
 
 		# detect
 		try:
-			response = detect_text(cropped_filepath)
+			response = detect_text(cropped_filepath, settings=settings._wrapped)
 			return response
 		finally:
 			if os.path.exists(cropped_filepath):
