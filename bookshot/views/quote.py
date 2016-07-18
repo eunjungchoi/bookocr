@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
+from django.contrib import messages
 
 from datetime import date
 from PIL import Image
@@ -15,6 +16,7 @@ from bookshot.models import *
 
 @login_required
 def add(request):
+
 	try:
 		book = Book.objects.get(
 			title=request.POST['book-title'],
@@ -28,6 +30,7 @@ def add(request):
 		)
 		book.isbn13 = request.POST['book-isbn']
 		book.save()
+
 
 	q = Quote(
 		user=request.user,
@@ -82,8 +85,9 @@ def ocr_update(request, book_id, quote_id):
 	if request.method != 'POST':
 		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
 
-	#ocr_response = {}
-	#text =  '봐, 나는 살or있어!'
+	if not request.POST['quotation']:
+		messages.error(request, '문구를 입력해주세요')
+		return redirect(reverse('new_quote_ocr', kwargs={"book_id": book_id, "quote_id": quote_id}))
 
 	#
 	book  = get_object_or_404(Book, pk=book_id)
@@ -125,4 +129,3 @@ def new(request):
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
-

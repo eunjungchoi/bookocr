@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}	
+{% block content %}
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
@@ -59,6 +59,12 @@
 					-->
 				</div>
 
+				{% if messages %}
+					{% for message in messages %}
+					<div class="alert alert-warning col-xs-12 col-sm-offset-2 col-sm-10" role="alert">{{ message }}</div>
+					{% endfor %}
+				{% endif %}
+
 				<div class="form-group">
 					<div class="col-xs-12 text-right">
 						<button type="submit" class="btn btn-primary">저장</button>
@@ -83,4 +89,3 @@
 {% include "quote/crop.js.html" %}
 
 {% endblock content %}
-
