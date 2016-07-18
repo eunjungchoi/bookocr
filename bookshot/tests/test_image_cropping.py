@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from PIL import Image
 
-from bookshot.views.quote import crop_image
+from bookshot.models import Quote
 
 TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -21,7 +21,8 @@ class CropImageTestCase(TestCase):
 	def test_returns_cropped_part_from_original_image(self):
 		width = 200
 		height = 200
-		cropped_image = crop_image(self.image_filename, self.cropped_image_filename, (0, 0, width, height))
+		cropped_image = Quote.crop_image(self.image_filename, (0, 0, width, height), self.cropped_image_filename)
 
 		self.assertIsNotNone(cropped_image)
 		self.assertEqual(cropped_image.size, (width, height))
+
