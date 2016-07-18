@@ -5,16 +5,12 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from django.conf import settings
+from django.db.models import Max
 
 from ocr.googlevision import detect_text
 
 def recent_books(self):
-	books = Book.objects.filter(quote__user=self).order_by('-quote__updated_at').distinct()
-
-	for book in books:
-		quote = Quote.objects.filter(book=book).order_by('-updated_at')[0]
-		book.updated_at = quote.updated_at
-
+	books = Book.objects.filter(quote__user=self).annotate(updated_at=Max('quote__updated_at')).order_by('-updated_at')
 	return books
 
 User.add_to_class("recent_books", recent_books)
