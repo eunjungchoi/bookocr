@@ -1,9 +1,6 @@
 import os
 from urllib.parse import urlparse
 
-from django.test import TestCase, override_settings
-from django.test import Client, RequestFactory
-
 from django.core.urlresolvers import resolve, reverse
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 
@@ -11,6 +8,12 @@ from django.contrib.auth.models import AnonymousUser, User
 from social.apps.django_app.default.models import UserSocialAuth
 
 from bookshot.models import Quote, Book
+
+#
+from django.test import TestCase, override_settings
+from django.test import Client, RequestFactory
+
+from mock import MagicMock, patch, ANY
 
 
 def create_user(username='jhk', email='jh@gggmail.com', password='jhpassword', **kwargs):
@@ -21,6 +24,23 @@ def create_user(username='jhk', email='jh@gggmail.com', password='jhpassword', *
 
 TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
 IMAGE_FILEPATH = os.path.join(TEST_ROOT, 'fixtures/media/IMG_6114.jpg')
+
+import json
+TEXT_DETCTION_RESPONSE = json.loads('''
+{"responses": [
+	{"textAnnotations": [
+		{
+			"boundingPoly": {
+				"vertices": [{"x": 9, "y": 15}, {"x": 479, "y": 15}, {"x": 479, "y": 76}, {"x": 9, "y": 76}]
+			}, 
+			"locale": "ko", 
+			"description": "봐, 나는 살or있어!"
+		}
+	]}
+]}
+'''.strip())
+
+
 
 
 class AbstractQuoteOCRUpdateTestCase(TestCase):
@@ -38,6 +58,10 @@ class AbstractQuoteOCRUpdateTestCase(TestCase):
 		#
 		self.client.force_login(self.user)
 		#
+
+		# stub: detect_text
+		self.patcher = patch('bookshot.models.detect_text', return_value=TEXT_DETCTION_RESPONSE)
+		self.patcher.start()
 
 
 class QuoteUpdateTextTestCase(AbstractQuoteOCRUpdateTestCase):
