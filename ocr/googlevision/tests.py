@@ -2,15 +2,15 @@
 
 from unittest import TestCase
 
-from ocr.googlevision import get_vision_service
+import ocr.googlevision.get_vision_service 
+from ocr.googlevision.get_vision_service  import get_vision_service
+
+from ocr.googlevision.get_vision_service import GoogleCredentials
+from oauth2client.service_account import _JWTAccessCredentials
 
 from mock import MagicMock, patch, ANY, sentinel
 
-import ocr.googlevision.text_detection
-from ocr.googlevision.text_detection import GoogleCredentials
-from oauth2client.service_account import _JWTAccessCredentials
-
-patch_discoverty_build = patch.object(ocr.googlevision.text_detection.discovery, 'build')
+patch_discoverty_build = patch.object(ocr.googlevision.get_vision_service.discovery, 'build')
 
 @patch_discoverty_build
 class GetVisionServiceByDeveloperKeyTestCase(TestCase):
@@ -60,7 +60,7 @@ class GetVisionServiceByCredentialsTestCase(TestCase):
 
 
 	@patch.object(_JWTAccessCredentials, 'from_json_keyfile_dict')
-	def test_passing__credentials__builds_service_with_credentials(self, from_json_keyfile_dict, discovery_build):
+	def test_passing__credentials__as_dict_builds_credentials(self, from_json_keyfile_dict, discovery_build):
 		'''passing `credentials` as a json data builds service with credentials built '''
 
 		fake_json_data = {
