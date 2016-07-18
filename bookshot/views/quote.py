@@ -125,3 +125,4 @@ def new(request):
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
+
