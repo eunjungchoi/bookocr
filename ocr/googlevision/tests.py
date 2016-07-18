@@ -12,8 +12,9 @@ from mock import MagicMock, patch, ANY, sentinel
 
 patch_discoverty_build = patch.object(ocr.googlevision.get_vision_service.discovery, 'build')
 
+
 @patch_discoverty_build
-class GetVisionServiceByDeveloperKeyTestCase(TestCase):
+class GetVisionServiceByArgumentTestCase(TestCase):
 
 	def test_passing__api_key__builds_service_with_developerKey_option(self, build):
 		'''passing `api_key` builds service with `developerKey` option '''
@@ -24,40 +25,12 @@ class GetVisionServiceByDeveloperKeyTestCase(TestCase):
 		_args, kwargs = build.call_args
 		self.assertEqual(kwargs['developerKey'], api_key)
 
-	@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': 'ABCD1234'})
-	def test_setting_environment_variable_GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
-		'''setting environment variable GOOGLE_SERVER_APIKEY_ builds service with `developerKey` option '''
-		service = get_vision_service()
-		#
-		build.assert_called_once()
-		_args, kwargs = build.call_args
-		self.assertEqual(kwargs['developerKey'], 'ABCD1234')
-
-
-@patch_discoverty_build
-class GetVisionServiceByCredentialsTestCase(TestCase):
-
 	def test_passing__credentials__builds_service_with_credentials(self, discovery_build):
 		'''passing `credentials` builds service with `credentials` option '''
 		service = get_vision_service(credentials=sentinel.CREDENTIALS)
 		#
 		_args, kwargs = discovery_build.call_args
 		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
-
-	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
-	@patch.object(GoogleCredentials, 'get_application_default')
-	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
-		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
-		get_app_default.return_value = sentinel.CREDENTIALS
-
-		#
-		service = get_vision_service()
-
-		#
-		get_app_default.assert_called_once()
-		_args, kwargs = build.call_args
-		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
-
 
 	@patch.object(_JWTAccessCredentials, 'from_json_keyfile_dict')
 	def test_passing__credentials__as_dict_builds_credentials(self, from_json_keyfile_dict, discovery_build):
@@ -83,4 +56,31 @@ class GetVisionServiceByCredentialsTestCase(TestCase):
 		# cannot test actual build, it checks signature.
 		from_json_keyfile_dict.assert_called_once()
 
+
+
+
+@patch_discoverty_build
+class GetVisionServiceByEnvionrmentVariable(TestCase):
+	@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': 'ABCD1234'})
+	def test_setting_environment_variable_GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
+		'''setting environment variable GOOGLE_SERVER_APIKEY_ builds service with `developerKey` option '''
+		service = get_vision_service()
+		#
+		build.assert_called_once()
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['developerKey'], 'ABCD1234')
+
+	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
+	@patch.object(GoogleCredentials, 'get_application_default')
+	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
+		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
+		get_app_default.return_value = sentinel.CREDENTIALS
+
+		#
+		service = get_vision_service()
+
+		#
+		get_app_default.assert_called_once()
+		_args, kwargs = build.call_args
+		self.assertEqual(kwargs['credentials'], sentinel.CREDENTIALS)
 
