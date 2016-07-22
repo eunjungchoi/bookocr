@@ -84,11 +84,14 @@ class GetVisionServiceByArgumentTestCase(_AbstractGetVisionServiceTestCaseBase):
 
 
 
+@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': ''})
+@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': ''})
 @patch_discoverty_build
 class GetVisionServiceByEnvionrmentVariable(_AbstractGetVisionServiceTestCaseBase):
+
 	@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': 'ABCD1234'})
 	def test_setting_environment_variable_GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
-		'''setting environment variable GOOGLE_SERVER_APIKEY_ builds service with `developerKey` option '''
+		'''GOOGLE_SERVER_APIKEY_ env variable builds service with `developerKey` option '''
 		service = get_vision_service()
 		#
 		self.assert_build_called_with_developerKey(build, 'ABCD1234')
@@ -97,29 +100,7 @@ class GetVisionServiceByEnvionrmentVariable(_AbstractGetVisionServiceTestCaseBas
 	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
 	@patch.object(GoogleCredentials, 'get_application_default')
 	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
-		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
-		get_app_default.return_value = sentinel.FAKE_CREDENTIALS
-
-		#
-		service = get_vision_service()
-
-		#
-		self.assert_build_called_with_credentials(build)
-
-
-@patch_discoverty_build
-class GetVisionServiceByEnvionrmentVariable(_AbstractGetVisionServiceTestCaseBase):
-	@patch.dict('os.environ', {'GOOGLE_SERVER_APIKEY_': 'ABCD1234'})
-	def test_setting_environment_variable_GOOGLE_SERVER_APIKEY___builds_service_with_developerKey_option(self, build):
-		'''setting environment variable GOOGLE_SERVER_APIKEY_ builds service with `developerKey` option '''
-		service = get_vision_service()
-		#
-		self.assert_build_called_with_developerKey(build, 'ABCD1234')
-
-	@patch.dict('os.environ', {'GOOGLE_APPLICATION_CREDENTIALS': 'credentials_file_test.json'})
-	@patch.object(GoogleCredentials, 'get_application_default')
-	def test_setting_environment_variable_GOOGLE_APPLICATION_CREDENTIALS__builds_service_with_credentials_option(self, get_app_default, build):
-		'''setting environment variable GOOGLE_APPLICATION_CREDENTIALS builds service with `credentials` option '''
+		'''GOOGLE_APPLICATION_CREDENTIALS env variable builds discovery service with `credentials` option '''
 		get_app_default.return_value = sentinel.FAKE_CREDENTIALS
 
 		#
