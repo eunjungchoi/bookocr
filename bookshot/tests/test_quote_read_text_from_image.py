@@ -86,7 +86,14 @@ class QuoteReadImageTestCase(TestCase):
 		self.quote.read_text_from_image({"x": 10, "y": 10, "w": 200, "h": 150}, cropped_filepath=cropped_filepath)
 
 		#
-		bookshot.models.detect_text.assert_called_once_with(cropped_filepath)
+		self.assert_called_once_with_arg(bookshot.models.detect_text, (cropped_filepath,))
 		self.assertFalse(os.path.exists(cropped_filepath))
 
+	def assert_called_once_with_arg(self, patched_method, check_args):
+		# called once
+		patched_method.assert_called_once()
+
+		#
+		(args, _kwargs) = patched_method.call_args
+		self.assertEqual(args, check_args)
 
