@@ -75,6 +75,11 @@
 	</div>
 </div>
 
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/image_preview_container.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
+
 {% if debug %}
 	{% load staticfiles %}
 	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
@@ -83,7 +88,6 @@
 {% endif %}
 <script src="{% static 'libs/jcrop-0.9.12/js/jquery.Jcrop.js' %}"></script>
 <link href="{% static 'libs/jcrop-0.9.12/css/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css"></link>
-
 
 <script src="{% static 'js/cropper.js' %}"></script>
 {% include "quote/crop.js.html" %}

@@ -47,3 +47,8 @@
 	</div>
 </div>
 
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/quote.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
+
