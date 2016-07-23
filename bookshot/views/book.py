@@ -17,12 +17,11 @@ def form(request):
 	return render(request,'bookform.html')
 
 
+from django.db.models import Count
+
 @login_required
 def list(request):
-	books = Book.objects.all()
-
-	for book in books:
-		book.quote_count = book.quote_set.count()
+	books = Book.objects.annotate(Count('quote')).all()
 
 	context = {
 		"books": books,
