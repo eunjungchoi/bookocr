@@ -5,7 +5,7 @@
 
 .image-preview-container {
 	position: relative;
-}
+
 	.image-preview-container-inner {
 		position: relative;
 
@@ -101,34 +101,38 @@
 			line-height: 3;
 		}
 
-		/*
-		.file-drop-box {
-			background-repeat: no-repeat;
-			background-image: url(/static/images/drop-guide.png);
-			background-position-x: center;
-			background-position-y: center;
+		//.file-drop-box {
+		//	background-repeat: no-repeat;
+		//	background-image: url(/static/images/drop-guide.png);
+		//	background-position-x: center;
+		//	background-position-y: center;
+		//}
+		//.file-drop-box .guide {
+		//	visibility: hidden;
+		//}
+
+		.thumbnail {
+			position: relative;
+			width: 100%;
+
+			margin-bottom: 0;
+			padding: 0;
+
+			background-color: transparent; /* show blue-ish on dragging */
+			border: none;
+			box-shadow: none;
+
+			.image-wrapper {
+				position: relative;
+				width: 100%;
+
+				> img {
+					max-width: 100%; 
+					max-height: 100%;
+				}
+			}
 		}
-		.file-drop-box .guide {
-			visibility: hidden;
-		}
-		*/
 
-	.image-preview-container .thumbnail {
-		position: relative;
-		width: 100%;
-
-		margin-bottom: 0;
-		padding: 0;
-
-		background-color: transparent; /* show blue-ish on dragging */
-		border: none;
-		box-shadow: none;
-	}
-
-	.image-preview-container .thumbnail .image-wrapper {
-		position: relative;
-		width: 100%;
-	}
 
 				/*
 				.image-preview-container-inner {
@@ -148,12 +152,12 @@
 
 .image-preview-container-inner .crop-tool-layer {
 	display: block;
-    position: absolute;
+	position: absolute;
 	width: 100%;
 
-    background-color: rgba(0, 0, 0, 0.6);
-}
-	.crop-tool-layer .crop-info {
+	background-color: rgba(0, 0, 0, 0.6);
+
+	.crop-info {
 		display: inline-block;
 		padding: 2px 5px;
 
@@ -163,7 +167,7 @@
 
 		color: grey;
 	}
-	.crop-tool-layer .cropper-button {
+	.cropper-button {
 		position: absolute;
 		top: 0px;
 		right: 0px;
@@ -172,22 +176,26 @@
 	}
 
 	/* don't over-show on small size */
-	.crop-tool-layer {
-		overflow: hidden;
-	}
-	.crop-tool-layer .crop-info {
+	overflow: hidden;
+
+	.crop-info {
 		white-space: nowrap;
 	}
-	.crop-tool-layer .cropper-button {
+
+	.cropper-button {
 		max-width: 100%;
 		width: 54px;
-	}
 
-	.cropper-button.disabled {
-		padding: 1px 3px;
-	}
-		.cropper-button.disabled .glyphicon-refresh {
-			-animation: spin 1.7s infinite linear;
-			-webkit-animation: spin-webkit 1.7s infinite linear;
+		&.disabled {
+			padding: 1px 3px;
+
+			.glyphicon-refresh {
+				-animation: spin 1.7s infinite linear;
+				-webkit-animation: spin-webkit 1.7s infinite linear;
+			}
 		}
+	}
+}
 
+
+}

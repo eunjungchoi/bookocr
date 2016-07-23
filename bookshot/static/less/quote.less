@@ -4,8 +4,8 @@
 
 .quote.thumbnail {
 	position: relative;
-}
-	.quote.thumbnail .background-image {
+
+	.background-image {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -14,12 +14,12 @@
 
 		opacity: 0.2;
 		overflow: hidden;
-	}
-		.quote.thumbnail .background-image img {
+
+		img {
 			max-width: 100%;
 			margin-top: calc(-150px + 59px);
 		}
-		.quote.thumbnail .background-image .img-block {
+		.img-block {
 			width: 100%;
 			height: 100%;
 			z-index: -1;
@@ -31,11 +31,18 @@
 			-moz-background-size: cover;
 			-webkit-background-size: cover;
 		}
-	.quote.thumbnail .caption {
-		position: relative;
 	}
 
-	.quote.thumbnail .quotation-mark {
+	.caption {
+		position: relative;
+
+		.quote {
+			margin-top: 20px; 
+			padding-left: 30px;
+		}
+	}
+
+	.quotation-mark {
 		clear: both;
 		float: left;
 		font-size: 60px;
@@ -46,4 +53,6 @@
 		position: absolute;
 		margin-left: -35px;
 	}
+
+}
 
