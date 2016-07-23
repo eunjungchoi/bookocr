@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 
     url(r'^books', views.book.list, name='book_list'),
+    url(r'^book/(?P<book_id>[0-9]+)', views.book.show, name='book'),
 
     url(r'^quotes/new$', views.quote.new, name='new_quote'),
     url(r'^books/(?P<book_id>[0-9]+)/quotes/(?P<quote_id>[0-9]+)/recognize$', views.quote.ocr_new, name='new_quote_ocr'),

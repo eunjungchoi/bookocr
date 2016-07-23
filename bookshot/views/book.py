@@ -32,6 +32,11 @@ def list(request):
 
 
 @login_required
+def show(request, book_id):
+	pass
+
+
+@login_required
 def add(request):
 	title = request.POST.get('title', False)
 	b = Book(

@@ -11,12 +11,12 @@
 				<li class="book-listitem list-group-item">
 					<div class="media">
 						<div class="media-left">
-							<a href="">
+							<a href="{% url 'book' book_id=book.id %}">
 								<img class="book-cover media-object" src="{{ book.cover_url|default:"" }}" alt="{{ book.title }} 표지" >
 							</a>
 						</div>
 						<div class="media-right">
-							<a class="media-right-inner">
+							<a href="{% url 'book' book_id=book.id %}" class="media-right-inner">
 								<h4 class="media-heading">{{ book.title }}</h4>
 								<p>
 									<span class='book-author'>{{book.authors}}</span>
@@ -25,12 +25,11 @@
 									<span class="quote-count">
 										<i class="glyphicon glyphicon-comment"></i> <span class="badge">{{book.quote_count}}</span>
 									</span>
-
 								</div>
 							</a>
 							<div class='new-quote-button-container'>
-								<a href="{% url 'new_quote' %}" class="btn btn-default">
-									<span class="sr-only">문구 추가하기</span>
+								<a href="{% url 'new_quote' %}?book_id={{book.id}}" class="btn btn-default">
+									<span class="sr-only">이 책에 새 문구 추가하기</span>
 									<i class="glyphicon glyphicon-plus"></i>
 								</a>
 							</div>
