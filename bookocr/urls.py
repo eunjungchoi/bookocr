@@ -38,6 +38,9 @@ urlpatterns = [
     url(r'^add/$', views.quote.add, name='add'),
     #url(r'^(?P<quote_id>[0-9]+)$', views.detail, name='detail'),
 
+    url(r'^books$', views.book.list, name='book_list'),
+    url(r'^books/(?P<book_id>[0-9]+)$', views.book.show, name='book'),
+
     url(r'^bookform/$', views.book.form, name='bookform'),
     url(r'^addbook/$', views.book.add, name='add_book'),
 

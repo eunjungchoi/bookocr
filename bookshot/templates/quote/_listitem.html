@@ -14,27 +14,36 @@
 
 		<p class="quote" style="margin-top: 20px; padding-left:30px;">
 			<span class="quotation-mark">“</span>
-			{{ quote.quotation|default:"Say something..." }}
+			{% if quote.quotation %}
+				{{ quote.quotation }}
+			{% else %}
+				<a href="{% url 'new_quote_ocr' book_id=quote.book.id quote_id=quote.id %}">사진에서 문구 영역을 정해 주세요.</a>
+			{% endif %}
 		</p>
 
-		<div class="text-right">
+		<div class="quote-source">
 			-
 			<a href="" class="book">
 				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>
-				<span class="author"></span>
+				, <span class="author">{{quote.book.authors}}</span>
 			</a>
 		</div>
 
-		<div class="writer">
-			<img src="" />
-
-			{{ quote.user.username }}
+		<div class="text-right">
+			<time datetime={{ quote.created_at }}>{{ quote.created_at }}</time>
+			<span class="quote-writer">
+				<span class="user-profile-image">
+					{% if quote.user.profile_picture_url %}
+						<img src="{{ quote.user.profile_picture_url }}" class="wrapper round-wrapper" >
+					{% else %}
+						<span class="wrapper">
+							<i class="glyphicon glyphicon-user"></i>
+						</span>
+					{% endif %}
+				</span>
+				<span class="username hidden-xs">{{ quote.user.username }}</span>
+			</span>
 		</div>
-
-		<!--p>
-			<a href="#" class="btn btn-primary" role="button">Button</a> 
-			<a href="#" class="btn btn-default" role="button">Button</a>
-		</p-->
 	</div>
 </div>
 

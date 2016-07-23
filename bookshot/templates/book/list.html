@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}	
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+
+			<ul class="book-list-group list-group">
+				{% for book in books %}
+
+				<li class="book-item list-group-item">
+					<div class="media">
+						<div class="media-left">
+							<a href="{% url 'book' book_id=book.id %}">
+								<img class="book-cover media-object" src="{{ book.cover_url|default:"" }}" alt="{{ book.title }} 표지" >
+							</a>
+						</div>
+						<div class="media-right">
+							<a href="{% url 'book' book_id=book.id %}" class="media-right-inner">
+								<h4 class="media-heading">{{ book.title }}</h4>
+								<p>
+									<span class='book-author'>{{book.authors}}</span>
+								</p>
+								<div class='book-status'>
+									<span class="quote-count">
+										<i class="glyphicon glyphicon-comment"></i> <span class="badge">{{book.quote__count}}</span>
+									</span>
+								</div>
+							</a>
+							<div class='new-quote-button-container'>
+								<a href="{% url 'new_quote' %}?book_id={{book.id}}" class="btn btn-default">
+									<span class="sr-only">이 책에 새 문구 추가하기</span>
+									<i class="glyphicon glyphicon-plus"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				{% endfor %}
+			</ul>
+
+		</div>
+	</div>
+</div>
+
+
+{% if debug %}
+	{% load staticfiles %}
+{% else %}
+{% endif %}
+
+{% endblock content %}
+

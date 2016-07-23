@@ -11,9 +11,6 @@ from datetime import date
 from PIL import Image
 from bookshot.models import *
 
-
-
-
 @login_required
 def add(request):
 
@@ -113,9 +110,15 @@ def ocr_update(request, book_id, quote_id):
 
 @login_required
 def new(request):
-	from django.core.serializers import serialize
 	import json
 
+	# book
+	book = Book()
+	if request.GET.get('book_id'):
+		book_id = request.GET['book_id']
+		book = get_object_or_404(Book, pk=book_id)
+
+	# recent books
 	recent_books = request.user.recent_books()[:3]
 	recent_books = [{
 		"id"    : b.id,
@@ -126,6 +129,8 @@ def new(request):
 	} for b in recent_books]
 
 	context = {
+		'book': book,
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
+

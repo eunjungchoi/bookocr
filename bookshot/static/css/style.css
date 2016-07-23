@@ -60,6 +60,9 @@ nav#nav {
 			-moz-background-size: cover;
 			-webkit-background-size: cover;
 		}
+	.quote.thumbnail .caption {
+		position: relative;
+	}
 
 
 	.quote.thumbnail .quotation-mark {
@@ -269,4 +272,60 @@ nav#nav {
 		}
 
 
+
+#sidebar li a {
+	border-top-left-radius: 0; 
+	border-bottom-left-radius: 0;
+}
+
+
+
+.book-item .media-left {
+	padding-right: 10px;
+	max-width: calc(64px + 10px);
+}
+	.book-item .media-left img.book-cover {
+		width: 64px;
+		min-height: 100px;
+	}
+
+
+.book-item .media-right {
+	position: relative;
+	width: 100%;
+}
+	.book-item .media-right-inner {
+		position: absolute;
+		width: calc(100% - 50px);
+		height: 100%;
+		padding-top: 3px;
+	}
+		.book-item a.media-right-inner {
+			display: block;
+			color: inherit;
+			cursor: pointer;
+		}
+			.book-item a.media-right-inner:hover {
+				text-decoration: none;
+			}
+
+.book-item .media-right .book-status {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	padding-left: 1rem;
+}
+	.book-item .book-status .quote-count {
+		font-size: 1.6em;
+	}
+		.book-item .book-status .quote-count i.glyphicon-comment {
+			vertical-align: middle;
+		}
+
+
+.book-item .media-right .new-quote-button-container {
+	position: absolute;
+	right: 0;
+	bottom: 10px;
+}
 

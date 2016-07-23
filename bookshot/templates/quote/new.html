@@ -12,12 +12,12 @@
 				<div class="book-form-group form-group">
 					<label class="control-label hidden-xs col-sm-2">책</label>
 					<div class="col-xs-12 col-sm-10">
-						<input type="text" class="form-control" name="book-title" placeholder="책 제목을 입력해 주세요.">
+						<input type="text" class="form-control" name="book-title" placeholder="책 제목을 입력해 주세요." value="{{book.title}}" >
 					</div>
-					<input type="hidden" name="book-isbn" />
-					<input type="hidden" name="book-authors" />
-					<input type="hidden" name="book-cover-url" />
-					<input type="hidden" name="book-response" />
+					<input type="hidden" name="book-isbn" value="{{book.isbn13}}" />
+					<input type="hidden" name="book-authors" value="{{book.authors}}" />
+					<input type="hidden" name="book-cover-url" value="{{book.cover_url}}" />
+					<input type="hidden" name="book-response" value="{{book.raw_response}}" />
 				</div>
 
 				<div class="quote-photo-form-group form-group">
