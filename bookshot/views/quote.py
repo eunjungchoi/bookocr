@@ -122,7 +122,7 @@ def new(request):
 		"title" : b.title,
 		"isbn13": b.isbn13,
 		"cover_url": b.cover_url,
-		"raw_response": json.loads(b.raw_response),
+		"raw_response": json.loads(b.raw_response or '{}'),
 	} for b in recent_books]
 
 	context = {
