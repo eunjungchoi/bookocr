@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 
-from bookshot.models import Book
+from bookshot.models import Book, Quote
 
 
 
@@ -32,7 +32,19 @@ def list(request):
 
 @login_required
 def show(request, book_id):
-	pass
+	try:
+		book = Book.objects.annotate(Count('quote')).get(id=book_id)
+	except Book.DoesNotExist:
+		raise Http404('Cannot find book with id=%d' % book_id)
+
+	quotes = Quote.objects.filter(book_id=book.id)
+
+	context = {
+		"book": book,
+		"quotes": quotes,
+	}
+
+	return render(request, 'book/show.html', context)
 
 
 @login_required
