@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'social.apps.django_app.default',
 	'storages', #
 	# 'django_s3_storage',
+	"compressor",
 ]
 
 
@@ -182,6 +183,12 @@ STATICFILES_DIRS = [
 	os.path.join(PROJECT_ROOT, 'static'),
 ]
 
+STATICFILES_FINDERS = [
+	'django.contrib.staticfiles.finders.FileSystemFinder',
+	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 #STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
@@ -213,3 +220,16 @@ GOOGLE_APPLICATION_CREDENTIALS__AUTH_URI                    = os.environ.get('GO
 GOOGLE_APPLICATION_CREDENTIALS__TOKEN_URI                   = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__token_uri')
 GOOGLE_APPLICATION_CREDENTIALS__AUTH_PROVIDER_X509_CERT_URL = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url')
 GOOGLE_APPLICATION_CREDENTIALS__CLIENT_X509_CERT_URL        = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url')
+
+
+#
+# compressor
+#
+COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
+COMPRESS_DEBUG_TOGGLE = 'debug'
+
+STATICFILES_FINDERS.append(
+    'compressor.finders.CompressorFinder'
+)
+
