@@ -3,6 +3,7 @@
 from bookocr.settings.base import *
 
 DEBUG = False
+
 INSTALLED_APPS += (
     # other apps for production site
     'whitenoise.runserver_nostatic',
@@ -124,7 +125,12 @@ DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
 # AWS_S3_GZIP_STATIC = True
 
 
+#
+# compressor
+#
+COMPRESS_OFFLINE=True
 
+# logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
