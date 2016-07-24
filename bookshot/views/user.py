@@ -10,11 +10,11 @@ from bookshot.models import *
 
 @login_required
 def me(request):
-	quote_list = Quote.objects.filter(user=request.user).order_by('-date')
+	quote_list = Quote.objects.filter(user=request.user).order_by('-created_at')
 	user = request.user
 
 	context = {
 		'quote_list' : quote_list,
-		'user' : user,
+		'user': user,
 	}
 	return render(request, 'user.html', context)

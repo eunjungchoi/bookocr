@@ -2,13 +2,13 @@
 
 {% block content %}	
 <div class="container">
-	<div class="row" style="margin-bottom:60px">
+	<div class="callout row">
 		<div class="col-xs-offset-1 col-xs-9">
 			<p>지금 무슨 책을 읽고 계신가요? </p>
 			<p>기억하고 싶은 문구가 있다면 사진을 찍어보세요.</p>	
 		</div>
-		<div class="col-xs-1">
-			<a href="{% url 'new_quote' %}" class="btn btn-primary">
+		<div class="col-xs-2 col-sm-1 text-right">
+			<a href="{% url 'new_quote' %}" class="btn btn-lg btn-primary">
 				<span class="sr-only">문구 추가하기</span>
 				<i class="glyphicon glyphicon-plus"></i>
 			</a>
@@ -22,11 +22,14 @@
 				{% include "quote/_listitem.html" %}
 			{% endfor %}
 		</div>
-
-
 	</div>
 	{% endif %} 
 </div>
+
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/home.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
 
 {% endblock content %}
 

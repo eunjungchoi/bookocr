@@ -45,10 +45,10 @@
 </div>
 
 
-{% if debug %}
-	{% load staticfiles %}
-{% else %}
-{% endif %}
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/book_item.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
 
 {% endblock content %}
 
