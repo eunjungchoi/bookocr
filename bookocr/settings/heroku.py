@@ -124,3 +124,19 @@ DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
 # AWS_S3_GZIP_STATIC = True
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
+    },
+}
