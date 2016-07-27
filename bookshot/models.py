@@ -108,8 +108,8 @@ class Book(models.Model):
 	title = models.CharField(max_length=30)
 	authors = models.CharField(max_length=100, null=False, blank=True)
 	_isbn13 = models.CharField(max_length=13, null=False, blank=True, db_column="isbn13")
-	cover_url = models.URLField(max_length=300, null=True, blank=True, default="{}")
-	_raw_response = models.TextField(null=True, blank=True, default=None)
+	cover_url = models.URLField(max_length=300, null=True, blank=True, default="")
+	_raw_response = models.TextField(null=True, blank=True, default="{}")
 
 	readers = models.ManyToManyField(User)
 
