@@ -11,6 +11,10 @@ from bookshot.models import *
 
 @login_required
 def index(request):
+
+	if request.scheme == 'https':
+		return redirect('http://{0}{1}'.format(request.META['HTTP_HOST'], request.path))
+
 	quote_list = Quote.objects.order_by('-id')
 
 	context = {
