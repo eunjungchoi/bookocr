@@ -34,6 +34,8 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_REGION = 'ap-northeast-2' #"us-east-1"
 AWS_S3_HOST = 's3-%s.amazonaws.com' % AWS_REGION
 os.environ['S3_USE_SIGV4'] = 'True' # https://github.com/boto/boto/issues/2916
+AWS_S3_FILE_OVERWRITE = False
+
 
 # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
 # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
@@ -123,8 +125,6 @@ DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
 
 # # Whether to enable gzip compression for static files.
 # AWS_S3_GZIP_STATIC = True
-
-
 #
 # compressor
 #
