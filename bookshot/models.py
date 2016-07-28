@@ -59,7 +59,7 @@ class Quote(models.Model):
 	def crop_image(file_path, box, cropped_filepath):
 		from PIL import Image
 		import requests
-		from io import StringIO, BytesIO
+		from io import BytesIO
 
 		if file_path.startswith('http'):
 			response = requests.get(file_path)
