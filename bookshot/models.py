@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Max
 
+from django.conf import settings
+
 from ocr.googlevision import detect_text
 
 def recent_books(self):
@@ -27,14 +29,32 @@ class Quote(models.Model):
 	updated_at = models.DateTimeField(null=True, default=None)
 
 	def read_text_from_image(self, crop_rect, cropped_filepath=None):
+		if self.photo.url.startswith('http'):
+			photo_filename = self.photo.url
+
+			# s3에서 이미지 다운받아서 image open하기
+			# import boto3
+			# s3 = boto3.resource('s3', 'ap-northeast-2')
+
+			# _, filename = self.photo.name.split('/')
+			# photo_filename = '{media_root}/{file_name}'.format(media_root=settings.MEDIA_ROOT, file_name=filename)
+			# s3.meta.client.download_file('bookocr', 'media/{name}'.format(name=self.photo.name), photo_filename)
+
+		else:
+			photo_filename = self.photo.path
+
 		if not cropped_filepath:
-			ts = int(timezone.now().timestamp())
-			cropped_filename, ext = os.path.splitext(self.photo.path)
-			cropped_tag      = 'crop-{x}-{y}-{w}-{h}-{ts}'.format(**crop_rect, ts=ts)
-			cropped_filepath = '{cropped_filename}.{cropped_tag}.{ext}'.format(**locals())
-		#
+			from random import choice
+			from string import ascii_uppercase
+
+			media_root = settings.MEDIA_ROOT
+			_, ext = os.path.splitext(photo_filename)
+			random_string = ''.join(choice(ascii_uppercase) for i in range(10))
+
+			cropped_filepath = '{media_root}/{random_string}{ext}'.format(**locals())
+
 		box = (crop_rect['x'], crop_rect['y'], crop_rect['x'] + crop_rect['w'], crop_rect['y'] + crop_rect['h'])
-		Quote.crop_image(self.photo.path, box, cropped_filepath)
+		Quote.crop_image(photo_filename, box, cropped_filepath)
 
 		# detect
 		try:
@@ -47,8 +67,15 @@ class Quote(models.Model):
 	@staticmethod
 	def crop_image(file_path, box, cropped_filepath):
 		from PIL import Image
+		import requests
+		from io import StringIO, BytesIO
 
-		image = Image.open(file_path)
+		if file_path.startswith('http'):
+			response = requests.get(file_path)
+			image = Image.open(BytesIO(response.content))
+		else:
+			image = Image.open(file_path)
+
 		cropped_image = image.crop(box)
 
 		cropped_image.save(cropped_filepath)
@@ -164,4 +191,3 @@ class Book(models.Model):
 
 	def __str__(self):
 		return self.title
-
