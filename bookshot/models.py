@@ -31,15 +31,6 @@ class Quote(models.Model):
 	def read_text_from_image(self, crop_rect, cropped_filepath=None):
 		if self.photo.url.startswith('http'):
 			photo_filename = self.photo.url
-
-			# s3에서 이미지 다운받아서 image open하기
-			# import boto3
-			# s3 = boto3.resource('s3', 'ap-northeast-2')
-
-			# _, filename = self.photo.name.split('/')
-			# photo_filename = '{media_root}/{file_name}'.format(media_root=settings.MEDIA_ROOT, file_name=filename)
-			# s3.meta.client.download_file('bookocr', 'media/{name}'.format(name=self.photo.name), photo_filename)
-
 		else:
 			photo_filename = self.photo.path
 
