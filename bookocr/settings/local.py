@@ -29,6 +29,11 @@ INSTALLED_APPS += (
 )
 
 #
+# Google API
+#
+GOOGLE_SERVER_APIKEY_ = os.environ.get('GOOGLE_SERVER_APIKEY_') or GOOGLE_SERVER_APIKEY_
+
+#
 # Django Compressor
 #
 COMPRESS_ENABLED = os.getenv('COMPRESS_ENABLED', False)
