@@ -7,6 +7,9 @@ from googleapiclient import discovery, errors
 
 from oauth2client.client import GoogleCredentials
 
+import logging
+logger = logging.getLogger(__name__)
+
 DISCOVERY_URL='https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'
 
 __all__ = ['get_vision_service']
@@ -21,9 +24,11 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 		if credentials and not api_key: 
 			if isinstance(credentials, dict): 
 				credentials = _get_application_default_credential_from_dict(credentials)
+			logger.info('explicit credentials given.')
 			options['credentials'] = credentials
 		# api_key
 		elif not credentials and api_key:
+			logger.info('explicit api_key given.')
 			options['developerKey'] = api_key
 		#
 		else: raise Exception("you can't pass both api_key= and credentials=")
@@ -37,12 +42,15 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 		# GOOGLE_APPLICATION_CREDENTIALS=
 		if credentials and not api_key:
 			if isinstance(credentials, dict): 
+				logger.info('credential dict given by settings')
 				credentials = _get_application_default_credential_from_dict(credentials)
 			else:
+				logger.info('credential filename given by settings')
 				credentials = _get_application_default_credential_from_file(credentials)
 			options['credentials'] = credentials
 		# GOOGLE_SERVER_APIKEY_=
 		elif api_key and not credentials:
+			logger.info('developer key given by settings')
 			options['developerKey'] = api_key
 		# merge keys starting with GOOGLE_APPLICATION_CREDENTIALS__
 		else:
@@ -53,6 +61,7 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 			cred_dict = dict((key.replace(PREFIX, '').lower(), value) for (key,value) in settings_tuple if key.startswith(PREFIX))
 
 			#
+			logger.info('all credential key/values given by settings')
 			credentials = _get_application_default_credential_from_dict(cred_dict)
 			options['credentials'] = credentials
 
@@ -61,9 +70,11 @@ def get_vision_service(api_key=None, credentials=None, settings=None):
 		# GOOGLE_SERVER_APIKEY_=
 		api_key = os.environ.get('GOOGLE_SERVER_APIKEY_')
 		if api_key:
+			logger.info('developer key given by env variable')
 			options['developerKey'] = api_key
 		# default Service account keys
 		else:
+			logger.info('credentials filename given by env variable')
 			# look for GOOGLE_APPLICATION_CREDENTIALS= , and others
 			credentials = GoogleCredentials.get_application_default()
 			options['credentials'] = credentials
