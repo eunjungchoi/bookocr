@@ -7,6 +7,9 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 
+import logging
+logger = logging.getLogger(__name__)
+
 from datetime import date
 from PIL import Image
 from bookshot.models import *

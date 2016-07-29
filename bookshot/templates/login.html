@@ -9,17 +9,26 @@
 {% endblock %}
 
 {% block content %}	
-<div class="container">
+<div class="container login-page">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 style="margin-bottom:30px">안녕하세요. </h1>
+			<h1>안녕하세요. </h1>
 			<p>지금 읽고 있는 책에서 발견한 멋진 문구, 그냥 지나치지 마세요. </p>
 			<p>이제 사진으로 찍어서 기록으로 남길 수 있습니다. </p>		
 
- 			<p><button type="button" class="btn btn-primary"><a style="color:#ffffff" href="{% url 'social:begin' 'facebook' %}?next={% url 'index' %}">Facebook으로 로그인하기</a></button></p>			
+ 			<p><button type="button" class="facebook-login-button btn btn-primary">
+				<a href="{% url 'social:begin' 'facebook' %}?next={% url 'index' %}">Facebook으로 로그인하기</a>
+			</button></p>			
+
  			<p>페이스북 로그인은 인증용으로, 사용자의 페이스북 담벼락에 어떤 것도 포스팅하지 않습니다.</p> 
 		</div>
 	</div>
 </div>
+
+
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/home.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
 
 {% endblock content %}

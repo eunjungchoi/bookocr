@@ -22,3 +22,5 @@ whitenoise==3.2
 colour-runner==0.0.4
 mock==2.0.0
 google-api-python-client==1.5.1
+jsonfield
+django-compressor==2.0

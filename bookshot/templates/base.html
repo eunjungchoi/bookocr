@@ -12,9 +12,9 @@
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 	{% if debug %}
-	<script src="{% static 'js/jquery.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
 	{% else %}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	{% endif %}
 
 	<title>
@@ -34,7 +34,7 @@
 				<i class="glyphicon glyphicon-chevron-right"></i>
 			</button>
 
-			<aside id="sidebar" class="dropdown-menu" aria-labelledby="dlabel-1" style="min-width: 50px;">
+			<aside id="sidebar" class="dropdown-menu" aria-labelledby="dlabel-1" >
 				{% block sidebar %}
 				<ul class="nav nav-pills nav-stacked navbar" >
 					{% url 'index' as home_path %}
@@ -67,13 +67,10 @@
 				{% endblock %}
 			</aside>
 
-			<div class="navbar-header" style="float: none;">
-	    		<a class="navbar-brand" href="{% url 'index' %}" style="
-					display: block;
-					float: none; width: 120px; margin-left: auto; margin-right: auto;
-				">BookOCR</a>
+			<div class="navbar-header" >
+	    		<a class="navbar-brand" href="{% url 'index' %}" >BookOCR</a>
 			</div>
-			<div class="navbar-right pull-right" style="position: absolute; top: 0; right: 8px;">
+			<div class="navbar-right pull-right">
 				{% if user.username %}
 				<span class="user-link dropdown-toggle btn x-navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 					<span class="user-profile-image">
@@ -90,9 +87,11 @@
 					</span>
 					<i class="caret"></i>
 				</span>
-				<ul class="dropdown-menu" style="right: 0; left: auto;">
+				<ul class="user-menu dropdown-menu">
+					<!--
 					<li><a href="#">Action</a></li>
 					<li role="separator" class="divider"></li>
+					-->
 					<li>
 						<a href="{% url 'log_out' %}" class="navbar-link">로그아웃</a>
 					</li>
@@ -118,8 +117,14 @@
 		{% endblock %}
 	</div>
 
-<script>
-</script>	
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/sidebar.less" charset="utf-8" type="text/less" rel="stylesheet">
+	<link href="{{ STATIC_URL }}less/nav.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
+
 </body>
 </html>

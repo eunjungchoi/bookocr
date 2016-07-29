@@ -1,8 +1,12 @@
 #!/usr/bin/python
 
+from django.conf import settings
+from bookocr.settings import base
 from bookocr.settings.base import *
 
+
 DEBUG = False
+
 INSTALLED_APPS += (
     # other apps for production site
     'whitenoise.runserver_nostatic',
@@ -16,7 +20,7 @@ MIDDLEWARE_CLASSES += (
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 #
@@ -50,18 +54,14 @@ STATIC_URL = "https://%s/static/" % (AWS_S3_CUSTOM_DOMAIN, )
 # Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
 # you run `collectstatic`).
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 's3_custom_storage.StaticStorage'
-
+STATICFILES_STORAGE = 'bookocr.s3_custom_storage.StaticStorage'
 
 #
 MEDIA_URL = "https://%s/media/" % (AWS_S3_CUSTOM_DOMAIN, )
 
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
+DEFAULT_FILE_STORAGE = 'bookocr.s3_custom_storage.MediaStorage'
 
-
-# DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
-# STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
 
 # # The region to connect to when storing files.
 # AWS_REGION = 'ap-northeast-2' #"us-east-1"
@@ -124,3 +124,30 @@ DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
 
 # # Whether to enable gzip compression for static files.
 # AWS_S3_GZIP_STATIC = True
+
+
+#
+# Django Compressor
+#
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+
+# TODO: remove hard-coded path
+COMPRESS_PRECOMPILERS = (('text/less', '/app/.heroku/vendor/node/lib/node_modules/less/bin/lessc {infile} {outfile}'),)
+
+# follow settings done by AWS_S3_
+COMPRESS_URL     = STATIC_URL
+#COMPRESS_STORAGE = STATICFILES_STORAGE
+COMPRESS_STORAGE = STATICFILES_STORAGE = 'bookocr.s3_custom_storage.CachedStaticS3BotoStorage'
+COMPRESS_ROOT    = STATIC_ROOT
+
+
+#
+# Logging
+#
+LOGGING = base.LOGGING or {'loggers': {}}
+#LOGGING['loggers']['bookshot.views.quote'] = {
+#    'handlers': ['console'],
+#    'level': 'DEBUG',
+#}
+

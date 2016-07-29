@@ -44,7 +44,7 @@
 							<div class="thumbnail">
 								<!--
 								<div class="image-wrapper">
-									<img class="obj" style="max-width: 100%; max-height: 100%;" src="">
+									<img class="obj" src="">
 								</div>
 								-->
 							</div>
@@ -74,6 +74,11 @@
 	</div>
 </div>
 
+
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/image_preview_container.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
 
 {% if debug %}
 	{% load staticfiles %}

@@ -12,7 +12,7 @@
 		<h3>Thumbnail label</h3>
 		-->
 
-		<p class="quote" style="margin-top: 20px; padding-left:30px;">
+		<p class="quote">
 			<span class="quotation-mark">“</span>
 			{% if quote.quotation %}
 				{{ quote.quotation }}
@@ -46,4 +46,9 @@
 		</div>
 	</div>
 </div>
+
+{% load compress %}
+{% compress css %}
+	<link href="{{ STATIC_URL }}less/quote.less" charset="utf-8" type="text/less" rel="stylesheet">
+{% endcompress %}
 

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'social.apps.django_app.default',
 	'storages', #
 	# 'django_s3_storage',
+	"compressor",
 ]
 
 
@@ -182,12 +183,37 @@ STATICFILES_DIRS = [
 	os.path.join(PROJECT_ROOT, 'static'),
 ]
 
+STATICFILES_FINDERS = [
+	'django.contrib.staticfiles.finders.FileSystemFinder',
+	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 #STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+#
+# Logging
+#
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
+    },
+}
 
 
 #
@@ -213,3 +239,29 @@ GOOGLE_APPLICATION_CREDENTIALS__AUTH_URI                    = os.environ.get('GO
 GOOGLE_APPLICATION_CREDENTIALS__TOKEN_URI                   = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__token_uri')
 GOOGLE_APPLICATION_CREDENTIALS__AUTH_PROVIDER_X509_CERT_URL = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__auth_provider_x509_cert_url')
 GOOGLE_APPLICATION_CREDENTIALS__CLIENT_X509_CERT_URL        = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS__client_x509_cert_url')
+
+
+#
+# Django Compressor
+# See http://django-compressor.readthedocs.io/en/latest/
+#
+
+# compress multiple tags into each group. (group by <link />, <script />)
+COMPRESS_ENABLED = True 
+
+# Run in offline/online mode.
+# if offline set True, it doesn't compress on request.
+# need to be compressed manually via "./manage.py compress" for production.
+# Set to False for development mode.
+COMPRESS_OFFLINE = False
+
+COMPRESS_OUTPUT_DIR = 'CACHE'
+
+# Run lessc for "text/less" type tags
+COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
+
+
+STATICFILES_FINDERS.append(
+    'compressor.finders.CompressorFinder'
+)
+
