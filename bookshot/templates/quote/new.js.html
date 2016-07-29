@@ -137,6 +137,12 @@ function bindTypebook($el, defaultData) {
 		},
 	}));
 
+
+    // deactive focus on window blur
+	$(window).on('focus', function(ev) {}).on('blur', function(ev) { 
+        $el[0].blur();
+    })
+
     return $typebook;
 }
 
@@ -250,8 +256,7 @@ $(function() {
         });
 
 	var $typebook = bindTypebook($bookInput, recentBooks).on('typeahead:select', function(ev, bookObj) {
-        console.log('selected:', bookObj);
-
+        //console.log('selected:', bookObj);
         $bookFormG
             .find('input[name="book-isbn"]'     ).val(bookObj.isbn               ).end()
             .find('input[name="book-authors"]'  ).val(bookObj.authorsStr         ).end()
@@ -260,5 +265,6 @@ $(function() {
         ;
     });
 });
+
 </script>
 
