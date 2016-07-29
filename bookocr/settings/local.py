@@ -13,9 +13,14 @@ if not no_env and os.path.exists(env_filename):
 	lines  = (line.strip() for line in lines)
 	lines  = (line for line in lines if line)
 	tuples = (line.split('=', 1) for line in lines)
+	tuples = ((key,v) for (key,v) in tuples if key.isupper())
 	for (key, value) in tuples:
 		locals()[key] = value
 
+
+#
+# local settings
+#
 
 DEBUG = True
 
@@ -32,7 +37,7 @@ COMPRESS_ENABLED = False
 #
 # logging
 #
-LOGGING = LOGGING or {'loggers': {}}
+LOGGING = base.LOGGING or {'loggers': {}}
 LOGGING['loggers']['django.db.backends'] = {
 	'handlers': ['console'],
 	'level': 'DEBUG',
