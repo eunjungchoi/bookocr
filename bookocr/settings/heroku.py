@@ -125,26 +125,27 @@ DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
 
 # # Whether to enable gzip compression for static files.
 # AWS_S3_GZIP_STATIC = True
+
+
 #
 # compressor
 #
 COMPRESS_OFFLINE=True
 
+# TODO: remove hard-coded path
 COMPRESS_PRECOMPILERS = (('text/less', '/app/.heroku/vendor/node/lib/node_modules/less/bin/lessc {infile} {outfile}'),)
 
-# logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-        },
-    },
-}
+# follow settings done by AWS_S3_
+COMPRESS_URL     = "http://%s/" % AWS_S3_CUSTOM_DOMAIN
+COMPRESS_STORAGE = DEFAULT_FILE_STORAGE
+
+
+#
+# Logging
+#
+LOGGING = LOGGING or {'loggers': {}}
+#LOGGING['loggers']['bookshot.views.quote'] = {
+#    'handlers': ['console'],
+#    'level': 'DEBUG',
+#}
+

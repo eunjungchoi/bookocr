@@ -8,20 +8,22 @@ INSTALLED_APPS += (
     #'debug_toolbar', # and other apps for local development
 )
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    }
+#
+# compressor
+#
+COMPRESS_ENABLED = False
+
+
+#
+# logging
+#
+LOGGING = LOGGING or {'loggers': {}}
+LOGGING['loggers']['django.db.backends'] = {
+	'handlers': ['console'],
+	'level': 'DEBUG',
 }
+#LOGGING['loggers']['bookshot.views.quote'] = {
+#    'handlers': ['console'],
+#    'level': 'DEBUG',
+#}
 

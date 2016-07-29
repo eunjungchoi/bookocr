@@ -9,6 +9,10 @@ from django.db.models import Max
 
 from ocr.googlevision import detect_text
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 def recent_books(self):
 	books = Book.objects.filter(quote__user=self).annotate(updated_at=Max('quote__updated_at')).order_by('-updated_at')
 	return books
