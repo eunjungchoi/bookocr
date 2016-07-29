@@ -51,14 +51,14 @@ STATIC_URL = "https://%s/static/" % (AWS_S3_CUSTOM_DOMAIN, )
 # Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
 # you run `collectstatic`).
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 's3_custom_storage.StaticStorage'
+STATICFILES_STORAGE = 'bookocr.s3_custom_storage.StaticStorage'
 
 
 #
 MEDIA_URL = "https://%s/media/" % (AWS_S3_CUSTOM_DOMAIN, )
 
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-DEFAULT_FILE_STORAGE = 's3_custom_storage.MediaStorage'
+DEFAULT_FILE_STORAGE = 'bookocr.s3_custom_storage.MediaStorage'
 
 
 # DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
