@@ -29,12 +29,12 @@ class Quote(models.Model):
 	def read_text_from_image(self, crop_rect, cropped_filepath=None):
 		if not cropped_filepath:
 			ts = int(timezone.now().timestamp())
-			cropped_filename, ext = os.path.splitext(self.photo.path)
+			cropped_filename, ext = os.path.splitext(self.photo.name)
 			cropped_tag      = 'crop-{x}-{y}-{w}-{h}-{ts}'.format(**crop_rect, ts=ts)
-			cropped_filepath = '{cropped_filename}.{cropped_tag}.{ext}'.format(**locals())
+			cropped_filepath = '{cropped_filename}.{cropped_tag}{ext}'.format(**locals())
 		#
 		box = (crop_rect['x'], crop_rect['y'], crop_rect['x'] + crop_rect['w'], crop_rect['y'] + crop_rect['h'])
-		Quote.crop_image(self.photo.path, box, cropped_filepath)
+		Quote.crop_image(self.photo, box, cropped_filepath)
 
 		# detect
 		try:
@@ -45,10 +45,10 @@ class Quote(models.Model):
 				os.remove(cropped_filepath)
 
 	@staticmethod
-	def crop_image(file_path, box, cropped_filepath):
+	def crop_image(image_field, box, cropped_filepath):
 		from PIL import Image
 
-		image = Image.open(file_path)
+		image = Image.open(image_field)
 		cropped_image = image.crop(box)
 
 		cropped_image.save(cropped_filepath)
