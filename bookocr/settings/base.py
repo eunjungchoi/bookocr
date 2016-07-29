@@ -242,11 +242,24 @@ GOOGLE_APPLICATION_CREDENTIALS__CLIENT_X509_CERT_URL        = os.environ.get('GO
 
 
 #
-# compressor
+# Django Compressor
+# See http://django-compressor.readthedocs.io/en/latest/
 #
-COMPRESS_ENABLED = True
+
+# compress multiple tags into each group. (group by <link />, <script />)
+COMPRESS_ENABLED = True 
+
+# Run in offline/online mode.
+# if offline set True, it doesn't compress on request.
+# need to be compressed manually via "./manage.py compress" for production.
+# Set to False for development mode.
+COMPRESS_OFFLINE = False
+
+COMPRESS_OUTPUT_DIR = 'CACHE'
+
+# Run lessc for "text/less" type tags
 COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
-COMPRESS_DEBUG_TOGGLE = 'debug'
+
 
 STATICFILES_FINDERS.append(
     'compressor.finders.CompressorFinder'

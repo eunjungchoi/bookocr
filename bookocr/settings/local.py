@@ -29,9 +29,11 @@ INSTALLED_APPS += (
 )
 
 #
-# compressor
+# Django Compressor
 #
-COMPRESS_ENABLED = False
+COMPRESS_ENABLED = os.getenv('COMPRESS_ENABLED', False)
+COMPRESS_OFFLINE = os.getenv('COMPRESS_OFFLINE', False)
+COMPRESS_DEBUG_TOGGLE = 'debug'
 
 
 #
