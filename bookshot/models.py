@@ -17,6 +17,14 @@ def recent_books(self):
 	books = Book.objects.filter(quote__user=self).annotate(updated_at=Max('quote__updated_at')).order_by('-updated_at')
 	return books
 
+def get_user_profile_picture_url(user):
+	if user.is_authenticated():
+		profile_picture_url = "https://graph.facebook.com/{0}/picture".format(user.social_auth.get().uid)
+	else:
+		profile_picture_url = ""
+
+	return profile_picture_url
+
 User.add_to_class("recent_books", recent_books)
 
 
