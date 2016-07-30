@@ -82,7 +82,7 @@ TEMPLATES = [
 	            'django.template.context_processors.tz',
 	            'social.apps.django_app.context_processors.backends',
 	            'social.apps.django_app.context_processors.login_redirect',
-				'bookshot.context_processors.profile',
+				'bookocr.context_processors.profile',
 	        ],
 	    },
 	},
