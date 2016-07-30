@@ -15,14 +15,10 @@ def index(request):
 	if request.scheme == 'https':
 		return redirect('http://{0}{1}'.format(request.META['HTTP_HOST'], request.path))
 
-	quote_list = Quote.objects.order_by('-id')
+	quote_list = Quote.objects.select_related('book', 'user').order_by('-id')
 
 	context = {
 		'quote_list' : quote_list,
 	}
 	return render(request, 'index.html', context)
 
-
-@login_required
-def detail(request):
-	pass
