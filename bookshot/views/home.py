@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
-from bookshot.models import *
+
+from bookshot import models
+from bookshot.models import User, Book, Quote
 
 
 @login_required
@@ -16,6 +18,10 @@ def index(request):
 		return redirect('http://{0}{1}'.format(request.META['HTTP_HOST'], request.path))
 
 	quote_list = Quote.objects.select_related('book', 'user').order_by('-id')
+
+	#
+	for quote in quote_list:
+		quote.user.profile_picture_url = models.get_user_profile_picture_url(quote.user)
 
 	context = {
 		'quote_list' : quote_list,
