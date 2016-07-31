@@ -97,17 +97,7 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
     return dfd.promise();
 }
 
-// XXX: implement me
 function postOCR(imageCropData) {
-    //var dfd = jQuery.Deferred();
-
-    //setTimeout(function() {
-    //    dfd.resolve({
-    //        text: '봐! 나는 살or있어'
-    //    });
-    //}, 3000 + (Math.random() * 1000) - 500)
-    //return dfd.promise();
-
     return $.ajax({
         method: 'post',
         url: "{% url 'post_quote_ocr' book_id=book.id quote_id=quote.id %}",
@@ -119,32 +109,45 @@ function postOCR(imageCropData) {
 
 ///
 $(function() {
-    var $img      = $('.image-preview-container img.obj');
-    var $textarea = $('textarea[name="quotation"]');
-    
-    // show cropper
-    var $_wrapper = $img.parent();
-    var cropper = initCropper($img, $_wrapper);
+    var $img = $('.image-preview-container img.obj');
 
-    // bind ocr
-    bindCropperWithOCR(cropper, $_wrapper, $img).then(function(ocrResult) { 
-        //console.log(ocrResult);
-        $textarea.val(ocrResult.result.text);
-        $textarea[0].focus();
-    }, function(err) { 
-        console.error(err);
-    });
+	// image loaded
+	(function() {
+		var dfd = $.Deferred();
+		$img.on('load', function() {
+			dfd.resolve();
+		}).each(function() {
+			if (this.complete) { $(this).load() }
+		});
+		return dfd.promise();
+	})()
+	.then(function() {
+		// show cropper
+		var $_wrapper = $img.parent();
+		var cropper = initCropper($img, $_wrapper);
 
-    // select default area
-    var width  = $img.width(),
-        height = $img.height();
-    var selectRect = { // blindly select (15~-15%, 25~-25%)
-        x: width * 0.15, 
-        w: width * (1 - (0.15)*2),
-        y: height * 0.25,
-        h: height * (1.0 - (0.25)*2),
-    };
-    cropper.select(selectRect);
+        // bind ocr
+        var $textarea = $('textarea[name="quotation"]');
+        bindCropperWithOCR(cropper, $_wrapper, $img).then(function(ocrResult) { 
+            //console.log(ocrResult);
+            $textarea.val(ocrResult.result.text);
+            $textarea[0].focus();
+        }, function(err) { 
+            console.error(err);
+        });
+
+        // select default area
+        var width  = $img.width(),
+            height = $img.height();
+        var selectRect = { // blindly select (15~-15%, 25~-25%)
+            x: width * 0.15, 
+            w: width * (1 - (0.15)*2),
+            y: height * 0.25,
+            h: height * (1.0 - (0.25)*2),
+        };
+        cropper.select(selectRect);
+	});
+
 })
 </script>
 
