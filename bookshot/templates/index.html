@@ -17,7 +17,7 @@
 
 	{% if quote_list %}
 	<div class="row">
-		<div class="col-xs-offset-1 col-xs-10">
+		<div class="col-xs-12 col-sm-offset-1 col-sm-10">
 			{% for quote in quote_list %}
 				{% include "quote/_listitem.html" %}
 			{% endfor %}
@@ -25,12 +25,6 @@
 	</div>
 	{% endif %} 
 </div>
-
-
-{% load compress %}
-{% compress css %}
-	<link href="{{ STATIC_URL }}less/home.less" charset="utf-8" type="text/less" rel="stylesheet">
-{% endcompress %}
 
 {% endblock content %}
 

@@ -13,8 +13,8 @@
 		-->
 
 		<p class="quote">
-			<span class="quotation-mark">“</span>
 			{% if quote.quotation %}
+				<span class="quotation-mark">“</span>
 				{{ quote.quotation }}
 			{% else %}
 				<a href="{% url 'new_quote_ocr' book_id=quote.book.id quote_id=quote.id %}">사진에서 문구 영역을 정해 주세요.</a>
@@ -23,9 +23,9 @@
 
 		<div class="quote-source">
 			-
-			<a href="" class="book">
-				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>
-				, <span class="author">{{quote.book.authors}}</span>
+			<a href="{% url 'book' book_id=quote.book.id %}" class="book">
+				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>,
+				<span class="author">{{quote.book.authors}}</span>
 			</a>
 		</div>
 
@@ -46,9 +46,4 @@
 		</div>
 	</div>
 </div>
-
-{% load compress %}
-{% compress css %}
-	<link href="{{ STATIC_URL }}less/quote.less" charset="utf-8" type="text/less" rel="stylesheet">
-{% endcompress %}
 

@@ -82,7 +82,7 @@
 							</span>
 						{% endif %}
 					</span>
-					<span class="username">
+					<span class="username hidden-xs">
 						{{ user.username|truncatechars:10 }} 
 					</span>
 					<i class="caret"></i>
@@ -122,8 +122,7 @@
 
 {% load compress %}
 {% compress css %}
-	<link href="{{ STATIC_URL }}less/sidebar.less" charset="utf-8" type="text/less" rel="stylesheet">
-	<link href="{{ STATIC_URL }}less/nav.less" charset="utf-8" type="text/less" rel="stylesheet">
+	<link href="{{ STATIC_URL }}less/all.less" charset="utf-8" type="text/less" rel="stylesheet">
 {% endcompress %}
 
 </body>

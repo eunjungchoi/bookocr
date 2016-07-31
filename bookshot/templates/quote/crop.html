@@ -75,11 +75,6 @@
 	</div>
 </div>
 
-{% load compress %}
-{% compress css %}
-	<link href="{{ STATIC_URL }}less/image_preview_container.less" charset="utf-8" type="text/less" rel="stylesheet">
-{% endcompress %}
-
 {% if debug %}
 	{% load staticfiles %}
 	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
