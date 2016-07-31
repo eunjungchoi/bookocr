@@ -76,10 +76,10 @@
 </div>
 
 {% if debug %}
-	{% load staticfiles %}
-	<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
+{% load staticfiles %}
+<script src="{% static 'libs/lodash.4.13.1.min.js' %}"></script>
 {% else %}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 {% endif %}
 <script src="{% static 'libs/jcrop-0.9.12/js/jquery.Jcrop.js' %}"></script>
 <link href="{% static 'libs/jcrop-0.9.12/css/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css"></link>
