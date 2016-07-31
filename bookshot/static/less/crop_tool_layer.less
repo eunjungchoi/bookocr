@@ -1,0 +1,47 @@
+.crop-tool-layer {
+	display: block;
+	position: absolute;
+	width: 100%;
+
+	background-color: rgba(0, 0, 0, 0.6);
+
+	.crop-info {
+		display: inline-block;
+		padding: 2px 5px;
+
+		font-family: sans-serif;
+		font-size: 11px;
+		line-height: 20px;
+
+		color: grey;
+	}
+	.cropper-button {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+
+		background-color: white;
+	}
+
+	/* don't over-show on small size */
+	overflow: hidden;
+
+	.crop-info {
+		white-space: nowrap;
+	}
+
+	.cropper-button {
+		max-width: 100%;
+		width: 54px;
+
+		&.disabled {
+			padding: 1px 3px;
+
+			.glyphicon-refresh {
+				-animation: spin 1.7s infinite linear;
+				-webkit-animation: spin-webkit 1.7s infinite linear;
+			}
+		}
+	}
+}
+

@@ -36,7 +36,6 @@ urlpatterns = [
     url(r'^books/(?P<book_id>[0-9]+)/quotes/(?P<quote_id>[0-9]+)/ocr$', views.quote.ocr_update, name='put_quote'),
     url(r'^books/(?P<book_id>[0-9]+)/quotes/(?P<quote_id>[0-9]+)/_ocr$', views.quote.ocr_request, name='post_quote_ocr'),
     url(r'^add/$', views.quote.add, name='add'),
-    #url(r'^(?P<quote_id>[0-9]+)$', views.detail, name='detail'),
 
     url(r'^books$', views.book.list, name='book_list'),
     url(r'^books/(?P<book_id>[0-9]+)$', views.book.show, name='book'),

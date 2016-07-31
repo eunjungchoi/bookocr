@@ -13,7 +13,7 @@
 						</a>
 					</div>
 					<div class="media-right">
-						<a href="{% url 'book' book_id=book.id %}" class="media-right-inner">
+						<div class="media-right-inner">
 							<h4 class="media-heading">{{ book.title }}</h4>
 							<p>
 								<span class='book-author'>{{book.authors}}</span>
@@ -23,7 +23,7 @@
 									<i class="glyphicon glyphicon-comment"></i> <span class="badge">{{book.quote__count}}</span>
 								</span>
 							</div>
-						</a>
+						</div>
 						<div class='new-quote-button-container'>
 							<a href="{% url 'new_quote' %}?book_id={{book.id}}" class="btn btn-lg btn-primary">
 								<span class="sr-only">이 책에 새 문구 추가하기</span>
@@ -50,12 +50,6 @@
 	{% endif %} 
 
 </div>
-
-
-{% load compress %}
-{% compress css %}
-	<link href="{{ STATIC_URL }}less/book_item.less" charset="utf-8" type="text/less" rel="stylesheet">
-{% endcompress %}
 
 {% endblock content %}
 
