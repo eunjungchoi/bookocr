@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# dump: 2016년 7월 31일 일요일 17시 11분 19초 KST
 
 from django.conf import settings
 from bookocr.settings import base
@@ -150,5 +151,4 @@ LOGGING = base.LOGGING or {'loggers': {}}
 #    'handlers': ['console'],
 #    'level': 'DEBUG',
 #}
-
 
