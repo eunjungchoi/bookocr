@@ -6,31 +6,32 @@
 	</div>
 
 	<div class="caption">
-		<time class="pull-right" datetime="{{ quote.date }}" title="{{ quote.date }}">{{ quote.date|naturalday }}</time>
 
 		<!--
 		<h3>Thumbnail label</h3>
 		-->
 
-		<p class="quote">
-			<span class="quotation-mark">“</span>
-			{% if quote.quotation %}
+		{% if quote.quotation %}
+			<p class="quote">
+				<span class="quotation-mark">“</span>
 				{{ quote.quotation }}
-			{% else %}
-				<a href="{% url 'new_quote_ocr' book_id=quote.book.id quote_id=quote.id %}">사진에서 문구 영역을 정해 주세요.</a>
-			{% endif %}
-		</p>
+			</p>
+		{% else %}
+			<p class="no-quote">
+				<a href="{% url 'new_quote_ocr' book_id=quote.book.id quote_id=quote.id %}">사진에서 영역을 지정해 주세요.</a>
+			</p>
+		{% endif %}
 
 		<div class="quote-source">
 			-
-			<a href="" class="book">
-				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>
-				, <span class="author">{{quote.book.authors}}</span>
+			<a href="{% url 'book' book_id=quote.book.id %}" class="book">
+				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>,
+				<span class="author">{{quote.book.authors}}</span>
 			</a>
 		</div>
 
-		<div class="text-right">
-			<time datetime={{ quote.created_at }}>{{ quote.created_at }}</time>
+		<div class="additional text-right">
+			<time datetime="{{ quote.created_at }}" title="{{ quote.created_at }}">{{ quote.created_at|naturalday }}</time>
 			<span class="quote-writer">
 				<span class="user-profile-image">
 					{% if quote.user.profile_picture_url %}
@@ -41,14 +42,11 @@
 						</span>
 					{% endif %}
 				</span>
-				<span class="username hidden-xs">{{ quote.user.username }}</span>
+				<span class="username hidden-xs truncate-ellipsis">
+					{{ quote.user.username }} 
+				</span>
 			</span>
 		</div>
 	</div>
 </div>
-
-{% load compress %}
-{% compress css %}
-	<link href="{{ STATIC_URL }}less/quote.less" charset="utf-8" type="text/less" rel="stylesheet">
-{% endcompress %}
 

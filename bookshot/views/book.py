@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 
+import logging
+logger = logging.getLogger(__name__)
+
 from bookshot.models import Book, Quote
 
 
