@@ -37,6 +37,7 @@
 		margin-bottom: 0;
 	}
 
+
 	.file-drop-box .guide {
 		position: absolute;
 		height: ~"calc(100% - 20px)";
@@ -49,12 +50,12 @@
 		border-radius: 5px;
 	}
 
-
 	.file-droppable.is-dragging-in .image-preview-container-inner {
 		border-color: rgba(9, 80, 208, 1.0);
 		background-color: rgba(9, 80, 208, 0.2);
 	}
-	/* let guide be clickable */
+
+	// let guide be clickable
 	.file-drop-box .guide:hover {
 		cursor: pointer;
 
@@ -89,15 +90,16 @@
 	//	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	//}
 
-		.file-drop-box .guide {
-			text-align: center;
-		}
-		.file-drop-box .guide i {
+	.file-drop-box .guide {
+		text-align: center;
+
+		i {
 			vertical-align: middle;
 			margin-top: 55px;
 			font-size: 30px;
 		}
-		.file-drop-box .guide p {
+
+		p {
 			line-height: 3;
 		}
 
@@ -105,97 +107,45 @@
 		//	background-repeat: no-repeat;
 		//	background-image: url(/static/images/drop-guide.png);
 		//	background-position-x: center;
-		//	background-position-y: center;
-		//}
-		//.file-drop-box .guide {
-		//	visibility: hidden;
-		//}
+	}
 
-		.thumbnail {
+	//.file-drop-box {
+	//	background-repeat: no-repeat;
+	//	background-image: url(/static/images/drop-guide.png);
+	//	background-position-x: center;
+	//	background-position-y: center;
+	//}
+	//.file-drop-box .guide {
+	//	visibility: hidden;
+	//}
+
+
+	.thumbnail {
+		position: relative;
+		width: 100%;
+
+		margin-bottom: 0;
+		padding: 0;
+
+		background-color: transparent; /* show blue-ish on dragging */
+		border: none;
+		box-shadow: none;
+
+		.image-wrapper {
 			position: relative;
 			width: 100%;
 
-			margin-bottom: 0;
-			padding: 0;
-
-			background-color: transparent; /* show blue-ish on dragging */
-			border: none;
-			box-shadow: none;
-
-			.image-wrapper {
-				position: relative;
-				width: 100%;
-
-				> img {
-					max-width: 100%; 
-					max-height: 100%;
-				}
-			}
-		}
-
-
-				/*
-				.image-preview-container-inner {
-					padding: 0;
-				}
-				.image-preview-container-inner .thumbnail {
-					padding: 4px;
-				}
-				*/
-
-
-.photo-form-control.form-control {
-	border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-
-.image-preview-container-inner .crop-tool-layer {
-	display: block;
-	position: absolute;
-	width: 100%;
-
-	background-color: rgba(0, 0, 0, 0.6);
-
-	.crop-info {
-		display: inline-block;
-		padding: 2px 5px;
-
-		font-family: sans-serif;
-		font-size: 11px;
-		line-height: 20px;
-
-		color: grey;
-	}
-	.cropper-button {
-		position: absolute;
-		top: 0px;
-		right: 0px;
-
-		background-color: white;
-	}
-
-	/* don't over-show on small size */
-	overflow: hidden;
-
-	.crop-info {
-		white-space: nowrap;
-	}
-
-	.cropper-button {
-		max-width: 100%;
-		width: 54px;
-
-		&.disabled {
-			padding: 1px 3px;
-
-			.glyphicon-refresh {
-				-animation: spin 1.7s infinite linear;
-				-webkit-animation: spin-webkit 1.7s infinite linear;
+			> img {
+				max-width: 100%; 
+				max-height: 100%;
 			}
 		}
 	}
+
+	.photo-form-control.form-control {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
 }
 
-
-}
