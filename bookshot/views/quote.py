@@ -14,6 +14,7 @@ from datetime import date
 from PIL import Image
 from bookshot.models import *
 
+
 @login_required
 def add(request):
 
@@ -110,7 +111,6 @@ def ocr_update(request, book_id, quote_id):
 
 	return redirect(reverse('index'))
 
-
 @login_required
 def new(request):
 	import json
@@ -136,4 +136,3 @@ def new(request):
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
-

@@ -103,6 +103,10 @@ class Quote(models.Model):
 		self.photo = SimpleUploadedFile(name=self.photo.name, content=tempfile_io.getvalue(), content_type='image/jpeg')
 
 
+	def user_profile_picture_url(self):
+		return get_user_profile_picture_url(self.user)
+
+
 	def save(self, *args, **kwargs):
 		#
 		if not self.id:

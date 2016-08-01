@@ -59,6 +59,7 @@ MIDDLEWARE_CLASSES = [
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'bookocr.http_middleware.HttpRedirectMiddleware'
 ]
 
 
@@ -247,7 +248,7 @@ GOOGLE_APPLICATION_CREDENTIALS__CLIENT_X509_CERT_URL        = os.getenv('GOOGLE_
 #
 
 # compress multiple tags into each group. (group by <link />, <script />)
-COMPRESS_ENABLED = True 
+COMPRESS_ENABLED = True
 
 # Run in offline/online mode.
 # if offline set True, it doesn't compress on request.
@@ -264,4 +265,3 @@ COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
 STATICFILES_FINDERS.append(
     'compressor.finders.CompressorFinder'
 )
-
