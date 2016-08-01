@@ -9,10 +9,8 @@ from django.template import RequestContext
 
 from bookshot import models
 from bookshot.models import User, Book, Quote
-from bookshot.decorators import *
 
 
-@http_redirect
 @login_required
 def index(request):
 
