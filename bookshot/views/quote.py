@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
+from bookshot.decorators import *
 
 import logging
 logger = logging.getLogger(__name__)
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 from datetime import date
 from PIL import Image
 from bookshot.models import *
+
 
 @login_required
 def add(request):
@@ -110,7 +112,7 @@ def ocr_update(request, book_id, quote_id):
 
 	return redirect(reverse('index'))
 
-
+@http_redirect
 @login_required
 def new(request):
 	import json
@@ -136,4 +138,3 @@ def new(request):
 		'recent_books': json.dumps(recent_books),
 	}
 	return render(request, 'quote/new.html', context)
-
