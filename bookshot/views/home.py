@@ -19,10 +19,6 @@ def index(request):
 
 	quote_list = Quote.objects.select_related('book', 'user').order_by('-id')
 
-	#
-	for quote in quote_list:
-		quote.user.profile_picture_url = models.get_user_profile_picture_url(quote.user)
-
 	context = {
 		'quote_list' : quote_list,
 	}

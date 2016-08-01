@@ -40,7 +40,7 @@ def show(request, book_id):
 	except Book.DoesNotExist:
 		raise Http404('Cannot find book with id=%d' % book_id)
 
-	quotes = Quote.objects.filter(book_id=book.id)
+	quotes = Quote.objects.select_related('book', 'user').filter(book_id=book.id)
 
 	context = {
 		"book": book,
