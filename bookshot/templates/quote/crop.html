@@ -86,8 +86,10 @@
 
 {# cropper.js #}
 <script src="{% static 'js/cropper.js' %}"></script>
-<script type="text/javascript">{% include "quote/crop.js" %}</script>
-
+{% load compress %}
+{% compress js %}
+<script src="{% static 'js/quote/crop.js' %}" type="text/javascript"></script>
+{% endcompress %}
 
 
 {% endblock content %}

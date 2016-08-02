@@ -259,7 +259,10 @@ COMPRESS_OFFLINE = False
 COMPRESS_OUTPUT_DIR = 'CACHE'
 
 # Run lessc for "text/less" type tags
-COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
+COMPRESS_PRECOMPILERS = (
+	('text/less', 'lessc {infile} {outfile}'),
+	('text/javascript', 'babel {infile} > {outfile}'),
+)
 
 
 STATICFILES_FINDERS.append(
