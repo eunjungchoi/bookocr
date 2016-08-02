@@ -134,7 +134,7 @@ COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 
 # TODO: remove hard-coded path
-COMPRESS_PRECOMPILERS = (('text/less', '/app/.heroku/vendor/node/lib/node_modules/less/bin/lessc {infile} {outfile}'),)
+#COMPRESS_PRECOMPILERS = (('text/less', '/app/.heroku/vendor/node/lib/node_modules/less/bin/lessc {infile} {outfile}'),)
 
 # follow settings done by AWS_S3_
 COMPRESS_URL     = STATIC_URL
