@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# dump: 2016년 7월 31일 일요일 17시 11분 19초 KST
 
 from django.conf import settings
 from bookocr.settings import base
@@ -131,9 +132,6 @@ DEFAULT_FILE_STORAGE = 'bookocr.s3_custom_storage.MediaStorage'
 #
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
-
-# TODO: remove hard-coded path
-COMPRESS_PRECOMPILERS = (('text/less', '/app/.heroku/vendor/node/lib/node_modules/less/bin/lessc {infile} {outfile}'),)
 
 # follow settings done by AWS_S3_
 COMPRESS_URL     = STATIC_URL
