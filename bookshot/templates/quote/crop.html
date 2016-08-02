@@ -84,7 +84,10 @@
 <script src="{% static 'libs/jcrop-0.9.12/js/jquery.Jcrop.js' %}"></script>
 <link href="{% static 'libs/jcrop-0.9.12/css/jquery.Jcrop.min.css' %}" rel="stylesheet" type="text/css"></link>
 
+{# cropper.js #}
 <script src="{% static 'js/cropper.js' %}"></script>
-{% include "quote/crop.js.html" %}
+<script type="text/javascript">{% include "quote/crop.js" %}</script>
+
+
 
 {% endblock content %}
