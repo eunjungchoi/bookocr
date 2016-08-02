@@ -1,4 +1,3 @@
-<script type="text/javascript">
 function initCropper($img, $parent) {
     // cropper
     var cropper = new Cropper();
@@ -37,7 +36,7 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
         if (_isSaving) { return }
 
         // form data
-        var imageCropData = $form.serializeArray().reduce(function(memo, obj) {
+        var imageCropData = $form.serializeArray().reduce((memo, obj) => {
             memo[obj.name] = obj.value;
             return memo;
         }, {});
@@ -146,7 +145,4 @@ $(function() {
         };
         cropper.select(selectRect);
 	});
-
-})
-</script>
-
+});
