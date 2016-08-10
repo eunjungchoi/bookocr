@@ -2,9 +2,12 @@
  * Navigation Bar
  */
 
-@import (reference) "../libs/bootstrap-3.3.6/less/bootstrap.less";
+@import (reference) "./user_profile_image.less";
 
 @nav-height: 50px;
+
+@user-link-button-left-padding : 12px;
+@user-link-button-right-padding: 12px;
 
 nav#nav {
 	height: @nav-height;
@@ -22,6 +25,7 @@ nav#nav {
 		position: absolute; 
 		top: 0; 
 		right: 8px;
+		overflow: hidden;
 	}
 
 	.user-menu {
@@ -29,37 +33,36 @@ nav#nav {
 		left: auto;
 	}
 
-	.user-link .username {
-    display: inline-block;
-		width: 70px;
-		line-height: 1.5;
-		vertical-align: middle;
-	}
-}
-
-//
-#sidebar-button {
-	i {
-		.glyphicon-chevron-right;
-	}
-
-	&[aria-expanded="true"] {
-		i {
-			.glyphicon-chevron-left;
+	.user-link {
+		&.btn {
+			padding: 6px @user-link-button-right-padding 6px @user-link-button-left-padding;
+		}
+		.username {
+			display: inline-block;
+			line-height: 1.5;
+			vertical-align: middle;
 		}
 	}
 }
-#sidebar {
-	position: absolute;
-	margin-top: 0;
-	height: ~"calc(100vh - @{nav-height})";
 
-	&.dropdown-menu {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
-		border-left-width: 0;
+// username width
+.navbar-right[class^="col-"] {
+	padding: 0;
+
+	> .pull-right {
+		width: 100%;
+	}
+
+	.user-link {
+		text-align: right;
+		width: 100%;
+
+		.username {
+			max-width: ~"calc(100% - @{user-link-button-left-padding} - @{user-profile-image-width} - @{user-link-button-right-padding})";
+		}
 	}
 }
+
 
 //
 .truncate-ellipsis {

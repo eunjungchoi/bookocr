@@ -1,72 +1,80 @@
 
 <div class="container">
-	<button id="sidebar-button" name="sidebar-button" class="btn btn-default navbar-btn pull-left" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		<i class="glyphicon"></i>
-	</button>
+	<div class="row">
+		<div class="col-xs-3 navbar-left">
+			<div class="">
+				<button id="sidebar-button" name="sidebar-button" class="btn btn-default navbar-btn pull-left" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="glyphicon"></i>
+				</button>
+				<aside id="sidebar" class="dropdown-menu" aria-labelledby="sidebar-button">
+					{% block sidebar %}
+					<ul class="nav nav-pills nav-stacked navbar" >
+						{% url 'index' as home_path %}
+						<li role="presentation" class="{% if request.path == home_path %}active{% endif %}">
+							<a href="{{ home_path }}" >
+								<i class="glyphicon glyphicon-home"></i> <span class="sr">Home</span></a>
+						</li>
+						<!--
+						<li role="presentation">
+							<a href="{% url 'me' %}" >
+								<i class="glyphicon glyphicon-user"></i> <span class="sr-only">User</span></a>
+						</li>
+						-->
+						{% url 'book_list' as books_path %}
+						<li role="presentation" class="{% if request.path == books_path %}active{% endif %}">
+							<a href="{{ books_path }}" >
+								<i class="glyphicon glyphicon-book"></i> <span class="sr">Book</span></a>
+						</li>
+						<!--
+						<li role="presentation">
+							<a href="/favorites" >
+								<i class="glyphicon glyphicon-heart"></i> <span class="sr-only">Favorite</span></a>
+						</li>
+						<li role="presentation">
+							<a href="/settings" >
+								<i class="glyphicon glyphicon-cog"></i> <span class="sr-only">Favorite</span></a>
+						</li>
+						-->
+					</ul>
+					{% endblock %}
+				</aside>
+			</div>
+		</div>
 
-	<aside id="sidebar" class="dropdown-menu" aria-labelledby="sidebar-button">
-		{% block sidebar %}
-		<ul class="nav nav-pills nav-stacked navbar" >
-			{% url 'index' as home_path %}
-			<li role="presentation" class="{% if request.path == home_path %}active{% endif %}">
-				<a href="{{ home_path }}" >
-					<i class="glyphicon glyphicon-home"></i> <span class="sr">Home</span></a>
-			</li>
-			<!--
-			<li role="presentation">
-				<a href="{% url 'me' %}" >
-					<i class="glyphicon glyphicon-user"></i> <span class="sr-only">User</span></a>
-			</li>
-			-->
-			{% url 'book_list' as books_path %}
-			<li role="presentation" class="{% if request.path == books_path %}active{% endif %}">
-				<a href="{{ books_path }}" >
-					<i class="glyphicon glyphicon-book"></i> <span class="sr">By Book</span></a>
-			</li>
-			<!--
-			<li role="presentation">
-				<a href="/favorites" >
-					<i class="glyphicon glyphicon-heart"></i> <span class="sr-only">Favorite</span></a>
-			</li>
-			<li role="presentation">
-				<a href="/settings" >
-					<i class="glyphicon glyphicon-cog"></i> <span class="sr-only">Favorite</span></a>
-			</li>
-			-->
-		</ul>
-		{% endblock %}
-	</aside>
+		<div class="col-xs-6 navbar-header">
+			<a class="navbar-brand" href="{% url 'index' %}" >BookOCR</a>
+		</div>
 
-	<div class="navbar-header" >
-		<a class="navbar-brand" href="{% url 'index' %}" >BookOCR</a>
-	</div>
-	<div class="navbar-right pull-right">
-		{% if user.username %}
-		<span class="user-link dropdown-toggle btn x-navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			<span class="user-profile-image">
-				{% if profile_picture_url %}
-					<img src="{{ profile_picture_url }}" class="wrapper round-wrapper" >
-				{% else %}
-					<span class="wrapper">
-						<i class="glyphicon glyphicon-user"></i>
+		<div class="col-xs-3 navbar-right">
+			<div class="pull-right">
+				{% if user.username %}
+				<span class="user-link dropdown-toggle btn x-navbar-btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<span class="user-profile-image">
+						{% if profile_picture_url %}
+							<img src="{{ profile_picture_url }}" class="wrapper round-wrapper" >
+						{% else %}
+							<span class="wrapper">
+								<i class="glyphicon glyphicon-user"></i>
+							</span>
+						{% endif %}
 					</span>
-				{% endif %}
-			</span>
-			<span class="username hidden-xs truncate-ellipsis">
-				{{ user.username }} 
-			</span>
-			<i class="caret"></i>
-		</span>
-		<ul class="user-menu dropdown-menu">
-			<!--
-			<li><a href="#">Action</a></li>
-			<li role="separator" class="divider"></li>
-			-->
-			<li>
-				<a href="{% url 'log_out' %}" class="navbar-link">로그아웃</a>
-			</li>
-		 </ul>
-		 {% endif %}
+					<span class="username hidden-xs truncate-ellipsis">
+						{{ user.username }} 
+					</span>
+					<i class="caret"></i>
+				</span>
+				<ul class="user-menu dropdown-menu">
+					<!--
+					<li><a href="#">Action</a></li>
+					<li role="separator" class="divider"></li>
+					-->
+					<li>
+						<a href="{% url 'log_out' %}" class="navbar-link">로그아웃</a>
+					</li>
+				 </ul>
+				 {% endif %}
+			 </div>
+		</div>
 	</div>
 </div>
 

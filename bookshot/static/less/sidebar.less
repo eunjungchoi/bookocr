@@ -1,5 +1,30 @@
+
+@import (reference) "../libs/bootstrap-3.3.6/less/bootstrap.less";
+
+@import (reference) "./nav.less";
+
+#sidebar-button {
+	i {
+		.glyphicon-chevron-right;
+	}
+
+	&[aria-expanded="true"] {
+		i {
+			.glyphicon-chevron-left;
+		}
+	}
+}
 #sidebar {
-	min-width: 50px;
+	position: absolute;
+	margin-top: -2px;
+	height: ~"calc(100vh - @{nav-height})";
+	min-width: 120px;
+
+	&.dropdown-menu {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-left-width: 0;
+	}
 
 	li a {
 		border-top-left-radius: 0; 
