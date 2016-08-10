@@ -62,6 +62,19 @@
 
 		a.book {
 			color: #666;
+
+			.title {
+				line-height: 20px;
+			}
+			.author {
+				font-size: 90%;
+				line-height: 20px;
+				color: #888;
+
+				&:before {
+					content: ", ";
+				}
+			}
 		}
 	}
 

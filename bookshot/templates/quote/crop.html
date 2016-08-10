@@ -86,9 +86,35 @@
 
 {# cropper.js #}
 <script src="{% static 'js/cropper.js' %}"></script>
+<script src="{% static 'libs/autosize/dist/autosize.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+  var postOCRUrl = "{% url 'post_quote_ocr' book_id=book.id quote_id=quote.id %}";
+</script>
 {% load compress %}
 {% compress js %}
 <script src="{% static 'js/quote/crop.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+    const $img      = $('.image-preview-container img.obj');
+    const $wrap     = $img.parent();
+    const $textarea = $('textarea[name="quotation"]');
+    const $toolbar = $wrap.find('.crop-tool-layer');
+    const $form = $('form[name="ocr-form"]');
+    const $cropInfo = $toolbar.find('.crop-info'),
+          $ocrButton = $toolbar.find('button[name="ocr"]')
+    ;
+
+	initCrop(postOCRUrl, {
+		$img,
+		$wrap,
+		$toolbar,
+		$form,
+		$cropInfo,
+		$ocrButton,
+		$textarea,
+	});
+});
+</script>
 {% endcompress %}
 
 

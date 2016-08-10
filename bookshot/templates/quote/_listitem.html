@@ -25,8 +25,8 @@
 		<div class="quote-source">
 			-
 			<a href="{% url 'book' book_id=quote.book.id %}" class="book">
-				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>,
-				<span class="author">{{quote.book.authors}}</span>
+				<span class="title">{{quote.book.title|default:"무슨 책?" }}</span>
+				{% if quote.book.authors %}<span class="author">{{quote.book.authors}}</span>{% endif %}
 			</a>
 		</div>
 
