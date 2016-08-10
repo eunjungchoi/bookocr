@@ -1,3 +1,5 @@
+/* global $, Cropper, autosize */
+
 function initCropper($img, $parent) {
     // cropper
     var cropper = new Cropper();
@@ -19,63 +21,56 @@ function initCropper($img, $parent) {
     return cropper;
 }
 
-function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
+function bindCropperWithOCR(cropper, url, {
+    $wrap,
+    $img,
+    $toolbar,
+    $form,
+    $cropInfo,
+    $ocrButton,
+}, onPostResult) {
     var dfd = $.Deferred();
 
-    //
-    var $toolbar = $wrap.find('.crop-tool-layer');
-    var $form = $('form[name="ocr-form"]');
-    var $cropInfo = $toolbar.find('.crop-info'),
-        $saveBtn = $toolbar.find('button[name="ocr"]')
-    ;
-
-    // $saveBtn
+    // $ocrButton
     var _isSaving = false;
-    $saveBtn.on('click', function(ev) {
+    $ocrButton.on('click', function onClickRecognize(ev) {
         ev.preventDefault();
-        if (_isSaving) { return }
+        if (_isSaving) return;
 
         // form data
         var imageCropData = $form.serializeArray().reduce((memo, obj) => {
-            memo[obj.name] = obj.value;
-            return memo;
+            return Object.assign({}, memo, {
+                [obj.name]: obj.value,
+            });
         }, {});
         // re-noramlize with image original size
-        imageCropData['crop-x'] = parseInt(parseFloat(imageCropData['crop-x']) / $img.width()  * $img.data('original-width' ));
-        imageCropData['crop-y'] = parseInt(parseFloat(imageCropData['crop-y']) / $img.height() * $img.data('original-height'));
-        imageCropData['crop-w'] = parseInt(parseFloat(imageCropData['crop-w']) / $img.width()  * $img.data('original-width' ));
-        imageCropData['crop-h'] = parseInt(parseFloat(imageCropData['crop-h']) / $img.height() * $img.data('original-height'));
+        imageCropData['crop-x'] = parseInt(parseFloat(imageCropData['crop-x']) / $img.width()  * $img.data('original-width' ), 10);
+        imageCropData['crop-y'] = parseInt(parseFloat(imageCropData['crop-y']) / $img.height() * $img.data('original-height'), 10);
+        imageCropData['crop-w'] = parseInt(parseFloat(imageCropData['crop-w']) / $img.width()  * $img.data('original-width' ), 10);
+        imageCropData['crop-h'] = parseInt(parseFloat(imageCropData['crop-h']) / $img.height() * $img.data('original-height'), 10);
 
         // POST
-        var pr = postOCR(imageCropData);
+        var pr = postOCR(imageCropData, url);
 
+        // enable/disable $ocrButton
         _isSaving = true;
-        $saveBtn.button('loading');
-
-        pr.then(function(ocrResult) {
+        $ocrButton.button('loading');
+        pr.then(null).then(function () {
+            $ocrButton.button('reset');
             _isSaving = false;
-            $saveBtn.button('reset')
-            //
-            dfd.resolve(ocrResult);
-        }, function(err) {
-            _isSaving = false;
-            $saveBtn.button('reset')
-            dfd.reject(err);
         });
+
+        pr.then(onPostResult);
     });
 
     //
     // bind cropper events
-    //
-    cropper.on('change', function(ev, x,y,w,h) {
-        $toolbar.hide();
-    });
-    cropper.on('select:start', function(ev, x,y,w,h) {});
-    cropper.on('release', function() {});
 
-    cropper.on('select', function(ev, x,y,w,h) {
-        var $selection = cropper.$selection();
+    //cropper.on('select:start', function onSelectStart(ev, x,y,w,h) {});
+    //cropper.on('release', function onSelectRelease() {});
 
+    // update crop rect info on select
+    cropper.on('select', function updateCropRectInfo(ev, x, y, w, h) {
         // update crop-rect info
         $form
             .find('input[name="crop-x"]').val(x).end()
@@ -84,65 +79,79 @@ function bindCropperWithOCR(cropper, $wrap, $img, onOCR) {
             .find('input[name="crop-h"]').val(h).end();
 
         var cropInfoText = `x ${x} y ${y} w ${w} h ${h}`;
-        $cropInfo.attr('title', cropInfoText).text(cropInfoText);
+        $cropInfo
+            .text(cropInfoText)
+            .attr('title', cropInfoText)
+        ;
+    });
 
-        //
-        $toolbar
-            .show()
-            .appendTo($selection);
+    // show/hide toolbar during change/select
+    cropper.on('change', function hideCropToolbar(ev, x,y,w,h) {
+        $toolbar.hide();
+    });
+    cropper.on('select', function showCropToolbar(ev) {
+        $toolbar.show()
+            .appendTo(cropper.$selection());
     });
 
     return dfd.promise();
 }
 
-function postOCR(imageCropData) {
+function postOCR(imageCropData, url) {
     return $.ajax({
         method: 'post',
-        url: "{% url 'post_quote_ocr' book_id=book.id quote_id=quote.id %}",
+        url: url,
         data: imageCropData,
     });
-
 }
 
+function ensureImageLoad($img) {
+    var dfd = $.Deferred();
+    $img.on('load', function onImageLoad() {
+        dfd.resolve();
+    }).each(function onAlreadyLoaded() {
+        if (this.complete) $(this).load();
+    });
+    return dfd.promise();
+}
 
 ///
-$(function() {
-    var $img = $('.image-preview-container img.obj');
+function initCrop(postUrl, elements) {
+    const {
+        $img,
+        $wrap,
+        $toolbar,
+        $form,
+        $cropInfo,
+        $ocrButton,
+        $textarea,
+    } = elements;
 
-	// image loaded
-	(function() {
-		var dfd = $.Deferred();
-		$img.on('load', function() {
-			dfd.resolve();
-		}).each(function() {
-			if (this.complete) { $(this).load() }
-		});
-		return dfd.promise();
-	})()
-	.then(function() {
-		// show cropper
-		var $_wrapper = $img.parent();
-		var cropper = initCropper($img, $_wrapper);
+    //
+    autosize($textarea);
+
+    ensureImageLoad($img).then(function () {
+        // show cropper
+        var cropper = initCropper($img, $wrap);
 
         // bind ocr
-        var $textarea = $('textarea[name="quotation"]');
-        bindCropperWithOCR(cropper, $_wrapper, $img).then(function(ocrResult) { 
+        bindCropperWithOCR(cropper, postUrl, elements, function writeOCRText(ocrResult) {
             //console.log(ocrResult);
             $textarea.val(ocrResult.result.text);
+            autosize.update($textarea);
             $textarea[0].focus();
-        }, function(err) { 
-            console.error(err);
         });
 
         // select default area
-        var width  = $img.width(),
-            height = $img.height();
-        var selectRect = { // blindly select (15~-15%, 25~-25%)
-            x: width * 0.15, 
-            w: width * (1 - (0.15)*2),
+        const width  = $img.width(),
+              height = $img.height();
+        const selectRect = { // blindly select (15~-15%, 25~-25%)
+            x: width  * 0.15,
+            w: width  * (1 - (0.15) * 2),
             y: height * 0.25,
-            h: height * (1.0 - (0.25)*2),
+            h: height * (1.0 - (0.25) * 2),
         };
         cropper.select(selectRect);
-	});
-});
+    });
+}
+
