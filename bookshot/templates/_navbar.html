@@ -1,16 +1,16 @@
-<div class="container">
 
-	<button id="dlabel-1" class="btn btn-default navbar-btn pull-left" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		<i class="glyphicon glyphicon-chevron-right"></i>
+<div class="container">
+	<button id="sidebar-button" name="sidebar-button" class="btn btn-default navbar-btn pull-left" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="glyphicon"></i>
 	</button>
 
-	<aside id="sidebar" class="dropdown-menu" aria-labelledby="dlabel-1" >
+	<aside id="sidebar" class="dropdown-menu" aria-labelledby="sidebar-button">
 		{% block sidebar %}
 		<ul class="nav nav-pills nav-stacked navbar" >
 			{% url 'index' as home_path %}
 			<li role="presentation" class="{% if request.path == home_path %}active{% endif %}">
 				<a href="{{ home_path }}" >
-					<i class="glyphicon glyphicon-home"></i> <span class="sr-only">Home</span></a>
+					<i class="glyphicon glyphicon-home"></i> <span class="sr">Home</span></a>
 			</li>
 			<!--
 			<li role="presentation">
@@ -21,7 +21,7 @@
 			{% url 'book_list' as books_path %}
 			<li role="presentation" class="{% if request.path == books_path %}active{% endif %}">
 				<a href="{{ books_path }}" >
-					<i class="glyphicon glyphicon-book"></i> <span class="sr-only">Book</span></a>
+					<i class="glyphicon glyphicon-book"></i> <span class="sr">By Book</span></a>
 			</li>
 			<!--
 			<li role="presentation">

@@ -1,7 +1,13 @@
 /*
  * Navigation Bar
  */
+
+@import (reference) "../libs/bootstrap-3.3.6/less/bootstrap.less";
+
+@nav-height: 50px;
+
 nav#nav {
+	height: @nav-height;
 
 	// navbar-header
 	.navbar-header {
@@ -31,6 +37,31 @@ nav#nav {
 	}
 }
 
+//
+#sidebar-button {
+	i {
+		.glyphicon-chevron-right;
+	}
+
+	&[aria-expanded="true"] {
+		i {
+			.glyphicon-chevron-left;
+		}
+	}
+}
+#sidebar {
+	position: absolute;
+	margin-top: 0;
+	height: ~"calc(100vh - @{nav-height})";
+
+	&.dropdown-menu {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-left-width: 0;
+	}
+}
+
+//
 .truncate-ellipsis {
   display: inline-block;
   overflow: hidden;
