@@ -23,7 +23,7 @@
 	}
 
 
-	.file-droppable .file-drop-box {
+	&.file-droppable .file-drop-box {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -48,19 +48,20 @@
 		text-align: center;
 		border: 2px dashed rgba(0,0,0,0.3);
 		border-radius: 5px;
+
+		// let guide be clickable
+		&:hover {
+			cursor: pointer;
+		}
 	}
 
-	.file-droppable.is-dragging-in .image-preview-container-inner {
+	.dragging-highlight() {
 		border-color: rgba(9, 80, 208, 1.0);
 		background-color: rgba(9, 80, 208, 0.2);
 	}
-
-	// let guide be clickable
+	&.file-droppable.is-dragging-in .image-preview-container-inner .guide,
 	.file-drop-box .guide:hover {
-		cursor: pointer;
-
-		border-color: rgba(9, 80, 208, 1.0);
-		background-color: rgba(9, 80, 208, 0.2);
+		.dragging-highlight();
 	}
 
 	// override with image
