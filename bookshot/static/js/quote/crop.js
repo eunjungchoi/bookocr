@@ -136,7 +136,7 @@ function initCrop(postUrl, elements) {
 
         // bind ocr
         bindCropperWithOCR(cropper, postUrl, elements, function writeOCRText(ocrResult) {
-            const text = (ocrResult.result.text||'').replace(/\n/g, '');
+            const text = (ocrResult.result.text||'').replace(/\n/g, '') + "\n";
             $textarea.val(text);
 
             // resize textarea
