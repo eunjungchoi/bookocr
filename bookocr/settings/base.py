@@ -261,7 +261,8 @@ COMPRESS_OUTPUT_DIR = 'CACHE'
 # Run lessc for "text/less" type tags
 COMPRESS_PRECOMPILERS = (
 	('text/less', 'lessc {infile} {outfile}'),
-	('text/javascript', 'babel {infile} > {outfile}'),
+	('text/javascript', 'babel --presets %s/node_modules/babel-preset-es2015 {infile} > {outfile}' % BASE_DIR),
+	('text/es6', 'babel --presets %s/node_modules/babel-preset-es2015 {infile} > {outfile}' % BASE_DIR),
 )
 
 
