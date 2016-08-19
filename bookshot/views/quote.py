@@ -16,7 +16,36 @@ from bookshot.models import *
 
 
 @login_required
+def new(request):
+	''' render page for new quote '''
+	import json
+
+	# book
+	book = Book()
+	if request.GET.get('book_id'):
+		book_id = request.GET['book_id']
+		book = get_object_or_404(Book, pk=book_id)
+
+	# recent books
+	recent_books = request.user.recent_books()[:3]
+	recent_books = [{
+		"id"    : b.id,
+		"title" : b.title,
+		"isbn13": b.isbn13,
+		"cover_url": b.cover_url,
+		"raw_response": json.loads(b.raw_response or '{}'),
+	} for b in recent_books]
+
+	context = {
+		'book': book,
+		'recent_books': json.dumps(recent_books),
+	}
+	return render(request, 'quote/new.html', context)
+
+
+@login_required
 def add(request):
+	''' save quote with book info. quote message not added yet. '''
 
 	try:
 		book = Book.objects.get(
@@ -47,6 +76,7 @@ def add(request):
 
 @login_required
 def ocr_new(request, book_id, quote_id):
+	''' render page for ocr '''
 	book  = get_object_or_404(Book, pk=book_id)
 	quote = get_object_or_404(Quote, pk=quote_id)
 
@@ -57,8 +87,10 @@ def ocr_new(request, book_id, quote_id):
 
 	return render(request, 'quote/crop.html', context)
 
+
 @login_required
 def ocr_request(request, book_id, quote_id):
+	''' request OCR service for current quote '''
 	quote = Quote.objects.get(id=quote_id)
 
 	area_rect = {
@@ -83,6 +115,7 @@ def ocr_request(request, book_id, quote_id):
 
 @login_required
 def ocr_update(request, book_id, quote_id):
+	''' save quote message '''
 	if request.method != 'POST':
 		return HttpResponseNotAllowed(['POST'], 'only POST method is allowed')
 
@@ -109,30 +142,5 @@ def ocr_update(request, book_id, quote_id):
 	#quote._ocr_raw_response = request.POST['ocr_raw_response']
 	quote.save()
 
-	return redirect(reverse('index'))
+	return redirect(reverse('book', kwargs={"book_id": book_id}))
 
-@login_required
-def new(request):
-	import json
-
-	# book
-	book = Book()
-	if request.GET.get('book_id'):
-		book_id = request.GET['book_id']
-		book = get_object_or_404(Book, pk=book_id)
-
-	# recent books
-	recent_books = request.user.recent_books()[:3]
-	recent_books = [{
-		"id"    : b.id,
-		"title" : b.title,
-		"isbn13": b.isbn13,
-		"cover_url": b.cover_url,
-		"raw_response": json.loads(b.raw_response or '{}'),
-	} for b in recent_books]
-
-	context = {
-		'book': book,
-		'recent_books': json.dumps(recent_books),
-	}
-	return render(request, 'quote/new.html', context)
