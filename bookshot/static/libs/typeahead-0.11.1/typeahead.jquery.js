@@ -700,6 +700,7 @@
                 this.trigger("rendered", this.name, suggestions, false);
             },
             _append: function append(query, suggestions) {
+                console.log('_append', suggestions.length, 'suggestions');
                 suggestions = suggestions || [];
                 if (suggestions.length && this.$lastSuggestion.length) {
                     this._appendSuggestions(query, suggestions);
@@ -803,15 +804,30 @@
                         that.trigger("asyncRequested", query);
                     }
                 }
+                //function async(suggestions) {
+                //    suggestions = suggestions || [];
+                //    if (!canceled && rendered < that.limit) {
+                //        that.cancel = $.noop;
+                //        rendered += suggestions.length;
+                //        that._append(query, suggestions.slice(0, that.limit - rendered));
+                //        that.async && that.trigger("asyncReceived", query);
+                //    }
+                //}
                 function async(suggestions) {
-                    suggestions = suggestions || [];
-                    if (!canceled && rendered < that.limit) {
-                        that.cancel = $.noop;
-                        rendered += suggestions.length;
-                        that._append(query, suggestions.slice(0, that.limit - rendered));
-                        that.async && that.trigger("asyncReceived", query);
-                    }
+                  suggestions = suggestions || [];
+
+                  // if the update has been canceled or if the query has changed
+                  // do not render the suggestions as they've become outdated
+                  if (!canceled && rendered < that.limit) {
+                    that.cancel = $.noop;
+                    var idx = Math.abs(rendered - that.limit);
+                    rendered += idx;
+                    console.log('appending', `from ${suggestions.length},`, `slice 0 ~ (${that.limit} - ${rendered})`);
+                    that._append(query, suggestions.slice(0, idx));
+                    that.async && that.trigger("asyncReceived", query);
+                  }
                 }
+                
             },
             cancel: $.noop,
             clear: function clear() {
