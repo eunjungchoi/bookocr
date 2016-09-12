@@ -49,15 +49,16 @@ function DaumBook(apiKey, options) {
 DaumBook.prototype = _.create(Bloodhound.prototype);
 
 DaumBook.prototype.prepare = function(query, settings) {
-    this.query   = query;
+    this.query = query;
+    this.url   = settings.url = settings.url.replace('%s', encodeURIComponent(query));
     settings.dataType = 'jsonp';
-    settings.url = settings.url.replace('%s', encodeURIComponent(query));
 
     return settings;
 };
 
 DaumBook.prototype.transform = function(response) {
     var query = this.query;
+    var url = this.url;
 
     var volumes = _.map(response.channel.item);
 
@@ -105,6 +106,7 @@ DaumBook.prototype.transform = function(response) {
         authors = _.filter(authors, function(author) {
             return author;
         });
+        authors = _.uniq(authors);
 
         var author1 = authors[0];
         var isbn13  = volume.isbn13;
@@ -134,6 +136,8 @@ DaumBook.prototype.transform = function(response) {
             thumbnail: thumbnailSmall || thumbnail,
             //
             value: title,
+            raw: volume,
+            uri: url,
         };
     });
     ///console.log('transform', result.length, 'results.');
