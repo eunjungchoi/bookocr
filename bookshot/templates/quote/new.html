@@ -93,7 +93,43 @@
 <link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
 <link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
 
+{% load compress %}
+{% compress js %}
 {% include "quote/new.js.html" %}
+<script type="text/es6">
+	// files input DnD
+	$(function() {
+		//
+		var recentBooks = JSON.parse('{{recent_books|escapejs}}');
+		const typeBookSource = (defaultData) => {
+			//return new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
+			//return new BandiNLunis({ local: defaultData });
+			return new DaumBook('770314f63c70887c58b51da9ab9dc3e3', { local: defaultData });
+		}
+
+		//
+		var $droppable    = $('.file-droppable');
+		var $previewInner = $('.image-preview-container-inner');
+		var $inputFile    = $('input#photo');
+
+		// initialize book type
+		var $bookFormGroup = $('.book-form-group'),
+		    $bookInput     = $bookFormGroup.find('input[name="book-title"]');
+
+		//
+		initializeQuoteNew({
+			//
+			$droppable,
+			$clickZone: null,
+			$inputFile,
+			$previewInner,
+			//
+			$bookInput,
+			$bookFormGroup
+		}, recentBooks, typeBookSource)
+	});
+</script>
+{% endcompress %}
 
 {% endblock content %}
 
