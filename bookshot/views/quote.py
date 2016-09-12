@@ -9,8 +9,11 @@ from django.contrib import messages
 
 import logging
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-from datetime import date
+from UniversalAnalytics import Tracker
+
+from datetime import date, datetime
 from PIL import Image
 from bookshot.models import *
 
@@ -46,6 +49,16 @@ def new(request):
 @login_required
 def add(request):
 	''' save quote with book info. quote message not added yet. '''
+
+	# track image upload time
+	if request.POST['_request_start_time_ms']:
+		_rtime = int(request.POST['_request_start_time_ms'])
+		time_to_upload = datetime.now().timestamp() * 1000 - _rtime
+		book_title = request.POST['book-title']
+		tracker = Tracker.create('UA-84000635-1') # REFACTOR ME
+		tracker.send('event', 'upload', 'image', book_title, time_to_upload);
+		tracker.send('timing', 'upload', 'image', time_to_upload)
+		logger.debug('%.1f s to upload image' % time_to_upload)
 
 	try:
 		book = Book.objects.get(

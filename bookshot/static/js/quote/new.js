@@ -213,6 +213,7 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
 //
 function initializeQuoteNew({
     //
+    $form,
     $droppable,
     $clickZone,
     $inputFile,
@@ -270,6 +271,15 @@ function initializeQuoteNew({
             .find('input[name="book-cover-url"]').val(bookObj.thumbnail          ).end()
             .find('input[name="book-response"]' ).val(JSON.stringify(bookObj.raw)).end()
         ;
+    });
+
+    //
+    // bind _request_start_time_ms on form submit
+    //
+    $form.on('submit', (ev) => {
+        console.log(new Date());
+        const now = Date.now();
+        $form.append(`<input type="hidden" name="_request_start_time_ms" value="${now}" />`);
     });
 }
 
