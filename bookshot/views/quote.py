@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 
+from django.conf import settings
+
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -55,7 +57,7 @@ def add(request):
 		_rtime = int(request.POST['_request_start_time_ms'])
 		time_to_upload = datetime.now().timestamp() * 1000 - _rtime
 		book_title = request.POST['book-title']
-		tracker = Tracker.create('UA-84000635-1') # REFACTOR ME
+		tracker = Tracker.create(settings.GOOGLE_ANALYTICS_TRACKER_ID)
 		tracker.send('event', 'upload', 'image', book_title, time_to_upload);
 		tracker.send('timing', 'upload', 'image', time_to_upload)
 		logger.debug('%.1f s to upload image' % time_to_upload)

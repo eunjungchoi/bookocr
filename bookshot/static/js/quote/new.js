@@ -277,7 +277,6 @@ function initializeQuoteNew({
     // bind _request_start_time_ms on form submit
     //
     $form.on('submit', (ev) => {
-        console.log(new Date());
         const now = Date.now();
         $form.append(`<input type="hidden" name="_request_start_time_ms" value="${now}" />`);
     });
