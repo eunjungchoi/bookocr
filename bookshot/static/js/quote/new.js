@@ -1,3 +1,4 @@
+// handle file change
 function handleFiles(files) {
 	if (!files || files.length === 0) {
 		return;
