@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 	'social.apps.django_app.default',
 	'storages', #
+    'debug_toolbar',
 	# 'django_s3_storage',
 	"compressor",
 ]
