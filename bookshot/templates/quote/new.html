@@ -87,12 +87,48 @@
 {% endif %}
 <script src="{% static 'libs/typebook/typebook.js' %}"></script>
 <!--<script src="{% static 'libs/typebook/typebook.googlebooks.js' %}"></script>-->
-<script src="{% static 'libs/typebook/google_books_auth.js' %}"></script>
-<script src="{% static 'libs/typebook/bandi_n_lunis.js' %}"></script>
+<!--script src="{% static 'libs/typebook/google_books_auth.js' %}"></script-->
+<!--script src="{% static 'libs/typebook/bandi_n_lunis.js' %}"></script-->
+<script src="{% static 'libs/typebook/daum_book.js' %}"></script>
 <link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
 <link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
 
-{% include "quote/new.js.html" %}
+{% load compress %}
+{% compress js %}
+<script src="{% static 'js/quote/new.js' %}" type="text/javascript"></script>
+<script type="text/es6">
+	$(function() {
+		//
+		var recentBooks = JSON.parse('{{recent_books|escapejs}}');
+		const typeBookSource = (defaultData) => {
+			//return new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
+			//return new BandiNLunis({ local: defaultData });
+			return new DaumBook('770314f63c70887c58b51da9ab9dc3e3', { local: defaultData });
+		}
+
+		//
+		var $droppable    = $('.file-droppable');
+		var $previewInner = $('.image-preview-container-inner');
+		var $inputFile    = $('input#photo');
+
+		// initialize book type
+		var $bookFormGroup = $('.book-form-group'),
+		    $bookInput     = $bookFormGroup.find('input[name="book-title"]');
+
+		//
+		initializeQuoteNew({
+			//
+			$droppable,
+			$clickZone: null,
+			$inputFile,
+			$previewInner,
+			//
+			$bookInput,
+			$bookFormGroup
+		}, recentBooks, typeBookSource)
+	});
+</script>
+{% endcompress %}
 
 {% endblock content %}
 
