@@ -93,10 +93,14 @@
 <link rel="stylesheet" href="{% static 'libs/typebook/typeahead.css' %}">
 <link rel="stylesheet" href="{% static 'libs/typebook/typebook.css' %}">
 
+{% load compress %}
+{% compress js %}
+<script src="{% static 'js/utils.js' %}"></script>
+{% endcompress %}
+
 <script type="text/javascript">
 	var recentBooks = JSON.parse('{{recent_books|escapejs}}');
 </script>
-{% load compress %}
 {% compress js %}
 <script src="{% static 'js/quote/new.js' %}" type="text/javascript"></script>
 <script type="text/es6">

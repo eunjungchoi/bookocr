@@ -208,7 +208,8 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     return $dropZone;
 }
 
-function temporarilyDisableZoomOnTab($el) {
+// temporarily disable zoom on tap
+function temporarilyDisableZoomOnTap($el) {
     const is_iOS = navigator.userAgent.length && /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (!is_iOS) {
@@ -303,7 +304,7 @@ function initializeQuoteNew({
     });
 
     //
-    temporarilyDisableZoomOnTab($bookInput);
+    temporarilyDisableZoomOnTap($bookInput);
 
     //
     // bind _request_start_time_ms on form submit
