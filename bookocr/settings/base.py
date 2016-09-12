@@ -83,6 +83,7 @@ TEMPLATES = [
 	            'django.template.context_processors.tz',
 	            'social.apps.django_app.context_processors.backends',
 	            'social.apps.django_app.context_processors.login_redirect',
+				'bookocr.context_processors.load_additional_settings',
 				'bookocr.context_processors.profile',
 	        ],
 	    },
@@ -269,3 +270,9 @@ COMPRESS_PRECOMPILERS = (
 STATICFILES_FINDERS.append(
     'compressor.finders.CompressorFinder'
 )
+
+#
+# Google Analytics 
+#
+GOOGLE_ANALYTICS_TRACKER_ID = 'UA-84000635-1'
+

@@ -700,7 +700,6 @@
                 this.trigger("rendered", this.name, suggestions, false);
             },
             _append: function append(query, suggestions) {
-                console.log('_append', suggestions.length, 'suggestions');
                 suggestions = suggestions || [];
                 if (suggestions.length && this.$lastSuggestion.length) {
                     this._appendSuggestions(query, suggestions);
@@ -822,7 +821,6 @@
                     that.cancel = $.noop;
                     var idx = Math.abs(rendered - that.limit);
                     rendered += idx;
-                    console.log('appending', `from ${suggestions.length},`, `slice 0 ~ (${that.limit} - ${rendered})`);
                     that._append(query, suggestions.slice(0, idx));
                     that.async && that.trigger("asyncReceived", query);
                   }

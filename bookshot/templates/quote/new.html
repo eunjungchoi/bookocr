@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 
-			<form class="form-horizontal" action="{% url 'add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form name="add-photo" class="form-horizontal" action="{% url 'add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
 				<h4>마음에 든 문구를 담아 주세요.</h4>
 
@@ -107,17 +107,19 @@
 		}
 
 		//
+		var $form = $('form[name="add-photo"]');
 		var $droppable    = $('.file-droppable');
 		var $previewInner = $('.image-preview-container-inner');
 		var $inputFile    = $('input#photo');
 
-		// initialize book type
+		// book type
 		var $bookFormGroup = $('.book-form-group'),
 		    $bookInput     = $bookFormGroup.find('input[name="book-title"]');
 
 		//
 		initializeQuoteNew({
 			//
+			$form,
 			$droppable,
 			$clickZone: null,
 			$inputFile,
