@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# bump: 2016년 8월  2일 화요일 15시 04분 37초 KST
+# bump: 2016년 9월 12일 월요일 21시 25분 24초 KST
 
 from django.conf import settings
 from bookocr.settings import base
