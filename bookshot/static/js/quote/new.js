@@ -146,6 +146,7 @@ function bindTypebook($el, defaultData, getSource) {
 }
 
 
+//
 function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     var ooleft    = $dropZone.offset().left;
     var ooright   = $dropZone.outerWidth() + ooleft;
@@ -205,6 +206,35 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     }
 
     return $dropZone;
+}
+
+// temporarily disable zoom on tap
+function temporarilyDisableZoomOnTap($el) {
+    const is_iOS = navigator.userAgent.length && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (!is_iOS) {
+        return;
+    }
+
+    var $head = $('head');
+
+    // if the device is an iProduct, apply the fix whenever the users touches an input
+    $el
+        .on('touchstart', () => disableZoom())
+        .on('touchend', () => setTimeout(enableZoom, 500));
+
+    // define a function to disable zooming
+    function disableZoom() {
+        $head.find('meta[name=viewport]').remove();
+        $head.prepend('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />');
+        //alert($head.find('meta[name="viewport"]')[0].outerHTML);
+    };
+
+    // ... and another to re-enable it
+    function enableZoom() {
+        $head.find('meta[name=viewport]').remove();
+        $head.prepend('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1" />');
+    };
 }
 
 
@@ -272,6 +302,9 @@ function initializeQuoteNew({
             .find('input[name="book-response"]' ).val(JSON.stringify(bookObj.raw)).end()
         ;
     });
+
+    //
+    temporarilyDisableZoomOnTap($bookInput);
 
     //
     // bind _request_start_time_ms on form submit
