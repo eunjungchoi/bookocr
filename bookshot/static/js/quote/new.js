@@ -1,54 +1,52 @@
-<script type="text/javascript">
+function handleFiles(files) {
+	if (!files || files.length === 0) {
+		return;
+	}
+    // display file info
+    $('.file-info').text(files[0].name);
 
-//function handleFiles(files) {
-//	if (!files || files.length === 0) {
-//		return;
-//	}
-//    // display file info
-//    $('.file-info').text(files[0].name);
-//
-//    // render preview
-//    var $preview = $('.image-preview-container'),
-//        $inner   = $preview.find('.image-preview-container-inner .thumbnail');
-//    var imgEl = renderImagePreview(files, $preview, $inner);
-//}
+    // render preview
+    var $preview = $('.image-preview-container'),
+        $inner   = $preview.find('.image-preview-container-inner .thumbnail');
+    var imgEl = renderImagePreview(files, $preview, $inner);
+}
 
-//// add selected image to preview
-//function renderImagePreview(files, $container, $inner) {
-//
-//    // empty preview
-//    $inner.empty();
-//
-//    var file;
-//    for (var i = 0; i < files.length; i++) {
-//        file = files[0];
-//        var imageType = /^image\//;
-//
-//        if (!imageType.test(file.type)) {
-//            continue;
-//        }
-//        break;
-//    }
-//
-//    // 
-//    // create image element
-//    var img = document.createElement("img");
-//        img.classList.add("obj");
-//        img.file = file;
-//        img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
-//    $inner.append($('<div class="image-wrapper" />').append(img)); // Assuming that "preview" is the div output where the content will be displayed.
-//
-//    // build reader
-//    var reader = new FileReader();
-//    reader.onload = (function(_img) {
-//        return function(ev) { 
-//            _img.src = ev.target.result; 
-//        }; 
-//    })(img);
-//    reader.readAsDataURL(file);
-//
-//    return img;
-//}
+// add selected image to preview
+function renderImagePreview(files, $container, $inner) {
+
+    // empty preview
+    $inner.empty();
+
+    var file;
+    for (var i = 0; i < files.length; i++) {
+        file = files[0];
+        var imageType = /^image\//;
+
+        if (!imageType.test(file.type)) {
+            continue;
+        }
+        break;
+    }
+
+    // 
+    // create image element
+    var img = document.createElement("img");
+        img.classList.add("obj");
+        img.file = file;
+        img.setAttribute('style', 'max-width: 100%; max-height: 100%;');
+    $inner.append($('<div class="image-wrapper" />').append(img)); // Assuming that "preview" is the div output where the content will be displayed.
+
+    // build reader
+    var reader = new FileReader();
+    reader.onload = (function(_img) {
+        return function(ev) { 
+            _img.src = ev.target.result; 
+        }; 
+    })(img);
+    reader.readAsDataURL(file);
+
+    return img;
+}
 
 //function bindDragNDrop($dropbox) {
 //	return $dropbox
@@ -272,6 +270,4 @@ function initializeQuoteNew({
         ;
     });
 }
-
-</script>
 

@@ -90,9 +90,7 @@ DaumBook.prototype.transform = function(response) {
         return false;
     });
     if (response.channel.item.length !== volumes.length) {
-        console.log('filtered:', response.channel.item.length, '=>', volumes.length);
-        //console.log(volumes);
-        //console.log(volumes);
+        ///console.log('filtered:', response.channel.item.length, '=>', volumes.length);
     }
     //
     var result = _.map(volumes, function(volume, i) {
@@ -138,7 +136,7 @@ DaumBook.prototype.transform = function(response) {
             value: title,
         };
     });
-    console.log('transform', result.length, 'results.');
+    ///console.log('transform', result.length, 'results.');
     return result;
 };
 
