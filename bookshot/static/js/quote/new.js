@@ -49,6 +49,7 @@ function renderImagePreview(files, $container, $inner) {
     return img;
 }
 
+
 //function bindDragNDrop($dropbox) {
 //	return $dropbox
 //		.on('dragenter', function(ev) {
