@@ -95,7 +95,7 @@ DaumBook.prototype.transform = function(response) {
     //
     var result = _.map(volumes, function(volume, i) {
         //console.log(i, volume);
-        var title = volume.title.replace('&lt;b&gt;', '').replace('&lt;/b&gt;', '');
+        var title = volume.title.replace(/&lt;b&gt;/g, '').replace(/&lt;\/b&gt;/g, '');
 
         var authors = [
             volume.author_t,

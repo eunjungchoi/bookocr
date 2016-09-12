@@ -62,13 +62,13 @@ def add(request):
 		tracker.send('timing', 'upload', 'image', time_to_upload)
 		logger.debug('%.1f s to upload image' % time_to_upload)
 
+	#
+	title = request.POST['book-title'][:TITLE_MAX_LENGTH]
 	try:
-		book = Book.objects.get(
-			title=request.POST['book-title'],
-		)
+		book = Book.objects.get(title=title)
 	except Book.DoesNotExist:
 		book = Book(
-			title=request.POST['book-title'],
+			title=title,
 			authors=request.POST['book-authors'],
 			cover_url =request.POST['book-cover-url'],
 			_raw_response =request.POST['book-response'],
