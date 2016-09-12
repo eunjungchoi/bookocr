@@ -101,7 +101,7 @@ DaumBook.prototype.transform = function(response) {
         var authors = [
             volume.author_t,
             volume.translator,
-            volume.etc_author,
+            //volume.etc_author,
         ];
         authors = _.filter(authors, function(author) {
             return author;
