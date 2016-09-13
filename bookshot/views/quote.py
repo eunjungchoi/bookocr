@@ -53,14 +53,14 @@ def add(request):
 	''' save quote with book info. quote message not added yet. '''
 
 	# track image upload time
-	if request.POST['_request_start_time_ms']:
+	if '_request_start_time_ms' in request.POST:
 		_rtime = int(request.POST['_request_start_time_ms'])
-		time_to_upload = datetime.now().timestamp() * 1000 - _rtime
+		time_to_upload_ms = datetime.now().timestamp() * 1000 - _rtime
 		book_title = request.POST['book-title']
 		tracker = Tracker.create(settings.GOOGLE_ANALYTICS_TRACKER_ID)
-		tracker.send('event', 'upload', 'image', book_title, time_to_upload);
-		tracker.send('timing', 'upload', 'image', time_to_upload)
-		logger.debug('%.1f s to upload image' % time_to_upload)
+		tracker.send('event', 'upload', 'image', book_title, int(time_to_upload_ms));
+		tracker.send('timing', 'upload', 'image', str(time_to_upload_ms), book_title)
+		logger.debug('upload image: %.1f s, "%s"' % (time_to_upload_ms / 1000, book_title))
 
 	#
 	title = request.POST['book-title'][:TITLE_MAX_LENGTH]
