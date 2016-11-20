@@ -35,6 +35,8 @@ LOGIN_URL = '/login/'
 
 INSTALLED_APPS = [
 	'bookshot.apps.BookshotConfig',
+	#'bookscore.apps.BookscoreConfig',
+	'bookscore',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
