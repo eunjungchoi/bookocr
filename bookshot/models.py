@@ -120,8 +120,11 @@ class Quote(models.Model):
 		return self.quotation
 
 
+# TODO: expand title length
+TITLE_MAX_LENGTH = 30
+
 class Book(models.Model):
-	title = models.CharField(max_length=30)
+	title = models.CharField(max_length=TITLE_MAX_LENGTH)
 	authors = models.CharField(max_length=100, null=False, blank=True)
 	_isbn13 = models.CharField(max_length=13, null=False, blank=True, db_column="isbn13")
 	cover_url = models.URLField(max_length=300, null=True, blank=True, default="")

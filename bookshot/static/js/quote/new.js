@@ -1,5 +1,4 @@
-<script type="text/javascript">
-
+// handle file change
 function handleFiles(files) {
 	if (!files || files.length === 0) {
 		return;
@@ -12,7 +11,6 @@ function handleFiles(files) {
         $inner   = $preview.find('.image-preview-container-inner .thumbnail');
     var imgEl = renderImagePreview(files, $preview, $inner);
 }
-
 
 // add selected image to preview
 function renderImagePreview(files, $container, $inner) {
@@ -51,6 +49,7 @@ function renderImagePreview(files, $container, $inner) {
     return img;
 }
 
+
 //function bindDragNDrop($dropbox) {
 //	return $dropbox
 //		.on('dragenter', function(ev) {
@@ -86,11 +85,8 @@ function renderImagePreview(files, $container, $inner) {
 //	;
 //}
 
-function bindTypebook($el, defaultData) {
-    //var source = new GoogleBooksAuth('AIzaSyAZBL1esHOeaMG_HRemyBKXm-d-o1Z_x-I');
-	var source = new BandiNLunis({
-		local: defaultData,
-	});
+function bindTypebook($el, defaultData, getSource) {
+    const source = getSource(defaultData);
 
     var minLength = _.isEmpty(defaultData) ? 1 : 0;
 
@@ -150,6 +146,7 @@ function bindTypebook($el, defaultData) {
 }
 
 
+//
 function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     var ooleft    = $dropZone.offset().left;
     var ooright   = $dropZone.outerWidth() + ooleft;
@@ -158,7 +155,7 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
 
     // $input follows on drag
     $dropZone.on("dragenter", function (ev) {
-        console.log('dragenter.');
+        ///console.log('dragenter.');
     });
     $dropZone.on("dragover", function (ev) {
         ev.preventDefault();
@@ -182,7 +179,7 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
         $dropZone.removeClass(mouseOverClass);
     });
     $dropZone.on("drop", function (ev) {
-        console.log('drop.');
+        ///console.log('drop.');
         //ev.preventDefault();
         //ev.stopPropagation();
 
@@ -211,63 +208,110 @@ function inputFollowsDrag($dropZone, $clickZone, $inputFile, mouseOverClass) {
     return $dropZone;
 }
 
+// temporarily disable zoom on tap
+function temporarilyDisableZoomOnTap($el) {
+    const is_iOS = navigator.userAgent.length && /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-// files input DnD
-$(function() {
-    var $droppable = $('.file-droppable');
+    if (!is_iOS) {
+        return;
+    }
+
+    var $head = $('head');
+
+    // if the device is an iProduct, apply the fix whenever the users touches an input
+    $el
+        .on('touchstart', () => disableZoom())
+        .on('touchend', () => setTimeout(enableZoom, 500));
+
+    // define a function to disable zooming
+    function disableZoom() {
+        $head.find('meta[name=viewport]').remove();
+        $head.prepend('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />');
+        //alert($head.find('meta[name="viewport"]')[0].outerHTML);
+    };
+
+    // ... and another to re-enable it
+    function enableZoom() {
+        $head.find('meta[name=viewport]').remove();
+        $head.prepend('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1" />');
+    };
+}
+
+
+//
+// initialize
+//
+function initializeQuoteNew({
+    //
+    $form,
+    $droppable,
+    $clickZone,
+    $inputFile,
+    $previewInner,
+    //
+    $bookInput,
+    $bookFormGroup
+}, recentBooks, typeBookSource) {
+
+    //
+	// initialize files input DnD
+    //
 
     // directly set dragover and drop
-	//bindDragNDrop($droppable);
+    //bindDragNDrop($droppable);
 
-    // files input follows drag
-    var $inner  = $('.image-preview-container-inner');
-    var $inputFile = $('input#photo').css({
+    $inputFile = $inputFile.css({
         'position': 'absolute',
         'opacity': 0, // 0,
         //'width': '0.1px',
         //'height': '0.1px',
         //'overflow': 'hidden',
         //'z-index': '-1', // XXX: cannot drop
-    }).appendTo($inner);
-    var $label = $inner.find('label[for="photo"]');
-    var $clickZone = null;
+    }).appendTo($previewInner);
+
     inputFollowsDrag($droppable, $clickZone, $inputFile, 'is-dragging-in');
-});
 
 
-// book type
-$(function() {
-    var $bookFormG = $('.book-form-group');
-    var $bookInput = $bookFormG.find('input[name="book-title"]');
-	var recentBooks = JSON.parse('{{recent_books|escapejs}}');
-        recentBooks = _.filter(recentBooks, function(book) { // ignore legacy data
-            return !!book.raw_response;
-        });
-        recentBooks = _.map(recentBooks, function(book) {
-            return {
-                idStr: book.id,
-                title: book.title,
-                subtitle: '',
-                isbn: book.isbn13,
-                thumbnail: book.cover_url,
-                publisher: '',
-                authorStr: '',
-                //
-                value: book.title,
-                raw: book.raw_response||'',
-            }
-        });
+    //
+	// initialize book type
+    //
 
-	var $typebook = bindTypebook($bookInput, recentBooks).on('typeahead:select', function(ev, bookObj) {
+    // filter recent books
+    recentBooks = _.reject(recentBooks, (book) => _.isEmpty(book.raw_response)); // ignore legacy data
+    recentBooks = _.map(recentBooks, (book) => {
+        return {
+            idStr: book.id,
+            title: book.title,
+            subtitle: '',
+            isbn: book.isbn13,
+            thumbnail: book.cover_url,
+            publisher: '',
+            authorStr: '',
+            //
+            value: book.title,
+            raw: book.raw_response||'',
+        }
+    });
+
+    var $typebook = bindTypebook($bookInput, recentBooks, typeBookSource).on('typeahead:select', function(ev, bookObj) {
         //console.log('selected:', bookObj);
-        $bookFormG
+        $bookFormGroup
             .find('input[name="book-isbn"]'     ).val(bookObj.isbn               ).end()
             .find('input[name="book-authors"]'  ).val(bookObj.authorsStr         ).end()
             .find('input[name="book-cover-url"]').val(bookObj.thumbnail          ).end()
             .find('input[name="book-response"]' ).val(JSON.stringify(bookObj.raw)).end()
         ;
     });
-});
 
-</script>
+    //
+    temporarilyDisableZoomOnTap($bookInput);
+
+    //
+    // bind _request_start_time_ms on form submit
+    //
+    $form.on('submit', (ev) => {
+        const now = Date.now();
+        $form.append(`<input type="hidden" name="_request_start_time_ms" value="${now}" />`);
+    });
+}
 

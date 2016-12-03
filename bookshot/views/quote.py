@@ -7,10 +7,15 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 
+from django.conf import settings
+
 import logging
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-from datetime import date
+from UniversalAnalytics import Tracker
+
+from datetime import date, datetime
 from PIL import Image
 from bookshot.models import *
 
@@ -47,13 +52,23 @@ def new(request):
 def add(request):
 	''' save quote with book info. quote message not added yet. '''
 
+	# track image upload time
+	if '_request_start_time_ms' in request.POST:
+		_rtime = int(request.POST['_request_start_time_ms'])
+		time_to_upload_ms = datetime.now().timestamp() * 1000 - _rtime
+		book_title = request.POST['book-title']
+		tracker = Tracker.create(settings.GOOGLE_ANALYTICS_TRACKER_ID)
+		tracker.send('event', 'upload', 'image', book_title, int(time_to_upload_ms));
+		tracker.send('timing', 'upload', 'image', str(time_to_upload_ms), book_title)
+		logger.debug('upload image: %.1f s, "%s"' % (time_to_upload_ms / 1000, book_title))
+
+	#
+	title = request.POST['book-title'][:TITLE_MAX_LENGTH]
 	try:
-		book = Book.objects.get(
-			title=request.POST['book-title'],
-		)
+		book = Book.objects.get(title=title)
 	except Book.DoesNotExist:
 		book = Book(
-			title=request.POST['book-title'],
+			title=title,
 			authors=request.POST['book-authors'],
 			cover_url =request.POST['book-cover-url'],
 			_raw_response =request.POST['book-response'],

@@ -105,16 +105,6 @@ function postOCR(imageCropData, url) {
     });
 }
 
-function ensureImageLoad($img) {
-    var dfd = $.Deferred();
-    $img.on('load', function onImageLoad() {
-        dfd.resolve();
-    }).each(function onAlreadyLoaded() {
-        if (this.complete) $(this).load();
-    });
-    return dfd.promise();
-}
-
 ///
 function initCrop(postUrl, elements) {
     const {
@@ -157,5 +147,8 @@ function initCrop(postUrl, elements) {
         };
         cropper.select(selectRect);
     });
+
+    //
+    temporarilyDisableZoomOnTap($textarea);
 }
 
