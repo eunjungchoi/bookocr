@@ -1,114 +1,181 @@
-<table>
-<thead>
-<tr>
-<th></th>
-<th>젊은 회의주의자에게 보내는 편지</th>
-<th>스페이스 크로니클</th>
-<th>의심스러운 싸움</th>
-<th>신들의 전쟁</th>
-<th>사피엔스의 미래</th>
-<th>사피엔스의 미래</th>
-<th>작은 것들의 신</th>
-<th>한밤의 아이들</th>
-<th>1417년 근대의 탄생</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>저자</td>
-<td>크리스토퍼 히친스</td>
-<td>닐 타이슨</td>
-<td>존 스타인벡</td>
-<td>닐 게이먼</td>
-<td></td>
-<td>아룬다티 로이</td>
-<td>살만 루슈디</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>쪽수</td>
-<td>248</td>
-<td>448</td>
-<td>334</td>
-<td>411</td>
-<td>208</td>
-<td>284</td>
-<td>488</td>
-<td>504</td>
-<td>400</td>
-</tr>
-<tr>
-<td>ebook</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>goodreads</td>
-<td>4.4 (x140)</td>
-<td>3.95 (x4,623)</td>
-<td>3.89 (x7,388)</td>
-<td>4.1 (x441,922)</td>
-<td>3.42 (x12)</td>
-<td>4.36 (x69,971)</td>
-<td>3.0 (x168,649)</td>
-<td>3.99 (x79,553)</td>
-<td>3.83 (x19,349)</td>
-</tr>
-<tr>
-<td>amazon</td>
-<td>4.15 (x6,580)</td>
-<td>4.4 (x202)</td>
-<td>4.4 (x108)</td>
-<td>4.2 (x3,380)</td>
-<td>5.0 (x2)</td>
-<td>4.7 (x4,985)</td>
-<td>3.0 (x1,235)</td>
-<td>4.0 (x421)</td>
-<td>4.2 (x711)</td>
-</tr>
-<tr>
-<td>aladin</td>
-<td>4.0 (x3)</td>
-<td>4.4 (x10)</td>
-<td>3.9 (x4)</td>
-<td>3.35 (x10)</td>
-<td>4.35</td>
-<td>4.8 (x287)</td>
-<td>4.7 (x12)</td>
-<td>4.85 (x20)</td>
-<td>4.6 (x14)</td>
-</tr>
-<tr>
-<td>kyobo</td>
-<td>4.1 (x7)</td>
-<td>5.0 (x4)</td>
-<td>5.0 (x1)</td>
-<td>3.75 (x6)</td>
-<td>5 (x2)</td>
-<td>5 (x47)</td>
-<td>5 (x1)</td>
-<td>- (x0)</td>
-<td>- (x0)</td>
-</tr>
-<tr>
-<td>yes24</td>
-<td></td>
-<td></td>
-<td></td>
-<td>3 (x14)</td>
-<td>4 (x12)</td>
-<td>4 (x12)</td>
-<td>5 (x2)</td>
-<td>4 (x10)</td>
-<td>4 (x7)</td>
-</tr>
-</tbody>
-</table>
+
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
+  integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="ejs.min.js"></script>
+
+
+<style>
+
+#app {
+  position: relative;
+}
+
+#content {
+}
+
+#sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+
+  border-left: 1px solid #666;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+  padding: 5px;
+
+  display: none;
+}
+
+.search_btn {
+  /*position: absolute;*/
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>BookScore</h1>
+
+<div class="lead">
+  Compare your books of Interest!
+</div>
+
+
+
+<div id="app">
+
+  <div id="topbar">
+  </div>
+
+  <div id="content">
+    <!-- table -->
+  </div>
+
+  <div id="sidebar">
+    <!-- sidebar -->
+  </div>
+</div>
+
+<footer>
+  Copyright. bookocr®
+</footer>
+
+
+<!-- -->
+<script type="text/javascript" src="search_list_component.js"></script>
+
+  <script type="text/javascript">
+
+  // app
+  (function () {
+
+    var onClickSearchButton = function() {
+      $('#sidebar').show();
+    };
+    var $topbar = $('#topbar');
+
+    //
+    {{ }}
+    // Book Compare Table compnent
+    (function () {
+
+      var bookCompareTable = ejs.render(`<table class="table table-striped <%= classname %>">
+      <thead>
+      <tr>
+      <th></th>
+      <th>젊은 회의주의자에게 보내는 편지</th>
+      <th>스페이스 크로니클</th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>저자</td>
+      <td>크리스토퍼 히친스</td>
+      <td>닐 타이슨</td>
+
+      </tr>
+      <tr>
+      <td>쪽수</td>
+      <td>248</td>
+      <td>448</td>
+
+      </tr>
+      <tr>
+      <td>ebook</td>
+      <td></td>
+      <td></td>
+
+      </tr>
+      <tr>
+      <td>goodreads</td>
+      <td>4.4 (x140)</td>
+      <td>3.95 (x4,623)</td>
+
+      </tr>
+      <tr>
+      <td>amazon</td>
+      <td>4.15 (x6,580)</td>
+      <td>4.4 (x202)</td>
+
+      </tr>
+      <tr>
+      <td>aladin</td>
+      <td>4.0 (x3)</td>
+      <td>4.4 (x10)</td>
+
+      </tr>
+      <tr>
+      <td>kyobo</td>
+      <td>4.1 (x7)</td>
+      <td>5.0 (x4)</td>
+
+      </tr>
+      <tr>
+      <td>yes24</td>
+      <td></td>
+      <td></td>
+
+      </tr>
+      </tbody>
+      </table>`, { classname: 'book-compare-table'});
+
+      // var $el = $(bookCompareTable);
+      // $el.appendTo('#content');
+      $('#content').html(bookCompareTable);
+
+    })();
+
+    SearchListComponent($topbar);
+
+    //
+    // Top Bar
+    //
+    (function(onClickSearchButton) {
+      var html = ejs.render('<button class="search-btn"><i class="fa fa-search" aria-hidden="true"></i></button>');
+
+      $('#topbar').html(html);
+
+      //
+      $('#topbar .search-btn').on('click', onClickSearchButton);
+    })(onClickSearchButton);
+
+  })();
+
+  </script>
+
+
+</body>
+</html>
