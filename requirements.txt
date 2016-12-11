@@ -25,4 +25,4 @@ mock==2.0.0
 google-api-python-client==1.5.1
 jsonfield
 django-compressor==2.0
-django-debug-toolbar==1.5
+django-debug-toolbar==1.6
