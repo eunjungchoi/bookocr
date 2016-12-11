@@ -9,7 +9,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="ejs.min.js"></script>
 
-
 <style>
 
 #app {
@@ -72,105 +71,77 @@
   Copyright. bookocr®
 </footer>
 
+<script type="text/javascript">
+  var APP = {};
+  function equire(keyName) {
+    var keyValue;
+    keyValue = APP[keyName];
+
+    return keyValue;
+  }
+  function xport(keyName, value) {
+    APP[keyName] =  value;
+  }
+</script>
 
 <!-- -->
+<script type="text/javascript" src="top_bar_component.js"></script>
 <script type="text/javascript" src="search_list_component.js"></script>
+<script type="text/javascript" src="book_compare_table_component.js"></script>
+
 
   <script type="text/javascript">
 
   // app
   (function () {
+    var TopBarComponent = equire('top_bar_component.js');
+    var BookCompareTableComponent = equire('book_compare_table_component.js');
+    var SearchListComponent = equire('search_list_component.js');
+
+
+    var data = [
+       {
+           title: "젊은 회의주의자에게 보내는 편지",
+           authors: ["크리스토퍼 히친스"],
+           pages: 248,
+           ebook: null,
+           scores: {
+               goodreads: "4.4 (x140)",
+               amazon: "4.15 (x6,580)",
+               aladin: "4.0 (x3)",
+               kyobo: "4.1 (x7)",
+               yes24: "",
+           },
+       }, {
+           title: "스페이스 크로니클",
+           authors: ["닐 타이슨"],
+           pages: 448,
+           ebook: null,
+           scores: {
+               goodreads: "3.95 (x4,623)",
+               amazon: "4.4 (x202)",
+               aladin: "4.4 (x10)",
+               kyobo: "5.0 (x4)",
+               yes24: "",
+           },
+       },
+    ]
 
     var onClickSearchButton = function() {
       $('#sidebar').show();
     };
-    var $topbar = $('#topbar');
+    var onClickSearchCloseButton = function() {
+      $('#sidebar').hide();
+    };
 
-    //
-    {{ }}
-    // Book Compare Table compnent
-    (function () {
+    function onSearchResult(result) {
+      console.log(result.channel.item.length);
+    }
 
-      var bookCompareTable = ejs.render(`<table class="table table-striped <%= classname %>">
-      <thead>
-      <tr>
-      <th></th>
-      <th>젊은 회의주의자에게 보내는 편지</th>
-      <th>스페이스 크로니클</th>
 
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-      <td>저자</td>
-      <td>크리스토퍼 히친스</td>
-      <td>닐 타이슨</td>
-
-      </tr>
-      <tr>
-      <td>쪽수</td>
-      <td>248</td>
-      <td>448</td>
-
-      </tr>
-      <tr>
-      <td>ebook</td>
-      <td></td>
-      <td></td>
-
-      </tr>
-      <tr>
-      <td>goodreads</td>
-      <td>4.4 (x140)</td>
-      <td>3.95 (x4,623)</td>
-
-      </tr>
-      <tr>
-      <td>amazon</td>
-      <td>4.15 (x6,580)</td>
-      <td>4.4 (x202)</td>
-
-      </tr>
-      <tr>
-      <td>aladin</td>
-      <td>4.0 (x3)</td>
-      <td>4.4 (x10)</td>
-
-      </tr>
-      <tr>
-      <td>kyobo</td>
-      <td>4.1 (x7)</td>
-      <td>5.0 (x4)</td>
-
-      </tr>
-      <tr>
-      <td>yes24</td>
-      <td></td>
-      <td></td>
-
-      </tr>
-      </tbody>
-      </table>`, { classname: 'book-compare-table'});
-
-      // var $el = $(bookCompareTable);
-      // $el.appendTo('#content');
-      $('#content').html(bookCompareTable);
-
-    })();
-
-    SearchListComponent($topbar);
-
-    //
-    // Top Bar
-    //
-    (function(onClickSearchButton) {
-      var html = ejs.render('<button class="search-btn"><i class="fa fa-search" aria-hidden="true"></i></button>');
-
-      $('#topbar').html(html);
-
-      //
-      $('#topbar .search-btn').on('click', onClickSearchButton);
-    })(onClickSearchButton);
+    BookCompareTableComponent($('#content'), data);
+    SearchListComponent($('#topbar'), onSearchResult);
+    TopBarComponent(onClickSearchButton, onClickSearchCloseButton);
 
   })();
 
