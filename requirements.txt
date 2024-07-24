@@ -11,7 +11,7 @@ jmespath==0.9.0
 oauthlib==1.1.2
 Pillow>=3.3.0
 psycopg2>=2.6.1
-PyJWT==1.4.0
+PyJWT>=2.8.0
 python-dateutil==2.5.3
 python-social-auth==0.2.19
 python3-openid==3.0.10
@@ -25,4 +25,4 @@ mock==2.0.0
 google-api-python-client>=1.5.1
 jsonfield
 django-compressor==2.0
-django-debug-toolbar==1.11.1
+django-debug-toolbar>=4.4.6
