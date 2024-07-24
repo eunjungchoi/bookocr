@@ -1,0 +1,152 @@
+
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
+  integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="ejs.min.js"></script>
+
+<style>
+
+#app {
+  position: relative;
+}
+
+#content {
+}
+
+#sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+
+  border-left: 1px solid #666;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+  padding: 5px;
+
+  display: none;
+}
+
+.search_btn {
+  /*position: absolute;*/
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>BookScore</h1>
+
+<div class="lead">
+  Compare your books of Interest!
+</div>
+
+
+
+<div id="app">
+
+  <div id="topbar">
+  </div>
+
+  <div id="content">
+    <!-- table -->
+  </div>
+
+  <div id="sidebar">
+    <!-- sidebar -->
+  </div>
+</div>
+
+<footer>
+  Copyright. bookocr®
+</footer>
+
+<script type="text/javascript">
+  var APP = {};
+  function equire(keyName) {
+    var keyValue;
+    keyValue = APP[keyName];
+
+    return keyValue;
+  }
+  function xport(keyName, value) {
+    APP[keyName] =  value;
+  }
+</script>
+
+<!-- -->
+<script type="text/javascript" src="top_bar_component.js"></script>
+<script type="text/javascript" src="search_list_component.js"></script>
+<script type="text/javascript" src="book_compare_table_component.js"></script>
+
+
+  <script type="text/javascript">
+
+  // app
+  (function () {
+    var TopBarComponent = equire('top_bar_component.js');
+    var BookCompareTableComponent = equire('book_compare_table_component.js');
+    var SearchListComponent = equire('search_list_component.js');
+
+
+    var data = [
+       {
+           title: "젊은 회의주의자에게 보내는 편지",
+           authors: ["크리스토퍼 히친스"],
+           pages: 248,
+           ebook: null,
+           scores: {
+               goodreads: "4.4 (x140)",
+               amazon: "4.15 (x6,580)",
+               aladin: "4.0 (x3)",
+               kyobo: "4.1 (x7)",
+               yes24: "",
+           },
+       }, {
+           title: "스페이스 크로니클",
+           authors: ["닐 타이슨"],
+           pages: 448,
+           ebook: null,
+           scores: {
+               goodreads: "3.95 (x4,623)",
+               amazon: "4.4 (x202)",
+               aladin: "4.4 (x10)",
+               kyobo: "5.0 (x4)",
+               yes24: "",
+           },
+       },
+    ]
+
+    var onClickSearchButton = function() {
+      $('#sidebar').show();
+    };
+    var onClickSearchCloseButton = function() {
+      $('#sidebar').hide();
+    };
+
+    function onSearchResult(result) {
+      console.log(result.channel.item.length);
+    }
+
+
+    BookCompareTableComponent($('#content'), data);
+    SearchListComponent($('#topbar'), onSearchResult);
+    TopBarComponent(onClickSearchButton, onClickSearchCloseButton);
+
+  })();
+
+  </script>
+
+
+</body>
+</html>

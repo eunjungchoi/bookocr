@@ -35,6 +35,8 @@ LOGIN_URL = '/login/'
 
 INSTALLED_APPS = [
 	'bookshot.apps.BookshotConfig',
+	#'bookscore.apps.BookscoreConfig',
+	'bookscore',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -44,7 +46,7 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 	'social.apps.django_app.default',
 	'storages', #
-    'debug_toolbar',
+    # 'debug_toolbar',
 	# 'django_s3_storage',
 	"compressor",
 ]
@@ -60,7 +62,8 @@ MIDDLEWARE_CLASSES = [
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'bookocr.http_middleware.HttpRedirectMiddleware'
+	'bookocr.http_middleware.HttpRedirectMiddleware',
+	# 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 

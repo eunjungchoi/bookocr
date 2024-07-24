@@ -18,10 +18,15 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from bookshot import views
+import bookscore
+from bookscore.views.home import index as bookscore_index
 
 urlpatterns = [
+	url(r'^bookscore$', bookscore_index),
+
+	##
     url(r'', include('social.apps.django_app.urls', namespace='social')),
-    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True, }),    
+    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True, }),
     url(r'^admin/', admin.site.urls),
 
     url(r'^login/$',  views.auth.log_in, name='log_in'),
@@ -44,7 +49,8 @@ urlpatterns = [
     url(r'^addbook/$', views.book.add, name='add_book'),
 
     url(r'^me$', views.user.me, name='me'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #
-# 마지막 static 라인은, debug= True일 때만 동작. 
+# 마지막 static 라인은, debug= True일 때만 동작.
